@@ -2,7 +2,11 @@
 
 Live app: **https://44.224.200.231/**. A custom domain is optional and remains the user's choice; none was purchased. Public HTTPS uses a trusted Let's Encrypt IP certificate, not a self-signed certificate. The certificate is automatically renewed by Caddy, and independent monitoring checks its identity, trust and remaining lifetime.
 
-## Latest web release — supplied hero artwork
+## Latest web release — simplified navigation
+
+On October 21, removed the top "Your teams" link and its obsolete mobile hiding rule. The current web image is `sha256:12772a43df6c9bc2a13b610566eac712e1d3e16916096b7db2d2d9c7c0f9ccb6`, built from commit `392eac918a2d` by successful CodeBuild `bayline-mvp-prod:5357b11b-cb6b-4010-a5b6-cafbdeb7762c`. Node base images now use the AWS Public ECR Docker Library mirror after Docker Hub returned HTTP 429. Only the web container was recreated; worker and database container IDs/start times were preserved. Public readiness passed. Browser checks confirmed the main navigation contains only Scoreboard on desktop and at 390 pixels; screenshot: `preview/navigation-phone.png`. Source and release evidence are retained under `releases/392eac918a2d/` in the private backup bucket.
+
+## Previous web release — supplied hero artwork
 
 On October 21, the web image was updated from application commit `6220c74` to `sha256:91828b2643cda1d90ad4744f7e37dd9c9a26ae4fff813659e669085d4c93b0fd`. CodeBuild `bayline-mvp-prod:992c56f4-6a89-4e31-8ed0-eae10ccea574` passed the production build and checks. Only the web container was recreated; worker and database container IDs and start times were unchanged. Public readiness remained healthy after deployment. The initial web digest below is retained for rollback; the worker/migration digest is still current.
 
