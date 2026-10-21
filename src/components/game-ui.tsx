@@ -54,6 +54,7 @@ export function GameCard({ game, now, delayed, hideScore, protection, onReveal, 
     <Matchup game={game} hideScore={hideScore} />
     {protection && played && <button className="reveal-score" onClick={onReveal}>{hideScore ? 'Reveal score' : 'Hide score'}</button>}
     <div className="game-footer"><span>{game.startsAt ? `${formatTime(game.startsAt)} PT` : 'Time TBD'}</span><span className={delayed ? 'delayed-text' : ''}>{delayed ? 'Update delayed' : checkLabel(game.observedAt, now)}</span></div>
+    {game.media && ['scheduled','in_progress','delayed','postponed','unknown','final'].includes(game.status) && <button className="game-media-button" onClick={event => onOpen(game, event.currentTarget)}><span aria-hidden="true">{game.status === 'final' ? '▶' : '◉'}</span><span>{game.status === 'final' ? hideScore ? 'Highlights · spoiler protected' : game.media.highlight ? 'Watch highlights' : 'Find highlights' : 'Where to watch'}</span>{game.status !== 'final' && game.media.broadcasts.length > 0 && <small>{game.media.broadcasts.map(item => item.label).join(' · ')}</small>}<Arrow /></button>}
     <button className="game-details-button" onClick={event => onOpen(game, event.currentTarget)}>Game details <Arrow /></button>
   </article>;
 }

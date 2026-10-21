@@ -1,0 +1,143 @@
+[
+  {
+    "league": "wnba",
+    "providerId": 1392707,
+    "homeTeamId": 13,
+    "awayTeamId": 4,
+    "startsAt": "2026-10-17T19:30:00.000Z",
+    "verifiedAt": "2026-10-21T19:57:17.465Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=CTJGJH9hPVU",
+    "broadcasts": [],
+    "highlight": {
+      "videoId": "CTJGJH9hPVU",
+      "title": "Atlanta Dream vs. Golden State Valkyries | FULL GAME HIGHLIGHTS | October 17, 2026",
+      "channel": "WNBA",
+      "verifiedAt": "2026-10-21T19:57:17.465Z"
+    }
+  },
+  {
+    "league": "wnba",
+    "providerId": 1392708,
+    "homeTeamId": 13,
+    "awayTeamId": 4,
+    "startsAt": "2026-10-20T00:00:00.000Z",
+    "verifiedAt": "2026-10-21T19:57:17.465Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=GSAxhaKdlVY",
+    "broadcasts": [],
+    "highlight": {
+      "videoId": "GSAxhaKdlVY",
+      "title": "Atlanta Dream vs. Golden State Valkyries | FULL GAME HIGHLIGHTS | October 19, 2026",
+      "channel": "WNBA",
+      "verifiedAt": "2026-10-21T19:57:17.465Z"
+    }
+  },
+  {
+    "league": "wnba",
+    "providerId": 1392715,
+    "homeTeamId": 4,
+    "awayTeamId": 13,
+    "startsAt": "2026-10-22T00:00:00.000Z",
+    "verifiedAt": "2026-10-21T19:57:17.465Z",
+    "sourceUrl": "https://cdn.wnba.com/static/json/staticData/scheduleLeagueV2.json",
+    "broadcasts": [
+      {
+        "label": "Peacock",
+        "url": "https://peacocktv.app.link/NSpf8peg96b",
+        "kind": "stream",
+        "region": "US",
+        "access": "Subscription required; U.S. availability."
+      },
+      {
+        "label": "USA Network",
+        "url": "https://www.usanetwork.com/game/golden-state-valkyries--atlanta-dream-1791926052287",
+        "kind": "tv",
+        "region": "US",
+        "access": "Participating TV provider or eligible subscription required."
+      }
+    ],
+    "highlight": null
+  },
+  {
+    "league": "wnba",
+    "providerId": 1392716,
+    "homeTeamId": 4,
+    "awayTeamId": 13,
+    "startsAt": "2026-10-24T17:00:00.000Z",
+    "verifiedAt": "2026-10-21T19:57:17.465Z",
+    "sourceUrl": "https://cdn.wnba.com/static/json/staticData/scheduleLeagueV2.json",
+    "broadcasts": [
+      {
+        "label": "Peacock",
+        "url": "https://peacocktv.app.link/7x0hvseg96b",
+        "kind": "stream",
+        "region": "US",
+        "access": "Subscription required; U.S. availability."
+      }
+    ],
+    "highlight": null
+  },
+  {
+    "league": "wnba",
+    "providerId": 1392723,
+    "homeTeamId": 13,
+    "awayTeamId": 4,
+    "startsAt": "2026-10-27T00:00:00.000Z",
+    "verifiedAt": "2026-10-21T19:57:17.465Z",
+    "sourceUrl": "https://cdn.wnba.com/static/json/staticData/scheduleLeagueV2.json",
+    "broadcasts": [
+      {
+        "label": "Peacock",
+        "url": "https://peacocktv.app.link/wc28WpgRp7b",
+        "kind": "stream",
+        "region": "US",
+        "access": "Subscription required; U.S. availability."
+      },
+      {
+        "label": "USA Network",
+        "url": "https://www.usanetwork.com/sports",
+        "kind": "tv",
+        "region": "US",
+        "access": "Participating TV provider or eligible subscription required."
+      }
+    ],
+    "highlight": null
+  },
+  {
+    "league": "nba",
+    "providerId": 21717859,
+    "homeTeamId": 14,
+    "awayTeamId": 10,
+    "startsAt": "2026-10-22T02:00:00.000Z",
+    "verifiedAt": "2026-10-21T19:57:17.465Z",
+    "sourceUrl": "https://www.nba.com/news/how-to-watch-games-2026-27-season",
+    "broadcasts": [
+      {
+        "label": "ESPN",
+        "url": "https://www.espn.com/watch/",
+        "kind": "stream",
+        "region": "US",
+        "access": "Eligible ESPN subscription or participating TV provider required."
+      }
+    ],
+    "highlight": null
+  },
+  {
+    "league": "nfl",
+    "providerId": 1392311,
+    "homeTeamId": 27,
+    "awayTeamId": 30,
+    "startsAt": "2026-10-25T17:00:00.000Z",
+    "verifiedAt": "2026-10-21T19:57:17.465Z",
+    "sourceUrl": "https://www.49ers.com/schedule/",
+    "broadcasts": [
+      {
+        "label": "FOX",
+        "url": "https://www.fox.com/sports/football/nfl/",
+        "kind": "tv",
+        "region": "US",
+        "access": "Regional broadcast. Check local availability and TV provider or subscription access."
+      }
+    ],
+    "highlight": null
+  }
+]

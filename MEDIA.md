@@ -1,0 +1,20 @@
+# Viewing links and game highlights
+
+Game cards open viewing options or highlights in game details. U.S. broadcast/streaming links include access notes and an official source. A service link is not a guarantee that a viewer's location or subscription includes the game. Missing or expired entries link to the official team schedule/viewing guide.
+
+Completed games show reviewed YouTube highlights, or a clearly labeled official-channel search when a matching clip has not been added. The initial catalog contains two official WNBA clips, plus viewing options for upcoming Warriors, 49ers and Valkyries games. It does not automatically discover new videos or broadcasters.
+
+With spoiler protection on, the video title, outbound video link and player remain absent until **Reveal highlights** is selected. That action does not reveal the score. The player is loaded only after **Play highlights**, never autoplays, and is destroyed when closed or hidden again. One player can be active in the game-details dialog. It supports fullscreen/PiP where YouTube and the browser permit them. Blocked/removed/restricted videos show an external YouTube fallback. The player is at least 200×200 pixels on supported phone widths and preserves YouTube's controls.
+
+## Review and publish an entry
+
+1. Find the exact game in `/api/games`. Copy league, provider ID, home/away team IDs and UTC start timestamp. Check its matchup/date against an official team/league source.
+2. Add an entry to `data/reviewed-game-media.json`. Store only official HTTPS links allowed by `src/shared/game-media.ts`. Viewing entries need U.S. scope, TV/stream type and honest access notes. Use the time the listing was actually reviewed as `verifiedAt`; do not refresh it merely because the worker ran.
+3. For highlights, verify the video ID, game date, opponents and uploader on the official NBA/NFL/WNBA/team YouTube channel. An oEmbed metadata response can confirm the video title and uploader without a YouTube Data API key; it does not guarantee playback in every region. Never use simulated games, previews or another season's matchup. Store the 11-character ID, title, official channel and review timestamp.
+4. Run `npm run typecheck`, `npm test` and build the web/worker images. Apply migration 004 before starting this release. Reviewed entries are imported into PostgreSQL only when their IDs, opponents and start time exactly match an existing game. Existing scores are not changed. Missing games are skipped and retried as ingestion fills the schedule.
+5. The independent worker imports the bundled catalog about every ten minutes, without making extra sports/YouTube requests. To apply it immediately after a release, use `docker compose --env-file production.env -f compose.production.yaml run --rm --no-deps migrate node dist-runtime/scripts/import-game-media.js` on the server. Local use: `npm run media:import -- data/reviewed-game-media.json`.
+6. Check the public game/detail response and phone UI. The API adds optional `media` metadata to existing game responses; no new public write endpoint or browser API key is introduced.
+
+Broadcast listings expire after seven days without a fresh review. A changed start time/opponent suppresses all attached media until reviewed again; postponed/delayed games show the official guide. Highlights are offered only for a final game, and playback availability is checked by the YouTube player. Periodically recheck stored videos and remove unavailable or incorrect entries by setting `highlight` to null. Updating the catalog requires a release; there is no public content-editing interface.
+
+YouTube player references: [embedding and size](https://developers.google.com/youtube/player_parameters), [player errors](https://developers.google.com/youtube/iframe_api_reference#onError), [client identity/referrer requirements](https://developers.google.com/youtube/terms/required-minimum-functionality#embedded-player-api-client-identity).

@@ -30,7 +30,7 @@ export interface NormalizedGame {
 }
 
 export interface GameTeam { providerId: number; name: string | null; abbreviation: string | null; }
-export interface StoredGame extends NormalizedGame { localDate: string; observedAt: string; changedAt: string; }
+export interface StoredGame extends NormalizedGame { localDate: string; observedAt: string; changedAt: string; media?: import('./game-media').GameMedia; }
 export interface LeagueSync {
   league: FreeLeague;
   lastAttemptAt: string | null;

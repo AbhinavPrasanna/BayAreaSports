@@ -21,6 +21,7 @@ test('PostgreSQL storage applies migrations, corrects scores, scopes IDs and rol
   try {
     await db.exec(await readFile('migrations/001_foundation.sql', 'utf8'));
     await db.exec(await readFile('migrations/002_game_ingestion.sql', 'utf8'));
+    await db.exec(await readFile('migrations/004_game_media.sql', 'utf8'));
     await t.test('game write and Pacific-date reads work against the actual SQL', async () => {
       await storeGames(client, 'nba', [game], await startRun('nba'), window, new Date());
       const response = await readGames(reader, query);

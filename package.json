@@ -13,6 +13,7 @@
     "worker": "tsx src/worker/main.ts",
     "worker:dev": "tsx watch src/worker/main.ts",
     "db:migrate": "tsx scripts/migrate.ts",
+    "media:import": "tsx scripts/import-game-media.ts",
     "setup": "node scripts/setup-env.mjs",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts"

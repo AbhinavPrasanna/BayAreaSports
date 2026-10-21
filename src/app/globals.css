@@ -211,6 +211,33 @@ h2 { margin:0; font-size:27px; letter-spacing:-.8px; font-weight:600; }
 /* Keep the supplied artwork complete, including all three team logos. */
 .hero-art { width:42%; max-width:400px; aspect-ratio:3/2; flex-shrink:0; overflow:hidden; border-radius:12px; background:#061229; }
 .hero-art img { display:block; width:100%; height:auto; }
+.game-media-button { display:flex; align-items:center; gap:8px; min-height:48px; width:100%; padding:10px 0; border:0; border-top:1px solid var(--line); background:transparent; text-align:left; font-size:12px; font-weight:600; }
+.game-media-button small { color:var(--muted); font-size:10px; font-weight:400; margin-left:auto; max-width:45%; text-align:right; }
+.game-media-button>.arrow { margin-left:auto; flex-shrink:0; }
+.game-media { border:1px solid #dce2d5; padding:18px; border-radius:10px; margin:22px 0; background:#fff; }
+.media-heading { display:flex; gap:8px; align-items:center; margin-bottom:14px; }
+.media-heading h3 { font-size:15px; margin:0; font-weight:600; }
+.media-heading>span:last-child:not(:first-child) { margin-left:auto; font-size:10px; color:var(--muted); }
+.broadcast-list { display:flex; flex-direction:column; gap:8px; }
+.broadcast-link { display:flex; gap:12px; align-items:center; justify-content:space-between; padding:12px; border:1px solid #dce3d5; border-radius:7px; min-height:56px; background:#f3f5ed; }
+.broadcast-link strong { font-size:13px; display:block; font-weight:600; margin-bottom:5px; }
+.broadcast-link small { font-size:11px; color:#687960; line-height:1.6; display:block; }
+.media-caption { color:#6d7e65; font-size:11px; line-height:1.7; margin:12px 0 0; }
+.media-caption a { text-decoration:underline; text-underline-offset:3px; }
+.media-note,.media-protected p { font-size:12px; color:#687760; line-height:1.8; margin:0 0 12px; }
+.media-external { display:flex; align-items:center; gap:9px; justify-content:space-between; font-size:12px; font-weight:550; min-height:44px; padding:10px 0; }
+.media-external:hover { text-decoration:underline; }
+.media-protected { padding:14px; border:1px solid #e0d9e8; background:#f3eef7; border-radius:8px; }
+.media-protected small { display:block; color:#756584; margin-top:10px; font-size:11px; }
+.media-reveal,.highlight-play { min-height:48px; width:100%; border:0; border-radius:7px; padding:12px 15px; color:#fff; background:var(--ink); font-size:13px; font-weight:550; }
+.media-reveal { background:#66517c; }
+.highlight-title { font-size:13px; font-weight:550; line-height:1.7; margin:0; }
+.highlight-play { margin-top:16px; display:flex; align-items:center; justify-content:center; gap:10px; }
+.youtube-player { position:relative; width:100%; min-height:200px; aspect-ratio:16/9; margin-top:14px; border-radius:7px; overflow:hidden; background:#101914; }
+.youtube-player[hidden] { display:none; }
+.youtube-player iframe { position:absolute; inset:0; display:block; width:100%; height:100%; min-height:200px; border:0; }
+.media-text-button { min-height:44px; border:0; background:transparent; padding:8px 0; font-size:12px; text-decoration:underline; }
+@media(max-width:540px) { .game-media { padding:14px 12px; } .game-media-button { font-size:12px; } .game-media-button small { font-size:10px; max-width:40%; } }
 @media(min-width:541px) and (max-width:1100px) { .hero h1 { font-size:clamp(32px,4.4vw,49px); } }
 @media(max-width:780px) { .hero-art { width:40%; } }
 @media(max-width:540px) { .hero { flex-direction:column; align-items:stretch; gap:20px; } .hero-art { width:100%; max-width:none; } }

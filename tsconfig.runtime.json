@@ -10,6 +10,6 @@
     "outDir": "dist-runtime",
     "types": ["node"]
   },
-  "include": ["src/worker/main.ts", "scripts/migrate.ts", "scripts/worker-health.ts"],
+  "include": ["src/worker/main.ts", "scripts/migrate.ts", "scripts/worker-health.ts", "scripts/import-game-media.ts"],
   "exclude": ["node_modules", "dist-runtime"]
 }

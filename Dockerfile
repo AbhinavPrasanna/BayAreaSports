@@ -34,6 +34,7 @@ ENV NODE_ENV=production
 COPY --from=production-dependencies --chown=node:node /app/node_modules ./node_modules
 COPY --from=build --chown=node:node /app/dist-runtime ./dist-runtime
 COPY --from=build --chown=node:node /app/migrations ./migrations
+COPY --chown=node:node data ./data
 COPY --chown=node:node package.json ./
 USER node
 CMD ["node", "dist-runtime/src/worker/main.js"]

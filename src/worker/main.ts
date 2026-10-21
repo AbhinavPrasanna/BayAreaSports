@@ -4,6 +4,7 @@ import { ConfigurationError, parseWorkerEnv } from '../server/config/env';
 import { closePool, getPool } from '../server/db/pool';
 import { BallDontLieAdapter } from '../server/providers/balldontlie/adapter';
 import { syncNextLeague } from '../server/ingestion/scheduler';
+import { importReviewedMedia, loadReviewedMedia } from '../server/media/reviewed-media';
 
 async function main() {
   loadLocalEnvironment();
@@ -14,6 +15,8 @@ async function main() {
   process.once('SIGTERM', shutdown);
   process.once('SIGINT', shutdown);
   const pool = getPool();
+  const reviewedMedia = loadReviewedMedia();
+  let mediaCheckAfter = 0;
   const lockClient = await pool.connect();
   let ownsLock = false;
   try {
@@ -27,6 +30,11 @@ async function main() {
     while (!stop.signal.aborted) {
       await lockClient.query("INSERT INTO worker_heartbeats (worker_name, last_seen_at) VALUES ('scheduler', now()) ON CONFLICT (worker_name) DO UPDATE SET last_seen_at = EXCLUDED.last_seen_at");
       await syncNextLeague(lockClient, adapters, config.WORKER_INTERVAL_SECONDS, stop.signal).catch(error => { if (!stop.signal.aborted) throw error; });
+      if (Date.now() >= mediaCheckAfter && !stop.signal.aborted) {
+        // A failed media refresh must not stop score ingestion or consume provider quota.
+        await importReviewedMedia(lockClient, reviewedMedia).catch(() => console.error(JSON.stringify({ event: 'media_import_failed' })));
+        mediaCheckAfter = Date.now() + 600_000;
+      }
       await sleep(5000, undefined, { signal: stop.signal }).catch(error => { if (error.name !== 'AbortError') throw error; });
     }
   } finally {
