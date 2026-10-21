@@ -2,10 +2,16 @@
 
 Live app: **https://44.224.200.231/**. A custom domain is optional and remains the user's choice; none was purchased. Public HTTPS uses a trusted Let's Encrypt IP certificate, not a self-signed certificate. The certificate is automatically renewed by Caddy, and independent monitoring checks its identity, trust and remaining lifetime.
 
+## Latest web release — supplied hero artwork
+
+On October 21, the web image was updated from application commit `6220c74` to `sha256:91828b2643cda1d90ad4744f7e37dd9c9a26ae4fff813659e669085d4c93b0fd`. CodeBuild `bayline-mvp-prod:992c56f4-6a89-4e31-8ed0-eae10ccea574` passed the production build and checks. Only the web container was recreated; worker and database container IDs and start times were unchanged. Public readiness remained healthy after deployment. The initial web digest below is retained for rollback; the worker/migration digest is still current.
+
+The deployed PNG matches the supplied image (SHA-256 `6539d1402cc72efa3f690c2ae1e6e06b61aed8ec49681b6bc2168220a8ba2b1c`). Responsive Next.js optimization returned a 39,316-byte WebP at 640 pixels. Browser checks at 1440 and 390 pixels confirmed the image loads without horizontal overflow and displays all three logos. Screenshots: `preview/hero-desktop.png` and `preview/hero-phone.png`. Source and deployment evidence are retained off-server under `releases/6220c74/`.
+
 ## Running infrastructure
 
 - Region: `us-west-2` (Oregon). Regional stack: `bayline-mvp-prod`; server: `bayline-mvp-prod-01`, Ubuntu 24.04, Lightsail `medium_3_0`, $24/month, attached static IPv4.
-- Separate prebuilt web and worker images were built in CodeBuild from application commit `48f0ab50bfa8`. The server only pulls/runs them; it does not compile the app. Images are deployed by digest. The later host-operation and monitoring changes are separate deployment files.
+- The initial prebuilt web and worker images were built in CodeBuild from application commit `48f0ab50bfa8`; the latest web image is recorded above. The server only pulls/runs them; it does not compile the app. Images are deployed by digest. The later host-operation and monitoring changes are separate deployment files.
 - Only Caddy publishes 80/443. Public probes reached those ports and could not reach 3000 or 5432. PostgreSQL has only the private internal container network. SSH is restricted to the operator's IPv4 /32.
 - Web and worker run separately as non-root users, with read-only filesystems, resource limits and container restart policies. Migration is a one-shot service. The provider key is mounted only into the worker; no key was stored in an image, archive, Git or browser. Database/provider secrets are root-managed files.
 - IMDSv2 is required with hop limit 1. Host backup access through the instance's bucket attachment works; app containers do not receive AWS credentials.
