@@ -14,7 +14,7 @@ export function template() {
   } });
   return {
     AWSTemplateFormatVersion: '2010-09-09',
-    Description: 'Bayline single-host MVP: $24 Lightsail, private PostgreSQL, off-server backups, prebuilt ECR images and $100 account budget.',
+    Description: 'Bayline single-host MVP: $24 Lightsail, private PostgreSQL, off-server backups, prebuilt ECR images and $100 service/region budget.',
     Parameters: {
       AlertEmail: { Type: 'String', AllowedPattern: '[^@\\s]+@[^@\\s]+\\.[^@\\s]+' },
       AdminCidr: { Type: 'String', AllowedPattern: '(?:[0-9]{1,3}\\.){3}[0-9]{1,3}/32', Description: 'Operator public IPv4 /32; never open SSH globally' },
@@ -68,6 +68,7 @@ export function template() {
       } },
       Budget: { Type: 'AWS::Budgets::Budget', Properties: {
         Budget: { BudgetName: 'Bayline-account-safety-100', BudgetType: 'COST', TimeUnit: 'MONTHLY', BudgetLimit: { Amount: 100, Unit: 'USD' },
+          CostFilters: { Region: ['us-west-2'], Service: ['Amazon Lightsail', 'Amazon EC2 Container Registry (ECR)', 'AWS CodeBuild', 'AWS Lambda', 'AmazonCloudWatch', 'Amazon Simple Notification Service', 'Amazon Simple Storage Service', 'Amazon EventBridge'] },
           CostTypes: { IncludeTax: true, IncludeSubscription: true, UseBlended: false, IncludeRefund: false, IncludeCredit: false } },
         NotificationsWithSubscribers: [
           { Notification: { NotificationType: 'ACTUAL', ComparisonOperator: 'GREATER_THAN', Threshold: 50, ThresholdType: 'PERCENTAGE' }, Subscribers: [{ SubscriptionType: 'EMAIL', Address: ref('AlertEmail') }] },

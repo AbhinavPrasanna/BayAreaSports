@@ -13,7 +13,7 @@ x-app: &app
   read_only: true
   cap_drop: [ALL]
   security_opt: [no-new-privileges:true]
-  tmpfs: [/tmp:size=64m,mode=1777]
+  tmpfs: ["/tmp:size=64m,mode=1777"]
   stop_grace_period: 30s
 
 services:
@@ -57,7 +57,7 @@ services:
     secrets: [database_url]
     networks: [edge, database]
     mem_limit: 768m
-    tmpfs: [/tmp:size=64m,mode=1777, /app/.next/cache:size=64m,uid=1000,gid=1000]
+    tmpfs: ["/tmp:size=64m,mode=1777", "/app/.next/cache:size=64m,uid=1000,gid=1000"]
     healthcheck:
       test: [CMD, node, -e, "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 30s
@@ -99,7 +99,7 @@ services:
     ports: ["80:80", "443:443"]
     networks: [edge]
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ${CADDY_CONFIG:-./Caddyfile}:/etc/caddy/Caddyfile:ro
       - caddy-data:/data
       - caddy-config:/config
     depends_on:

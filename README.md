@@ -132,7 +132,7 @@ If you specifically need host-side database tools or Node processes, enable the 
 - Worker heartbeat: inspect `worker_heartbeats.last_seen_at` or bounded worker logs.
 - Adapter methods validate provider responses, preserve null scores and unknown statuses, and do not expose raw error payloads. A score snapshot is not complete play-by-play.
 
-No AWS resources, public site, scheduled automation, paid API plan, or remote Git repository is created by this scaffold. Compose and its development Dockerfile are for local development; production hardening and deployment remain separate.
+The local development launcher creates no AWS resources or paid API plan. The separate production deployment is documented in [deploy/DEPLOYMENT.md](deploy/DEPLOYMENT.md); it uses the production Docker targets and Compose file. The development Compose stack is not the public deployment.
 
 Tests include an in-memory PostgreSQL engine (PGlite, development dependency only) to execute the real migrations, transactional upserts, Pacific-date queries, corrections, rollback, league-scoped IDs, request reservation, and cached-data preservation. No tests call a paid or live provider endpoint.
 

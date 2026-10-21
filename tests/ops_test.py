@@ -40,6 +40,13 @@ class RecoveryGuards(unittest.TestCase):
                 ops.restore('other/database.json', 'bayline_restore_20261021100000')
             aws.assert_not_called()
 
+    def test_promotion_refuses_a_populated_live_database_without_altering_it(self):
+        with patch.object(ops, 'compose', return_value=''), patch.object(ops, 'sql', return_value='7') as sql:
+            with self.assertRaisesRegex(RuntimeError, 'populated live database'):
+                ops.promote('bayline_restore_20261021100000')
+            self.assertEqual(sql.call_count, 1)
+            self.assertTrue(sql.call_args.args[0].startswith('SELECT count(*)'))
+
 
 if __name__ == '__main__':
     unittest.main()

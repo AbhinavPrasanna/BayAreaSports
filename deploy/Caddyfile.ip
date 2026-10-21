@@ -1,0 +1,26 @@
+{
+    email {$ACME_EMAIL}
+    admin off
+    default_sni {$APP_DOMAIN}
+}
+
+{$APP_DOMAIN} {
+    tls {
+        issuer acme {
+            dir https://acme-v02.api.letsencrypt.org/directory
+            profile shortlived
+        }
+    }
+    encode zstd gzip
+    header {
+        X-Content-Type-Options nosniff
+        Referrer-Policy strict-origin-when-cross-origin
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    reverse_proxy web:3000
+    log {
+        output stdout
+        format json
+    }
+}

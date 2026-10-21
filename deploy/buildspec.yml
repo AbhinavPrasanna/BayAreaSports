@@ -4,6 +4,7 @@ phases:
     commands:
       - set -eu
       - python3 -m unittest discover -s tests -p 'ops_test.py'
+      - node deploy/validate-compose.mjs
       - REGISTRY="$(printf '%s' "$WEB_REPOSITORY" | cut -d/ -f1)"
       - aws ecr get-login-password --region "$AWS_DEFAULT_REGION" | docker login --username AWS --password-stdin "$REGISTRY"
   build:

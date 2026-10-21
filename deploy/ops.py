@@ -163,6 +163,27 @@ def prune():
     print(json.dumps({'event': 'retention_checked', 'retention_days': 35}))
 
 
+def promote(database):
+    if not database or not re.fullmatch(r'bayline_restore_\d{14}', database):
+        raise RuntimeError('Promotion requires a verified timestamped restore database')
+    for service in ('web', 'worker', 'migrate'):
+        container = compose('ps', '--all', '-q', service).strip()
+        if container and run(['docker', 'inspect', '--format', '{{.State.Running}}', container]).strip() == 'true':
+            raise RuntimeError('Stop application, worker and migration processes before promotion')
+    if sql("SELECT count(*) FROM pg_tables WHERE schemaname='public';") != '0':
+        raise RuntimeError('Refusing to replace a populated live database; promotion is for a fresh recovery host only')
+    counts = json.loads(sql("SELECT json_build_object('migrations',(SELECT count(*) FROM schema_migrations),'teams',(SELECT count(*) FROM teams WHERE enabled),'games',(SELECT count(*) FROM games));", database))
+    canary = sql("SELECT detail->>'token' FROM operational_checks WHERE name='restore-canary';", database)
+    if counts['migrations'] < 3 or counts['teams'] != 3 or counts['games'] < 1 or not re.fullmatch(r'[a-f0-9]{32}', canary):
+        raise RuntimeError('Restored database failed promotion checks')
+    empty = 'bayline_empty_' + dt.datetime.now(UTC).strftime('%Y%m%d%H%M%S')
+    # Validated identifiers only; preserve even the empty initial database.
+    sql("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname IN ('bayline'," + quote(database) + ") AND pid<>pg_backend_pid();", 'postgres')
+    sql(f'ALTER DATABASE bayline RENAME TO {empty};', 'postgres')
+    sql(f'ALTER DATABASE {database} RENAME TO bayline;', 'postgres')
+    print(json.dumps({'event': 'recovery_database_promoted', 'preserved_empty_database': empty, **counts}))
+
+
 def watchdog():
     for service in ('web', 'worker', 'db'):
         container = compose('ps', '--all', '-q', service).strip()
@@ -222,7 +243,7 @@ def restart_proof():
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('action', choices=['backup', 'restore', 'prune', 'watchdog', 'restart-proof'])
+    parser.add_argument('action', choices=['backup', 'restore', 'promote', 'prune', 'watchdog', 'restart-proof'])
     parser.add_argument('--key')
     parser.add_argument('--database')
     parser.add_argument('--no-record', action='store_true', help='Recovery on a fresh host before live schema exists')
@@ -234,6 +255,8 @@ def main():
     elif args.action == 'backup':
         backup()
         prune()
+    elif args.action == 'promote':
+        promote(args.database)
     else:
         {'prune': prune, 'watchdog': watchdog, 'restart-proof': restart_proof}[args.action]()
 
@@ -242,5 +265,6 @@ if __name__ == '__main__':
     try:
         main()
     except Exception as error:
-        print(json.dumps({'event': 'operation_failed', 'type': type(error).__name__}), file=sys.stderr)
+        print(json.dumps({'event': 'operation_failed', 'type': type(error).__name__,
+                          'message': str(error) if isinstance(error, RuntimeError) else 'Unexpected failure; raw details omitted'}), file=sys.stderr)
         sys.exit(1)
