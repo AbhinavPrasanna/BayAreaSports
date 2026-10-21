@@ -2,7 +2,7 @@
 
 Game cards open viewing options or highlights in game details. U.S. broadcast/streaming links include access notes and an official source. A service link is not a guarantee that a viewer's location or subscription includes the game. Missing or expired entries link to the official team schedule/viewing guide.
 
-Completed games show reviewed YouTube highlights, or a clearly labeled official-channel search when a matching clip has not been added. The initial catalog contains two official WNBA clips, plus viewing options for upcoming Warriors, 49ers and Valkyries games. It does not automatically discover new videos or broadcasters.
+Completed games show reviewed YouTube highlights, or a clearly labeled official-channel search when a matching clip has not been added. The catalog contains two official WNBA clips and four official NFL clips for the September 27–October 19, 2026 49ers games, plus viewing options for upcoming Warriors, 49ers and Valkyries games. It does not automatically discover new videos or broadcasters.
 
 With spoiler protection on, the video title, outbound video link and player remain absent until **Reveal highlights** is selected. That action does not reveal the score. The player is loaded only after **Play highlights**, never autoplays, and is destroyed when closed or hidden again. One player can be active in the game-details dialog. It supports fullscreen/PiP where YouTube and the browser permit them. Blocked/removed/restricted videos show an external YouTube fallback. The player is at least 200×200 pixels on supported phone widths and preserves YouTube's controls.
 

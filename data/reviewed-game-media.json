@@ -139,5 +139,69 @@
       }
     ],
     "highlight": null
+  },
+  {
+    "league": "nfl",
+    "providerId": 1392258,
+    "homeTeamId": 30,
+    "awayTeamId": 33,
+    "startsAt": "2026-09-27T20:05:00.000Z",
+    "verifiedAt": "2026-10-21T20:19:46.786Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=7ngu-tT0PQs",
+    "broadcasts": [],
+    "highlight": {
+      "videoId": "7ngu-tT0PQs",
+      "title": "Arizona Cardinals vs. San Francisco 49ers Game Highlights | NFL 2026 Season Week 3",
+      "channel": "NFL",
+      "verifiedAt": "2026-10-21T20:19:46.786Z"
+    }
+  },
+  {
+    "league": "nfl",
+    "providerId": 1392276,
+    "homeTeamId": 30,
+    "awayTeamId": 15,
+    "startsAt": "2026-10-04T20:25:00.000Z",
+    "verifiedAt": "2026-10-21T20:19:46.871Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=3T1_zYMHPaQ",
+    "broadcasts": [],
+    "highlight": {
+      "videoId": "3T1_zYMHPaQ",
+      "title": "Denver Broncos vs San Francisco 49ers Game Highlights | 2026 NFL Season Week 4",
+      "channel": "NFL",
+      "verifiedAt": "2026-10-21T20:19:46.871Z"
+    }
+  },
+  {
+    "league": "nfl",
+    "providerId": 1392292,
+    "homeTeamId": 31,
+    "awayTeamId": 30,
+    "startsAt": "2026-10-11T20:25:00.000Z",
+    "verifiedAt": "2026-10-21T20:19:47.097Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=B1hjRUzIduc",
+    "broadcasts": [],
+    "highlight": {
+      "videoId": "B1hjRUzIduc",
+      "title": "San Francisco 49ers vs Seattle Seahawks Game Highlights | 2026 NFL Season Week 5",
+      "channel": "NFL",
+      "verifiedAt": "2026-10-21T20:19:47.097Z"
+    }
+  },
+  {
+    "league": "nfl",
+    "providerId": 1392308,
+    "homeTeamId": 30,
+    "awayTeamId": 21,
+    "startsAt": "2026-10-20T00:15:00.000Z",
+    "verifiedAt": "2026-10-21T20:19:47.174Z",
+    "sourceUrl": "https://www.youtube.com/watch?v=EM4Bq_uqLQ0",
+    "broadcasts": [],
+    "highlight": {
+      "videoId": "EM4Bq_uqLQ0",
+      "title": "Washington Commanders vs San Francisco 49ers Game Highlights | 2026 NFL Season Week 6",
+      "channel": "NFL",
+      "verifiedAt": "2026-10-21T20:19:47.174Z"
+    }
   }
 ]
