@@ -12,7 +12,22 @@ The monitor stack update completed with Endpoint `baylinescore.com`; a real Lamb
 
 The Route 53 hosted zone adds $0.50/month plus queries, and domain registration/renewal is an annual charge. These global DNS/registration costs are outside the existing Oregon service-filtered budget and need allowance alongside it; total expected MVP usage remains below $100/month. Browser-local team/spoiler preferences are scoped separately to the new domain and the old IP origin.
 
-## Latest web release — simplified navigation
+## Latest application release — viewing links and highlights
+
+Application commit `33046b033145` added migration 004 (`game_media`), reviewed media imports, U.S. viewing links, official-channel fallbacks and a click-to-load YouTube miniplayer. CodeBuild `bayline-mvp-prod:e7a6f675-e922-4027-ac67-50e36050b828` passed the Linux production build, all 46 application tests, Python recovery checks and the worker image's catalog/runtime validation. Local typechecking and 46 tests passed; local Windows packaging encountered its existing generated-directory EPERM restriction, so Linux CodeBuild supplied the production build verification.
+
+Current images:
+
+- Web: `sha256:16ce911b7c4208e44f6a4d90f3df837b21c1317bfe11f006ccd546e1ad176522`
+- Worker/migrations: `sha256:a4ea8bf7a5a36030724d9c1e69f43710577cfd48d6e2d951709f52bf35c4dae9`
+
+A fresh off-server backup preceded the additive migration. Migration 004 and the catalog import succeeded (7 entries); web and worker were recreated with the new digest-pinned images, while the database container and its start time were preserved. Public readiness and the independent Lambda monitor returned healthy. Initial coverage is five upcoming matchups plus two official WNBA highlight videos. Other games show official viewing guides or a labeled YouTube channel search. Listings/videos are reviewed manually; no automatic search or additional paid API subscription was activated. See [MEDIA.md](../MEDIA.md).
+
+At a 390×844 phone viewport, viewing links fit without horizontal overflow. With spoilers enabled, no title, YouTube link or iframe was present and both scores remained dashes. Revealing highlights left scores hidden. The official WNBA YouTube player loaded and played; playback progressed from 6.25 to 37.89 seconds across multiple 15-second score refreshes. Its measured iframe was 277×200 pixels with no horizontal overflow. Closing the player removed its iframe. Normal browser sizing was restored after testing. Screenshots: `preview/streaming-phone.png`, `preview/highlights-protected-phone.png`, `preview/highlights-player-phone.png`.
+
+The post-release backup `postgres/20261021T200824Z-97857a6bb6e0.json` was checksum-verified and restored into separate database `bayline_restore_20261021200832`. The canary, 4 migrations, 3 enabled teams, 44 games and all 7 media rows were verified. Dump SHA-256: `e8713d3f1d609f5d217a2aa972e857d805ebffd39832e38e13a108c375a07f6f`. Source/recovery files and verification are retained in the private backup bucket with this release; the prior web/worker digests remain available for rollback without reversing the additive migration.
+
+## Previous web release — simplified navigation
 
 On October 21, removed the top "Your teams" link and its obsolete mobile hiding rule. The current web image is `sha256:12772a43df6c9bc2a13b610566eac712e1d3e16916096b7db2d2d9c7c0f9ccb6`, built from commit `392eac918a2d` by successful CodeBuild `bayline-mvp-prod:5357b11b-cb6b-4010-a5b6-cafbdeb7762c`. Node base images now use the AWS Public ECR Docker Library mirror after Docker Hub returned HTTP 429. Only the web container was recreated; worker and database container IDs/start times were preserved. Public readiness passed. Browser checks confirmed the main navigation contains only Scoreboard on desktop and at 390 pixels; screenshot: `preview/navigation-phone.png`. Source and release evidence are retained under `releases/392eac918a2d/` in the private backup bucket.
 

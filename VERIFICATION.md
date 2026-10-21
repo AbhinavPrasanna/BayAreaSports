@@ -1,5 +1,9 @@
 # Verification
 
+## Viewing links and highlights — October 21, 2026
+
+The live release passed 46 application tests and a Linux production image build. Phone checks verified viewing links, spoiler-gated titles/links/player, independent highlights reveal, working YouTube playback across score refreshes, a player of at least 200×200 pixels, and removal of its iframe on close. Migration 004 and seven reviewed media entries are deployed. A fresh off-server backup was restored separately and checked for all seven media rows. This is a manually reviewed catalog with official-source fallbacks, not automated broadcaster/video discovery. See [MEDIA.md](MEDIA.md) and [deploy/DEPLOYMENT.md](deploy/DEPLOYMENT.md).
+
 ## Production deployment — October 21, 2026
 
 The app is live at **https://baylinescore.com/** on the $24/month Lightsail instance. The registered singular domain, public DNS, trusted domain HTTPS, HTTP/www redirects and monitoring on the new hostname were verified. The original IP remains a fallback. Public trusted HTTPS, private PostgreSQL networking, prebuilt digest-pinned images, off-server backups, an isolated restore of 44 games, forced crash recovery for all three app/data processes, a full host reboot, and external ALARM → OK notifications have been verified. The latest application suite has 40 tests; four additional Python recovery guard tests passed on Linux. See [deploy/DEPLOYMENT.md](deploy/DEPLOYMENT.md) for evidence and limits, and [deploy/RUNBOOK.md](deploy/RUNBOOK.md) for server-loss recovery.
