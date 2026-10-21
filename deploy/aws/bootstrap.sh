@@ -1,5 +1,6 @@
-#!/bin/bash
-set -euo pipefail
+#!/bin/sh
+# Lightsail prepends its initialization script and invokes user data with /bin/sh.
+set -eu
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get install -y docker.io docker-compose-v2 curl unzip ca-certificates python3
