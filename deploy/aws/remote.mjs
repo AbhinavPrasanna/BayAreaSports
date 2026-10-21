@@ -30,15 +30,10 @@ export function connection(instance, directory) {
       const key = host.publicKey.includes(' ') ? host.publicKey : `${host.algorithm} ${host.publicKey}`;
       return `${access.ipAddress} ${key}`;
     }).join('\n') + '\n');
-  } else if (!existsSync(knownHosts)) {
-    // Lightsail Ubuntu sometimes omits hostKeys. Pin first contact for this new
-    // instance, then enforce strict verification on every subsequent connection.
-    const scan = spawnSync('ssh-keyscan', ['-T', '10', '-t', 'ed25519', access.ipAddress], { encoding: 'utf8', timeout: 15_000, windowsHide: true });
-    if (scan.status !== 0 || !scan.stdout.includes('ssh-ed25519')) throw new Error('Could not obtain the new instance SSH host key');
-    writeFileSync(knownHosts, scan.stdout);
   }
   const options = ['-i', identity, '-o', `CertificateFile=${certificate}`, '-o', `UserKnownHostsFile=${knownHosts}`,
-    '-o', 'StrictHostKeyChecking=yes', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', '-o', 'ServerAliveInterval=15'];
+    '-o', `StrictHostKeyChecking=${existsSync(knownHosts) ? 'yes' : 'accept-new'}`, '-o', 'KexAlgorithms=curve25519-sha256',
+    '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', '-o', 'ServerAliveInterval=15'];
   const target = `${access.username}@${access.ipAddress}`;
   return {
     ip: access.ipAddress,
