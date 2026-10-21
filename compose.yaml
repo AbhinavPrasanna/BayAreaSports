@@ -1,0 +1,74 @@
+name: bayline-mvp
+
+x-runtime: &runtime
+  build:
+    context: .
+    target: development
+  init: true
+  working_dir: /app
+  volumes:
+    - .:/app
+    - dependencies:/app/node_modules
+
+x-database-env: &database-env
+  DATABASE_URL: postgresql://bayline:${POSTGRES_PASSWORD:?Run npm run setup first}@db:5432/bayline
+
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: bayline
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Run npm run setup first}
+      POSTGRES_DB: bayline
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bayline -d bayline"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  migrate:
+    <<: *runtime
+    command: ["npm", "run", "db:migrate"]
+    environment: *database-env
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  web:
+    <<: *runtime
+    command: ["npm", "run", "dev"]
+    environment:
+      <<: *database-env
+      WATCHPACK_POLLING: "true"
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - .:/app
+      - dependencies:/app/node_modules
+      - next-cache:/app/.next
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  worker:
+    <<: *runtime
+    command: ["npm", "run", "worker:dev"]
+    environment:
+      <<: *database-env
+      BALLDONTLIE_API_KEY: ${BALLDONTLIE_API_KEY:-}
+      ENABLED_LEAGUES: nba,nfl,wnba
+      WORKER_INTERVAL_SECONDS: ${WORKER_INTERVAL_SECONDS:-60}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+volumes:
+  dependencies:
+  postgres-data:
+  next-cache:

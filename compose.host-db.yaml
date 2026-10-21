@@ -1,0 +1,6 @@
+# Optional: only for database tools/processes running outside Docker.
+# The normal launcher does not load this file.
+services:
+  db:
+    ports:
+      - "127.0.0.1:${LOCAL_DB_PORT:-15432}:5432"
