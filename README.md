@@ -1,5 +1,7 @@
 # Bayline MVP — schedules and scores
 
+Live app: **[baylinescore.com](https://baylinescore.com/)**. `www.baylinescore.com` redirects to the primary domain. Deployment and recovery details are in [deploy/DEPLOYMENT.md](deploy/DEPLOYMENT.md) and [deploy/RUNBOOK.md](deploy/RUNBOOK.md).
+
 Next.js + TypeScript + PostgreSQL, with an independently supervised Node.js worker. The enabled leagues are NBA, NFL, and WNBA; the seeded teams are the Warriors, 49ers, and Golden State Valkyries. NHL/MLS remain disabled until their paid game endpoints are available and tested.
 
 The independent worker fetches and stores schedules/scores for the three free-tier teams. The fan interface includes Today, each followed team's next game, a combined week/day schedule, the last 30 days of results, live snapshots, and game details. Team selections and spoiler protection are saved on the device. No simulated scores are displayed and no paid provider requests are scheduled. NHL/MLS are shown only as coming later.

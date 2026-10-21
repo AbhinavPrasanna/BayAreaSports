@@ -1,6 +1,16 @@
 # Production deployment — October 21, 2026
 
-Live app: **https://44.224.200.231/**. A custom domain is optional and remains the user's choice; none was purchased. Public HTTPS uses a trusted Let's Encrypt IP certificate, not a self-signed certificate. The certificate is automatically renewed by Caddy, and independent monitoring checks its identity, trust and remaining lifetime.
+Live app: **https://baylinescore.com/** (singular "score"). The user registered this exact domain in Route 53. `https://www.baylinescore.com/` redirects to the primary domain with HTTP 308 and preserves paths/query strings. The retained static IP `44.224.200.231` also continues to serve the app for existing bookmarks and recovery.
+
+## Custom-domain launch — October 21, 2026
+
+Registration was verified ACTIVE and its registrar nameservers matched public hosted zone `Z0972724104F8MLFVSCZ7`. The apex A record points to `44.224.200.231`; `www` is a CNAME to `baylinescore.com`; both TTLs are 300 seconds. The Route 53 change reached INSYNC, and independent public DNS resolution returned the expected address. The declarative records are saved in `aws/domain-records.json`.
+
+Production uses `APP_DOMAIN=baylinescore.com` and `CADDY_CONFIG=./Caddyfile.bayline`. The new Caddy configuration was validated using the deployed Caddy image before replacing only that container. Web, worker and database container IDs/start times were unchanged. The domain has a trusted public certificate expiring January 19, 2027, with Caddy automatic renewal. Public page/readiness checks returned HTTP 200; HTTP redirects to HTTPS, and the HTTPS `www` redirect preserved `/api/ready?check=domain`. Browser verification passed; screenshot: `preview/custom-domain.png`.
+
+The monitor stack update completed with Endpoint `baylinescore.com`; a real Lambda invocation returned healthy with about 90 certificate days remaining, and the uptime alarm was OK. Keep this hostname when restoring the server, retain/reassign the static IP and restore this Caddyfile with the other deployment files. Source/configuration and proof are archived off-server under the domain release reference recorded with the release.
+
+The Route 53 hosted zone adds $0.50/month plus queries, and domain registration/renewal is an annual charge. These global DNS/registration costs are outside the existing Oregon service-filtered budget and need allowance alongside it; total expected MVP usage remains below $100/month. Browser-local team/spoiler preferences are scoped separately to the new domain and the old IP origin.
 
 ## Latest web release — simplified navigation
 

@@ -1,0 +1,40 @@
+{
+    email {$ACME_EMAIL}
+    admin off
+    default_sni 44.224.200.231
+}
+
+(bayline_app) {
+    encode zstd gzip
+    header {
+        X-Content-Type-Options nosniff
+        Referrer-Policy strict-origin-when-cross-origin
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    reverse_proxy web:3000
+    log {
+        output stdout
+        format json
+    }
+}
+
+baylinescore.com {
+    import bayline_app
+}
+
+www.baylinescore.com {
+    redir https://baylinescore.com{uri} 308
+}
+
+# Keep the retained static IP available for existing bookmarks and recovery.
+# Update this block and default_sni only if the static IP itself changes.
+44.224.200.231 {
+    tls {
+        issuer acme {
+            dir https://acme-v02.api.letsencrypt.org/directory
+            profile shortlived
+        }
+    }
+    import bayline_app
+}

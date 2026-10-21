@@ -1,0 +1,23 @@
+{
+  "Comment": "Bayline custom domain; apply only to the baylinescore.com public hosted zone",
+  "Changes": [
+    {
+      "Action": "UPSERT",
+      "ResourceRecordSet": {
+        "Name": "baylinescore.com.",
+        "Type": "A",
+        "TTL": 300,
+        "ResourceRecords": [{ "Value": "44.224.200.231" }]
+      }
+    },
+    {
+      "Action": "UPSERT",
+      "ResourceRecordSet": {
+        "Name": "www.baylinescore.com.",
+        "Type": "CNAME",
+        "TTL": 300,
+        "ResourceRecords": [{ "Value": "baylinescore.com." }]
+      }
+    }
+  ]
+}

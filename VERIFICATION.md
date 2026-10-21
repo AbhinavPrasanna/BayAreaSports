@@ -2,7 +2,7 @@
 
 ## Production deployment — October 21, 2026
 
-The app is live at **https://44.224.200.231/** on the $24/month Lightsail instance. Public trusted HTTPS, private PostgreSQL networking, prebuilt digest-pinned images, off-server backups, an isolated restore of 44 games, forced crash recovery for all three app/data processes, a full host reboot, and external ALARM → OK notifications have been verified. The latest application suite has 40 tests; four additional Python recovery guard tests passed on Linux. See [deploy/DEPLOYMENT.md](deploy/DEPLOYMENT.md) for evidence and limits, and [deploy/RUNBOOK.md](deploy/RUNBOOK.md) for server-loss recovery.
+The app is live at **https://baylinescore.com/** on the $24/month Lightsail instance. The registered singular domain, public DNS, trusted domain HTTPS, HTTP/www redirects and monitoring on the new hostname were verified. The original IP remains a fallback. Public trusted HTTPS, private PostgreSQL networking, prebuilt digest-pinned images, off-server backups, an isolated restore of 44 games, forced crash recovery for all three app/data processes, a full host reboot, and external ALARM → OK notifications have been verified. The latest application suite has 40 tests; four additional Python recovery guard tests passed on Linux. See [deploy/DEPLOYMENT.md](deploy/DEPLOYMENT.md) for evidence and limits, and [deploy/RUNBOOK.md](deploy/RUNBOOK.md) for server-loss recovery.
 
 The historical local-development checks below describe the earlier MVP milestones. Local Docker access is still restricted in the shell sandbox; production verification used AWS CodeBuild and SSH to the Lightsail host. The development worker was stopped when production ingestion started.
 

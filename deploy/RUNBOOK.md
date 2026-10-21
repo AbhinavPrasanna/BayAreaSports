@@ -2,6 +2,8 @@
 
 This runbook describes the production path. Commands and files alone are not proof of a successful deployment: record actual image digests, restore output, restart counters and HTTPS checks in `DEPLOYMENT.md` as they complete. Never put credentials in this repository, a build argument, a release archive or terminal output.
 
+Current production hostname: **baylinescore.com** (singular). The registrar and DNS service are Route 53; public hosted zone is `Z0972724104F8MLFVSCZ7`. Preserve its nameservers and the attached static IP `44.224.200.231`. Production settings are `APP_DOMAIN=baylinescore.com`, `CADDY_CONFIG=./Caddyfile.bayline`, `COMPOSE_PROFILES=public`; the independent monitor Endpoint is `baylinescore.com`. Restore `Caddyfile.bayline` alongside Compose; it also supports `www` → apex redirects and the legacy IP certificate. `aws/domain-records.json` records only this domain's apex A and www CNAME records. Do not create a replacement hosted zone or modify another project's DNS during a server restore. If the static IP changes, update these records, the legacy-IP Caddy block and default SNI; retaining/reassigning the current IP avoids that change.
+
 ## Design and cost limits
 
 One Ubuntu 24.04 Lightsail `medium_3_0` server in `us-west-2` costs $24/month (2 vCPU, 4 GiB, 80 GB disk). Only Caddy publishes ports 80/443. PostgreSQL is attached solely to an internal Docker network; neither 5432 nor the web server's 3000 is published. Web and worker are separate non-root containers, with restart policies, resource limits, read-only filesystems and file-backed secrets. The worker retains its own schedule and persistent provider throttle across restarts.
