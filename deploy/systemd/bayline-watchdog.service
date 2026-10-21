@@ -1,0 +1,8 @@
+[Unit]
+Description=Recover unhealthy Bayline containers
+After=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /opt/bayline/deploy/ops.py watchdog
+TimeoutStartSec=180

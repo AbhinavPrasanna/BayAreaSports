@@ -137,3 +137,7 @@ No AWS resources, public site, scheduled automation, paid API plan, or remote Gi
 Tests include an in-memory PostgreSQL engine (PGlite, development dependency only) to execute the real migrations, transactional upserts, Pacific-date queries, corrections, rollback, league-scoped IDs, request reservation, and cached-data preservation. No tests call a paid or live provider endpoint.
 
 See [VERIFICATION.md](VERIFICATION.md) for completed checks and runtime verification limits.
+
+## Production deployment and recovery
+
+The production Docker targets are `web` (Next.js standalone) and `worker` (compiled Node.js worker/migrations). `deploy/compose.production.yaml` consumes prebuilt images pinned by digest, has no source mounts or PostgreSQL host port, and puts Caddy on the public edge. Secrets are supplied through restricted host files. See [deploy/RUNBOOK.md](deploy/RUNBOOK.md) for AWS provisioning, launch gates, backup/restore operations, crash tests, and server-loss recovery. Production readiness is separate from the local development Compose stack.

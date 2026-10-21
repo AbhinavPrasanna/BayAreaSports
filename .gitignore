@@ -9,5 +9,11 @@ coverage/
 *.tsbuildinfo
 .secrets/
 backups/
+dist-runtime/
+deploy/production.env
+deploy/secrets/
+deploy/evidence/
+__pycache__/
+*.pyc
 next-env.d.ts
 .DS_Store

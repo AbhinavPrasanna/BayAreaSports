@@ -1,0 +1,8 @@
+[Unit]
+Description=Bayline off-server PostgreSQL backup
+After=docker.service network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/flock -n /run/bayline-backup.lock /usr/bin/python3 /opt/bayline/deploy/ops.py backup
+TimeoutStartSec=900

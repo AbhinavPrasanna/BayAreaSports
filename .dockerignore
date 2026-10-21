@@ -9,3 +9,10 @@ node_modules
 *.tsbuildinfo
 .secrets
 backups
+dist-runtime
+deploy/production.env
+deploy/secrets
+deploy/evidence
+preview
+__pycache__
+*.pyc

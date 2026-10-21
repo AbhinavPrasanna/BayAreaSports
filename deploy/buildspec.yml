@@ -1,0 +1,19 @@
+version: 0.2
+phases:
+  pre_build:
+    commands:
+      - set -eu
+      - python3 -m unittest discover -s tests -p 'ops_test.py'
+      - REGISTRY="$(printf '%s' "$WEB_REPOSITORY" | cut -d/ -f1)"
+      - aws ecr get-login-password --region "$AWS_DEFAULT_REGION" | docker login --username AWS --password-stdin "$REGISTRY"
+  build:
+    commands:
+      - docker build --target web --tag "$WEB_REPOSITORY:$IMAGE_TAG" .
+      - docker build --target worker --tag "$WORKER_REPOSITORY:$IMAGE_TAG" .
+      - docker run --rm --entrypoint node "$WORKER_REPOSITORY:$IMAGE_TAG" -e "require('fs').accessSync('dist-runtime/scripts/migrate.js');require('fs').accessSync('migrations/003_operations.sql')"
+  post_build:
+    commands:
+      - test "$CODEBUILD_BUILD_SUCCEEDING" = 1
+      - docker push "$WEB_REPOSITORY:$IMAGE_TAG"
+      - docker push "$WORKER_REPOSITORY:$IMAGE_TAG"
+      - docker logout "$REGISTRY"

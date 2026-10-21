@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { readFileSync } from 'node:fs';
 import { freeLeagues, type FreeLeague } from '../../shared/games';
 
 type Environment = Record<string, string | undefined>;
@@ -26,8 +27,18 @@ function validate<T>(schema: z.ZodType<T>, env: Environment): T {
   return result.data;
 }
 
-export function parseDatabaseEnv(env: Environment = process.env) { return validate(databaseSchema, env); }
+function withSecrets(env: Environment, keys: string[]): Environment {
+  const resolved = { ...env };
+  for (const key of keys) {
+    if (!env[`${key}_FILE`]) continue;
+    if (env[key]) throw new ConfigurationError([key]);
+    try { resolved[key] = readFileSync(env[`${key}_FILE`]!, 'utf8').trim(); }
+    catch { throw new ConfigurationError([key]); }
+  }
+  return resolved;
+}
+export function parseDatabaseEnv(env: Environment = process.env) { return validate(databaseSchema, withSecrets(env, ['DATABASE_URL'])); }
 export function parseWorkerEnv(env: Environment = process.env) {
-  const result = validate(workerSchema, env);
+  const result = validate(workerSchema, withSecrets(env, ['DATABASE_URL', 'BALLDONTLIE_API_KEY']));
   return { ...result, ENABLED_LEAGUES: result.ENABLED_LEAGUES as FreeLeague[] };
 }

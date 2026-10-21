@@ -1,0 +1,121 @@
+name: bayline-production
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+x-app: &app
+  init: true
+  restart: unless-stopped
+  logging: *logging
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  tmpfs: [/tmp:size=64m,mode=1777]
+  stop_grace_period: 30s
+
+services:
+  db:
+    image: ${POSTGRES_IMAGE:?Use a digest-pinned PostgreSQL 17 image}
+    restart: unless-stopped
+    logging: *logging
+    environment:
+      POSTGRES_USER: bayline
+      POSTGRES_DB: bayline
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    secrets: [postgres_password]
+    networks: [database]
+    volumes: [postgres-data:/var/lib/postgresql/data]
+    mem_limit: 1g
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U bayline -d bayline"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    stop_grace_period: 60s
+
+  migrate:
+    <<: *app
+    image: ${WORKER_IMAGE:?Set the prebuilt worker image digest}
+    restart: "no"
+    command: [node, dist-runtime/scripts/migrate.js]
+    environment:
+      DATABASE_URL_FILE: /run/secrets/database_url
+    secrets: [database_url]
+    networks: [database]
+    mem_limit: 256m
+    depends_on:
+      db: {condition: service_healthy}
+
+  web:
+    <<: *app
+    image: ${WEB_IMAGE:?Set the prebuilt web image digest}
+    environment:
+      DATABASE_URL_FILE: /run/secrets/database_url
+    secrets: [database_url]
+    networks: [edge, database]
+    mem_limit: 768m
+    tmpfs: [/tmp:size=64m,mode=1777, /app/.next/cache:size=64m,uid=1000,gid=1000]
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 8s
+      start_period: 30s
+      retries: 3
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+
+  worker:
+    <<: *app
+    image: ${WORKER_IMAGE:?Set the prebuilt worker image digest}
+    environment:
+      DATABASE_URL_FILE: /run/secrets/database_url
+      BALLDONTLIE_API_KEY_FILE: /run/secrets/provider_key
+      ENABLED_LEAGUES: nba,nfl,wnba
+      WORKER_INTERVAL_SECONDS: "60"
+    secrets: [database_url, provider_key]
+    networks: [database, outbound]
+    mem_limit: 384m
+    healthcheck:
+      test: [CMD, node, dist-runtime/scripts/worker-health.js]
+      interval: 60s
+      timeout: 10s
+      start_period: 120s
+      retries: 3
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+
+  caddy:
+    profiles: [public]
+    image: ${CADDY_IMAGE:?Use a digest-pinned Caddy image}
+    restart: unless-stopped
+    logging: *logging
+    mem_limit: 192m
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN:?Set the chosen public hostname}
+      ACME_EMAIL: ${ACME_EMAIL:?Set the certificate contact email}
+    ports: ["80:80", "443:443"]
+    networks: [edge]
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      web: {condition: service_healthy}
+
+networks:
+  database: {internal: true}
+  edge: {}
+  outbound: {}
+
+volumes:
+  postgres-data: {}
+  caddy-data: {}
+  caddy-config: {}
+
+secrets:
+  postgres_password: {file: ./secrets/postgres-password}
+  database_url: {file: ./secrets/database-url}
+  provider_key: {file: ./secrets/provider-key}

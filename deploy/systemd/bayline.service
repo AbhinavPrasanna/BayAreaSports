@@ -1,0 +1,20 @@
+[Unit]
+Description=Bayline production containers
+Requires=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
+ConditionPathExists=/opt/bayline/deploy/production.env
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/opt/bayline/deploy
+ExecStart=/usr/bin/docker compose --env-file production.env -f compose.production.yaml up -d --pull never --wait --wait-timeout 180
+ExecStop=/usr/bin/docker compose --env-file production.env -f compose.production.yaml stop
+TimeoutStartSec=240
+TimeoutStopSec=120
+Restart=on-failure
+RestartSec=15
+
+[Install]
+WantedBy=multi-user.target

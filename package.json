@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "next dev --webpack --hostname 0.0.0.0",
     "build": "next build --webpack",
+    "build:runtime": "tsc -p tsconfig.runtime.json",
     "start": "next start --hostname 0.0.0.0",
     "worker": "tsx src/worker/main.ts",
     "worker:dev": "tsx watch src/worker/main.ts",
