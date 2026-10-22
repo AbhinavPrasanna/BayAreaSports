@@ -2,6 +2,19 @@
 
 Live app: **https://baylinescore.com/** (singular "score"). The user registered this exact domain in Route 53. `https://www.baylinescore.com/` redirects to the primary domain with HTTP 308 and preserves paths/query strings. The retained static IP `44.224.200.231` also continues to serve the app for existing bookmarks and recovery.
 
+## Current application release — automatic official highlights, October 22, 2026
+
+Image source `30008710013c` adds migration 005, independent worker discovery from **@NBA for Warriors, @NFL for 49ers, and @WNBA for Valkyries**, strict matchup/date/publication checks, persisted backoff/quota limits, and separate expiring automatic metadata. Matching reviewed clips take precedence. YouTube's embedding flag selects direct links for videos that cannot be embedded. The key is worker-only, with Windows encrypted local configuration and a server-side validation/activation helper documented in [YOUTUBE-SETUP.md](../YOUTUBE-SETUP.md).
+
+**Deployment is healthy, but fetching is disabled pending the user's YouTube key.** Production has `HIGHLIGHTS_ENABLED=false` and an empty worker-mounted key file. All three discovery states exist, with zero YouTube requests and zero automatic rows. Live API responses still return the eleven reviewed media entries. The browser check confirmed no title, YouTube link or iframe before revealing highlights, and scores remained hidden after revealing the video. No browser console errors were observed. Successful discovery against real authenticated YouTube responses remains pending key setup; mocked API/PostgreSQL integration coverage passed.
+
+CodeBuild `bayline-mvp-prod:ceadc035-ac92-4f74-ad18-d98e3d0763f4` passed the Linux build, all **51 application tests**, four Python recovery tests, production Compose validation and compiled worker/runtime checks. Current images:
+
+- Web: `sha256:e8246a3afb0ab36088d6c89840602764d0853724a32014a5003099aca7a24c6d`
+- Worker/migrations: `sha256:aaeca67f28cfbe0a02c32e01c7062dd5f456a424194e125d624fc3253bb664d2`
+
+The database container was not restarted. A verified off-server backup `postgres/20261022T073419Z-6a6fc48eb97b.json` was restored into separate database `bayline_restore_20261022073426`: five migrations, three enabled teams, 45 games, eleven reviewed media rows, zero automatic rows and three discovery states. The recovery canary and dump SHA-256 `b23d085a1fa54b671c8295a7ced26c0e2c45aa8c647d56bbe01aea0d76af01e4` matched. Public readiness returned all checks true. The optional integration adds no new AWS service. Preserve this release's source/images/configuration in the private recovery archive; enable discovery only after installing a restricted key.
+
 ## Custom-domain launch — October 21, 2026
 
 Registration was verified ACTIVE and its registrar nameservers matched public hosted zone `Z0972724104F8MLFVSCZ7`. The apex A record points to `44.224.200.231`; `www` is a CNAME to `baylinescore.com`; both TTLs are 300 seconds. The Route 53 change reached INSYNC, and independent public DNS resolution returned the expected address. The declarative records are saved in `aws/domain-records.json`.
@@ -12,7 +25,7 @@ The monitor stack update completed with Endpoint `baylinescore.com`; a real Lamb
 
 The Route 53 hosted zone adds $0.50/month plus queries, and domain registration/renewal is an annual charge. These global DNS/registration costs are outside the existing Oregon service-filtered budget and need allowance alongside it; total expected MVP usage remains below $100/month. Browser-local team/spoiler preferences are scoped separately to the new domain and the old IP origin.
 
-## Latest application release — viewing links and highlights
+## Previous application release — viewing links and highlights
 
 Application commit `33046b033145` added migration 004 (`game_media`), reviewed media imports, U.S. viewing links, official-channel fallbacks and a click-to-load YouTube miniplayer. CodeBuild `bayline-mvp-prod:e7a6f675-e922-4027-ac67-50e36050b828` passed the Linux production build, all 46 application tests, Python recovery checks and the worker image's catalog/runtime validation. Local typechecking and 46 tests passed; local Windows packaging encountered its existing generated-directory EPERM restriction, so Linux CodeBuild supplied the production build verification.
 

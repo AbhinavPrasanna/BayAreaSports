@@ -66,6 +66,9 @@ test('worker discovery persists exact game metadata, protects spoilers, keeps ma
   try {
     assert.equal((await syncNextHighlights(pool,secret,['nba'],new AbortController().signal,{now,request:mockAPI([video],calls)})).status,'checked');
     assert.equal(calls.length,3);
+    // Discovery uses a fixed test clock; PostgreSQL's read-time expiry uses the
+    // wall clock. Keep this read fixture current when tests run in later months.
+    await db.exec("UPDATE youtube_highlights SET expires_at=clock_timestamp()+interval '28 days'");
     let stored=(await readGames(pool,query)).data[0];
     assert.equal(stored.media?.highlight?.videoId,video.id);assert.equal(stored.media?.highlight?.embeddable,false);
     assert.equal('automaticMedia' in stored,false);
