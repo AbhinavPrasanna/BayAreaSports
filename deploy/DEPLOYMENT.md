@@ -2,7 +2,13 @@
 
 Live app: **https://baylinescore.com/** (singular "score"). The user registered this exact domain in Route 53. `https://www.baylinescore.com/` redirects to the primary domain with HTTP 308 and preserves paths/query strings. The retained static IP `44.224.200.231` also continues to serve the app for existing bookmarks and recovery.
 
-## Current application release — advanced game details, October 22, 2026
+## Current application release — omit WNBA advanced details, October 22, 2026
+
+Web source `a4291794db5c` removes the entire Advanced details panel from WNBA game dialogs, including upcoming and completed games. NBA/NFL quarter breakdowns remain available. Live browser checks verified both WNBA states and expanded NBA/NFL quarter tables; WNBA records and official highlights still display. Screenshot: `preview/wnba-details.png`.
+
+CodeBuild `bayline-mvp-prod:82fa18aa-a3ef-40cc-9a73-f18a78d72d70` passed all 61 application tests, production compilation and recovery/Compose checks. Only web was replaced with image `sha256:7e9b32dbe7880332eebe352163a107a5227205ad2486bbb37f79bc38554c6d31`. Worker/database IDs and start times were unchanged; public readiness returned all checks true. No schema, ingestion, paid-access or infrastructure change was required. The prior backup/restore evidence remains applicable.
+
+## Previous application release — advanced game details, October 22, 2026
 
 Source `92747245bbcb` adds migration 007 and expandable Advanced details in every game dialog. NBA/NFL quarter and overtime scores are persisted from the existing free games responses. Missing values remain unknown, genuine zeroes are retained, and incomplete final line scores are labeled. Scheduled games show pending copy; spoiler protection removes the statistical content until that game is revealed. See [ADVANCED-DETAILS.md](../ADVANCED-DETAILS.md).
 
