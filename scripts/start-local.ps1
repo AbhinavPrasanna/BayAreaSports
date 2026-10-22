@@ -5,7 +5,9 @@ $ErrorActionPreference = 'Stop'
 $repoPath = Split-Path $PSScriptRoot -Parent
 $keyPath = [System.IO.Path]::GetFullPath((Join-Path $repoPath '..\..\work\.secrets\balldontlie-key.dpapi'))
 $previousKey = $env:BALLDONTLIE_API_KEY
+$previousYouTubeKey = $env:YOUTUBE_API_KEY
 $secureKey = $null
+$secureYouTubeKey = $null
 Push-Location $repoPath
 try {
     & node scripts/check-docker.mjs
@@ -18,6 +20,12 @@ try {
         $credential = [System.Net.NetworkCredential]::new('', $secureKey)
         $env:BALLDONTLIE_API_KEY = $credential.Password
     }
+    $youtubeKeyPath = Join-Path $repoPath '.secrets\youtube-key.dpapi'
+    if ([string]::IsNullOrWhiteSpace($env:YOUTUBE_API_KEY) -and (Test-Path -LiteralPath $youtubeKeyPath)) {
+        $secureYouTubeKey = ConvertTo-SecureString -String ([System.IO.File]::ReadAllText($youtubeKeyPath))
+        $youtubeCredential = [System.Net.NetworkCredential]::new('', $secureYouTubeKey)
+        $env:YOUTUBE_API_KEY = $youtubeCredential.Password
+    }
     & node --import tsx scripts/start-compose.ts
     $composeExitCode = $LASTEXITCODE
     if ($composeExitCode -ne 0) {
@@ -28,7 +36,10 @@ try {
 finally {
     if ($null -eq $previousKey) { Remove-Item Env:BALLDONTLIE_API_KEY -ErrorAction SilentlyContinue }
     else { $env:BALLDONTLIE_API_KEY = $previousKey }
+    if ($null -eq $previousYouTubeKey) { Remove-Item Env:YOUTUBE_API_KEY -ErrorAction SilentlyContinue }
+    else { $env:YOUTUBE_API_KEY = $previousYouTubeKey }
     if ($null -ne $secureKey) { $secureKey.Dispose() }
-    Remove-Variable credential -ErrorAction SilentlyContinue
+    if ($null -ne $secureYouTubeKey) { $secureYouTubeKey.Dispose() }
+    Remove-Variable credential,youtubeCredential -ErrorAction SilentlyContinue
     Pop-Location
 }

@@ -6,7 +6,7 @@ import { createLogRedactor } from './compose-log';
 
 const repo = process.cwd();
 const logPath = resolve(repo, 'logs/compose-startup.log');
-const secrets = [process.env.BALLDONTLIE_API_KEY, process.env.POSTGRES_PASSWORD, process.env.DATABASE_URL];
+const secrets = [process.env.BALLDONTLIE_API_KEY, process.env.YOUTUBE_API_KEY, process.env.POSTGRES_PASSWORD, process.env.DATABASE_URL];
 // Read only local database values for redaction. Do not load .env into the process.
 try {
   for (const line of readFileSync(resolve(repo, '.env'), 'utf8').split(/\r?\n/)) {

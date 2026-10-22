@@ -75,7 +75,9 @@ services:
       BALLDONTLIE_API_KEY_FILE: /run/secrets/provider_key
       ENABLED_LEAGUES: nba,nfl,wnba
       WORKER_INTERVAL_SECONDS: "60"
-    secrets: [database_url, provider_key]
+      YOUTUBE_API_KEY_FILE: /run/secrets/youtube_key
+      HIGHLIGHTS_ENABLED: ${HIGHLIGHTS_ENABLED:-true}
+    secrets: [database_url, provider_key, youtube_key]
     networks: [database, outbound]
     mem_limit: 384m
     healthcheck:
@@ -119,3 +121,4 @@ secrets:
   postgres_password: {file: ./secrets/postgres-password}
   database_url: {file: ./secrets/database-url}
   provider_key: {file: ./secrets/provider-key}
+  youtube_key: {file: ./secrets/youtube-key}

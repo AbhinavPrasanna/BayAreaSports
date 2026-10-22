@@ -4,6 +4,8 @@ Live app: **[baylinescore.com](https://baylinescore.com/)**. `www.baylinescore.c
 
 Upcoming games include reviewed U.S. viewing links; completed games support a YouTube highlights miniplayer with separate spoiler protection. Missing media has official-source fallbacks. See [MEDIA.md](MEDIA.md) for the initial coverage and the review/import process.
 
+The independent worker can automatically attach official NBA/NFL/WNBA full-game highlights after final games. Matching, persisted retries, quota limits, key setup and known limitations are documented in [YOUTUBE-SETUP.md](YOUTUBE-SETUP.md). A YouTube key is optional and remains worker-only; without it, discovery is disabled and the reviewed catalog continues to work.
+
 Next.js + TypeScript + PostgreSQL, with an independently supervised Node.js worker. The enabled leagues are NBA, NFL, and WNBA; the seeded teams are the Warriors, 49ers, and Golden State Valkyries. NHL/MLS remain disabled until their paid game endpoints are available and tested.
 
 The independent worker fetches and stores schedules/scores for the three free-tier teams. The fan interface includes Today, each followed team's next game, a combined week/day schedule, the last 30 days of results, live snapshots, and game details. Team selections and spoiler protection are saved on the device. No simulated scores are displayed and no paid provider requests are scheduled. NHL/MLS are shown only as coming later.

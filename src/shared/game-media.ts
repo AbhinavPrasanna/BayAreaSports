@@ -9,7 +9,7 @@ const link = z.string().url().refine(value => {
   } catch { return false; }
 }, 'Use an approved official HTTPS source or viewing service.');
 export const broadcastSchema = z.object({ label: z.string().trim().min(1).max(80), url: link, kind: z.enum(['tv','stream']), region: z.literal('US'), access: z.string().trim().min(1).max(200) });
-export const highlightSchema = z.object({ videoId: z.string().regex(/^[A-Za-z0-9_-]{11}$/), title: z.string().trim().min(1).max(200), channel: z.enum(['NBA','NFL','WNBA','Golden State Warriors','San Francisco 49ers','Golden State Valkyries']), verifiedAt: z.string().datetime() });
+export const highlightSchema = z.object({ videoId: z.string().regex(/^[A-Za-z0-9_-]{11}$/), title: z.string().trim().min(1).max(200), channel: z.enum(['NBA','NFL','WNBA','Golden State Warriors','San Francisco 49ers','Golden State Valkyries']), verifiedAt: z.string().datetime(), embeddable: z.boolean().optional() });
 export const reviewedMediaSchema = z.object({
   league: z.enum(freeLeagues), providerId: z.number().int().positive(), homeTeamId: z.number().int().positive(), awayTeamId: z.number().int().positive(),
   startsAt: z.string().datetime(), verifiedAt: z.string().datetime(), sourceUrl: link,

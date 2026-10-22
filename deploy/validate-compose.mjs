@@ -21,5 +21,7 @@ for (const [name, service] of Object.entries(config.services)) {
 assert.deepEqual(Object.keys(config.services.db.networks), ['database']);
 assert.ok(!config.services.web.secrets.some(secret => secret.source === 'provider_key'));
 assert.ok(config.services.worker.secrets.some(secret => secret.source === 'provider_key'));
+assert.ok(config.services.worker.secrets.some(secret => secret.source === 'youtube_key'));
+assert.ok(!config.services.web.secrets.some(secret => secret.source === 'youtube_key'));
 assert.equal(config.services.web.tmpfs.length, 2);
 console.log('Production topology, pinned images, secret isolation, restart policies and log limits verified.');

@@ -54,7 +54,7 @@ export function YouTubePlayer({ highlight }: { highlight: Highlight }) {
   return <>
     <p className="highlight-title">{highlight.title}</p>
     <p className="media-caption">Official highlights · {highlight.channel}</p>
-    {!playing ? <button className="highlight-play" onClick={() => setPlaying(true)}><span aria-hidden="true">▶</span> Play highlights</button> : <>
+    {highlight.embeddable === false ? <p className="media-note">Watch this official highlight on YouTube. In-app playback isn’t available for this video.</p> : !playing ? <button className="highlight-play" onClick={() => setPlaying(true)}><span aria-hidden="true">▶</span> Play highlights</button> : <>
       <div className="youtube-player" ref={slot} hidden={status === 'error'} />
       {status === 'loading' && <p className="media-caption" role="status">Loading YouTube player…</p>}
       {status === 'error' && <p className="media-note" role="status">This video couldn’t play here. It may be restricted or unavailable. Try opening it on YouTube.</p>}

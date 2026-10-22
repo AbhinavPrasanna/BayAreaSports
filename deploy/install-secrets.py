@@ -14,6 +14,11 @@ if not value or len(value) > 4096 or '\n' in value or '\r' in value:
 directory = Path('/opt/bayline/deploy/secrets')
 directory.mkdir(mode=0o700, parents=True, exist_ok=True)
 directory.chmod(0o700)
+# Empty means automatic discovery is disabled until a YouTube key is supplied.
+youtube = directory / 'youtube-key'
+if not youtube.exists():
+    descriptor = os.open(youtube, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    os.close(descriptor)
 password = directory / 'postgres-password'
 if not password.exists():
     descriptor = os.open(password, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)

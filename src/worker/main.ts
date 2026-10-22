@@ -5,6 +5,7 @@ import { closePool, getPool } from '../server/db/pool';
 import { BallDontLieAdapter } from '../server/providers/balldontlie/adapter';
 import { syncNextLeague } from '../server/ingestion/scheduler';
 import { importReviewedMedia, loadReviewedMedia } from '../server/media/reviewed-media';
+import { syncNextHighlights } from '../server/media/highlight-discovery';
 
 async function main() {
   loadLocalEnvironment();
@@ -17,6 +18,7 @@ async function main() {
   const pool = getPool();
   const reviewedMedia = loadReviewedMedia();
   let mediaCheckAfter = 0;
+  let highlightCheckAfter = 0;
   const lockClient = await pool.connect();
   let ownsLock = false;
   try {
@@ -27,6 +29,7 @@ async function main() {
     lockClient.on('error', () => { console.error(JSON.stringify({ event: 'worker_lock_connection_lost' })); stop.abort(); process.exitCode = 1; });
     await lockClient.query("UPDATE sync_runs SET status='failed', completed_at=now(), error_code='WORKER_RESTART' WHERE status='running'");
     console.log(JSON.stringify({ event: 'worker_started', leagues: adapters.map(adapter => adapter.league), mode: 'game_ingestion' }));
+    console.log(JSON.stringify({ event: 'highlights_discovery', enabled: config.HIGHLIGHTS_ENABLED && !!config.YOUTUBE_API_KEY }));
     while (!stop.signal.aborted) {
       await lockClient.query("INSERT INTO worker_heartbeats (worker_name, last_seen_at) VALUES ('scheduler', now()) ON CONFLICT (worker_name) DO UPDATE SET last_seen_at = EXCLUDED.last_seen_at");
       await syncNextLeague(lockClient, adapters, config.WORKER_INTERVAL_SECONDS, stop.signal).catch(error => { if (!stop.signal.aborted) throw error; });
@@ -34,6 +37,11 @@ async function main() {
         // A failed media refresh must not stop score ingestion or consume provider quota.
         await importReviewedMedia(lockClient, reviewedMedia).catch(() => console.error(JSON.stringify({ event: 'media_import_failed' })));
         mediaCheckAfter = Date.now() + 600_000;
+      }
+      if (Date.now() >= highlightCheckAfter && !stop.signal.aborted) {
+        await syncNextHighlights(lockClient, config.HIGHLIGHTS_ENABLED ? config.YOUTUBE_API_KEY : undefined, config.ENABLED_LEAGUES, stop.signal)
+          .catch(() => { if (!stop.signal.aborted) console.error(JSON.stringify({ event: 'highlights_storage_failed' })); });
+        highlightCheckAfter = Date.now() + 60_000;
       }
       await sleep(5000, undefined, { signal: stop.signal }).catch(error => { if (error.name !== 'AbortError') throw error; });
     }
