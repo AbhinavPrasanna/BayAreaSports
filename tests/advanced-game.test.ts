@@ -15,6 +15,7 @@ import { storeGames } from '../src/server/ingestion/store';
 import { readGames } from '../src/server/db/game-reader';
 import { parseWorkerEnv } from '../src/server/config/env';
 import type { StoredGame } from '../src/shared/games';
+import { addDays,ingestionWindow,pacificDate } from '../src/shared/dates';
 
 const raw={id:7,home_team:{id:10,full_name:'Golden State Warriors',abbreviation:'GSW'},visitor_team:{id:14,full_name:'Los Angeles Lakers',abbreviation:'LAL'},season:2026,postseason:false,date:'2026-10-21',datetime:'2026-10-22T02:00:00Z',status_state:'final',home_team_score:110,visitor_team_score:100,home_q1:20,home_q2:30,home_q3:25,home_q4:35,visitor_q1:22,visitor_q2:28,visitor_q3:20,visitor_q4:30};
 const base=normalizeGame('nba',raw);
@@ -80,5 +81,42 @@ test('actual SQL stores corrected quarter snapshots and only exposes player payl
     mode='fail';await tick();snapshot=await readPlayerStats(pool,'nba',7);assert.equal(snapshot.status,'delayed');assert.equal(snapshot.players[0].values.pts,2,'a failure on page two cannot publish page one');
     mode='empty';await tick();snapshot=await readPlayerStats(pool,'nba',7);assert.equal(snapshot.status,'delayed');assert.equal(snapshot.players.length,1);
     await configurePlayerStats(client,[]);assert.deepEqual((await readPlayerStats(pool,'nba',7)).players,[]);
+  }finally{await db.close();}
+});
+
+test('player ingestion covers the full schedule history with inclusive Pacific dates and calendar-only games',async()=>{
+  const db=await PGlite.create(),client=db as unknown as PoolClient;
+  try {
+    for(const file of ['001_foundation.sql','002_game_ingestion.sql','004_game_media.sql','005_automatic_highlights.sql','006_season_records.sql','007_advanced_game_details.sql'])await db.exec(await readFile('migrations/'+file,'utf8'));
+    const today=pacificDate(),{from,to}=ingestionWindow(),requested:string[]=[];
+    const providers:PlayerStatsProvider[]=[];
+    for(const league of ['nba','nfl'] as const){
+      const recent=addDays(today,-32),older=addDays(today,-41);
+      const games=[
+        {...base,league,providerId:71,startsAt:recent+'T20:00:00Z',calendarDate:recent},
+        {...base,league,providerId:72,startsAt:older+'T20:00:00Z',calendarDate:older},
+        {...base,league,providerId:73,startsAt:null,calendarDate:from},
+        // Early UTC on the boundary is still the preceding Pacific day.
+        {...base,league,providerId:74,startsAt:from+'T01:00:00Z',calendarDate:from},
+      ];
+      const run=await db.query<{id:string}>("INSERT INTO sync_runs(league,status) VALUES($1,'running') RETURNING id::text",[league]);
+      await storeGames(client,league,games,run.rows[0].id,{from,to},new Date());
+      // An existing job outside the shared window must not be fetched either.
+      await db.query('INSERT INTO game_player_stats(league,provider_id) VALUES($1,74)',[league]);
+      providers.push({league,getGames:async()=>({games:[],nextCursor:null}),getPlayerStats:async game=>{
+        requested.push(league+':'+game.providerId);
+        return {players:[player],nextCursor:null};
+      }});
+    }
+    await configurePlayerStats(client,['nba','nfl']);
+    for(let i=0;i<7;i++){
+      await db.exec("UPDATE player_stats_gate SET next_check_at=now()-interval '1 second';UPDATE provider_throttle SET next_request_at=now()-interval '1 minute'");
+      await syncNextPlayerStats(client,providers,['nba','nfl'],new AbortController().signal);
+    }
+    assert.deepEqual(requested.sort(),['nba:71','nba:72','nba:73','nfl:71','nfl:72','nfl:73']);
+    const rows=await db.query<{league:string;provider_id:number;checked_at:Date|null}>('SELECT league,provider_id,checked_at FROM game_player_stats ORDER BY league,provider_id');
+    assert.equal(rows.rows.length,8);
+    assert.equal(rows.rows.filter(row=>row.checked_at!==null).length,6);
+    assert.ok(rows.rows.filter(row=>Number(row.provider_id)===74).every(row=>row.checked_at===null));
   }finally{await db.close();}
 });

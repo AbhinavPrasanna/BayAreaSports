@@ -4,6 +4,7 @@ import type { PlayerGameStats } from '../../shared/advanced-game';
 import type { SportsProvider } from '../providers/types';
 import { reserveRequest } from './scheduler';
 import { failurePolicy } from './policy';
+import { ingestionWindow } from '../../shared/dates';
 
 interface GameScope {providerId:number;homeTeamId:number;awayTeamId:number;}
 export interface PlayerStatsProvider extends SportsProvider {getPlayerStats(game:GameScope,cursor:number|undefined,signal?:AbortSignal):Promise<{players:PlayerGameStats[];nextCursor:number|null}>;}
@@ -14,11 +15,16 @@ export async function syncNextPlayerStats(client:PoolClient,providers:PlayerStat
   if(!enabled.length||signal.aborted)return false;
   const gate=await client.query("UPDATE player_stats_gate SET next_check_at=now()+interval '60 seconds' WHERE singleton AND next_check_at<=now() RETURNING singleton");
   if(!gate.rows.length)return false;
+  // Use the same inclusive Pacific-date window as schedule ingestion, including
+  // games with only a calendar date. A shorter stats window leaves visible games unqueued.
+  const {from}=ingestionWindow();
   await client.query(`INSERT INTO game_player_stats(league,provider_id) SELECT league,provider_id FROM games
-    WHERE league=ANY($1::text[]) AND status IN ('in_progress','suspended','final') AND starts_at>=now()-interval '31 days' ON CONFLICT DO NOTHING`,[enabled]);
+    WHERE league=ANY($1::text[]) AND status IN ('in_progress','suspended','final')
+      AND COALESCE((starts_at AT TIME ZONE 'America/Los_Angeles')::date,calendar_date)>=$2::date ON CONFLICT DO NOTHING`,[enabled,from]);
   const result=await client.query<{league:FreeLeague;game:GameScope;failures:number;populated:boolean}>(`SELECT g.league,json_build_object('providerId',g.provider_id,'homeTeamId',g.home_team_id,'awayTeamId',g.away_team_id) AS game,s.consecutive_failures AS failures,jsonb_array_length(COALESCE(s.payload,'[]'::jsonb))>0 AS populated
-    FROM game_player_stats s JOIN games g USING(league,provider_id) WHERE g.league=ANY($1::text[]) AND s.next_sync_at<=now() AND g.status IN ('in_progress','suspended','final') AND g.starts_at>=now()-interval '31 days'
-    ORDER BY (g.status='in_progress') DESC,s.next_sync_at,g.starts_at DESC LIMIT 1`,[enabled]);
+    FROM game_player_stats s JOIN games g USING(league,provider_id) WHERE g.league=ANY($1::text[]) AND s.next_sync_at<=now() AND g.status IN ('in_progress','suspended','final')
+      AND COALESCE((g.starts_at AT TIME ZONE 'America/Los_Angeles')::date,g.calendar_date)>=$2::date
+    ORDER BY (g.status='in_progress') DESC,s.next_sync_at,g.starts_at DESC LIMIT 1`,[enabled,from]);
   const state=result.rows[0];if(!state)return false;
   const provider=providers.find(p=>p.league===state.league);if(!provider)return false;
   await client.query('UPDATE game_player_stats SET last_attempt_at=now() WHERE league=$1 AND provider_id=$2',[state.league,state.game.providerId]);
