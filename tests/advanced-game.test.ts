@@ -40,6 +40,7 @@ test('advanced details keep all quarter/player content out of protected markup a
   assert.match(visible,/Q1|Q4|Test Player|31:22|8\/16/);assert.match(visible,/—/);
   const scheduled=renderToStaticMarkup(createElement(AdvancedGameDetails,{game:{...stored,status:'scheduled'},hidden:false}));assert.doesNotMatch(scheduled,/<table|Test Player/);assert.match(scheduled,/once the game is underway/);
   const wnba=renderToStaticMarkup(createElement(AdvancedGameDetails,{game:{...stored,league:'wnba',lineScore:null,playerStats:{status:'disabled',players:[],checkedAt:null}},hidden:false}));assert.match(wnba,/Quarter scores aren’t available|Player statistics aren’t available/);assert.doesNotMatch(wnba,/Test Player|<table/);
+  const scheduledWnba=renderToStaticMarkup(createElement(AdvancedGameDetails,{game:{...stored,league:'wnba',status:'scheduled',lineScore:null,playerStats:{status:'disabled',players:[],checkedAt:null}},hidden:false}));assert.doesNotMatch(scheduledWnba,/will appear|Test Player|<table/);assert.match(scheduledWnba,/Quarter scores aren’t available/);assert.match(scheduledWnba,/Player statistics aren’t available/);
 });
 
 test('player stats enforce matchup scope, preserve nullable stats and use documented endpoints',async t=>{
