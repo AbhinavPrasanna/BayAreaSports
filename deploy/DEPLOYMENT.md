@@ -2,6 +2,14 @@
 
 Live app: **https://baylinescore.com/** (singular "score"). The user registered this exact domain in Route 53. `https://www.baylinescore.com/` redirects to the primary domain with HTTP 308 and preserves paths/query strings. The retained static IP `44.224.200.231` also continues to serve the app for existing bookmarks and recovery.
 
+## Current web release — Valkyries Finals series records, October 22, 2026
+
+Web source `1739e22f894e` adds separate Finals win/loss records for all seven 2026 Valkyries–Dream Finals games. Official WNBA schedule labels/game numbers/conditional flags were matched by team identity and start time to the provider IDs in `src/shared/finals.ts`. Game cards show Finals game numbers and per-team series records after finals or entering upcoming games; details show a separate series panel. My teams adds the current Finals tally. Games 6/7 are marked “If necessary.” Overall playoff totals remain separate. See [RECORDS.md](../RECORDS.md).
+
+Historical Finals totals were verified as Valkyries 1–0 after Game 1, 1–1 after Game 2, and 1–2 after Game 3. All four scheduled games expose the current 1–2 record entering the game, with no future results counted. All seven list/detail responses and the sidebar tally passed live validation. At 390×844, cards and the dialog had no horizontal overflow; hidden scores also hid Finals tallies and revealing one game kept all sidebar records hidden. Screenshot: `preview/finals-upcoming-phone.png`.
+
+CodeBuild `bayline-mvp-prod:60ed172a-686b-469b-9c20-2b47831452f7` passed production checks and **65 application tests**, including historical/future boundaries, exclusion of non-series games, corrections, missing history, pending/live games, team/season identity and spoiler protection. Web image: `sha256:f2ee16f35e2a87b96b3a6b0a8600d7bf2376a6f6d6c2c60c70dba4e85bf5d322`. Only web was recreated; worker/database IDs and start times were preserved. Readiness passed. The feature derives totals from the existing complete playoff snapshot and latest schedule corrections, with no new query, provider request, subscription or migration. Existing migration-007 backup/restore evidence remains applicable; restore the matching web image/source mapping alongside those cached record snapshots.
+
 ## Current worker release — older player-stat backfill corrected, October 22, 2026
 
 Worker source `315732e69a90` fixes a history-window mismatch: player jobs used a 31-day timestamp cutoff while schedules ingest 45 Pacific calendar days. Rams–49ers (September 10 Pacific, game 1392217, 41 days old) and Dolphins–49ers (September 20, game 1392245, 32 days old) had no jobs, attempts or stored errors. Authenticated provider checks returned complete HTTP 200 pages with 65 and 69 valid player rows respectively. Both job creation and selection now use the shared schedule window, inclusive of its starting Pacific date, with calendar-date fallback when a start time is absent.
