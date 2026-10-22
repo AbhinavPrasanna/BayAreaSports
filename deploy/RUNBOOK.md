@@ -45,6 +45,8 @@ All host commands run from `/opt/bayline/deploy` as root. Backups use the host's
 
 ## Ongoing checks
 
+Advanced game details require migration 007. NBA/NFL quarter snapshots are stored on `games.line_score` by normal score ingestion. On the free release, `PLAYER_STATS_LEAGUES=` stays empty, all `player_stats_access.enabled` values must be false and `game_player_stats` should contain no jobs. WNBA quarter scores are absent from its free games response; do not substitute guessed values. Optional player-stat adapters are prepared but need validated paid access before enabling a league. After restore, verify seven migrations, stored quarter snapshots and the intended disabled access state alongside records/media and the recovery canary. See [ADVANCED-DETAILS.md](../ADVANCED-DETAILS.md).
+
 `/api/health` checks web/database reachability. `/api/ready` additionally requires a worker heartbeat within three minutes, each free feed checked within ten minutes, a verified backup within eight hours, and a successful restore drill within 35 days. A stale feed or backup produces 503 so the independent external monitor also detects broken ingestion or recovery readiness while the UI still shows cached games. These routes expose only booleans/status.
 
 Inspect bounded logs with `journalctl -u bayline-backup -n 30` and `docker compose --env-file production.env -f compose.production.yaml logs --tail 50 worker`. Avoid dumping container environments, the secret directory, expanded Compose configuration or the whole Docker inspect object. Verify disk free space before each release and keep at least 10 GB available. Never use `docker compose down --volumes` in normal operations.
