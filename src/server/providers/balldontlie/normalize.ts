@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { followedTeams, gameStatuses, type FreeLeague, type NormalizedGame, type GameTeam } from '../../../shared/games';
 import { isCalendarDate } from '../../../shared/dates';
+import { normalizeLineScore } from '../../../shared/advanced-game';
 
 const score = z.number().int().nonnegative().nullable().optional();
 const team = z.object({ id: z.number().int().positive(), full_name: z.string().nullable().optional(), name: z.string().nullable().optional(), city: z.string().nullable().optional(), abbreviation: z.string().nullable().optional() });
@@ -35,6 +36,7 @@ export function normalizeGame(league: FreeLeague, input: unknown): NormalizedGam
     homeTeamId: game.home_team.id, awayTeamId: game.visitor_team.id,
     homeScore: league === 'wnba' ? game.home_score ?? null : game.home_team_score ?? null,
     awayScore: league === 'wnba' ? game.away_score ?? null : game.visitor_team_score ?? null,
+    lineScore: normalizeLineScore(league,input as Record<string,unknown>,league === 'wnba' ? game.home_score ?? null : game.home_team_score ?? null,league === 'wnba' ? game.away_score ?? null : game.visitor_team_score ?? null),
     startsAt, calendarDate: calendarDate && isCalendarDate(calendarDate) ? calendarDate : null,
     status, originalStatus: game.status ?? null,
     period: league === 'nfl' ? null : game.period ?? null,

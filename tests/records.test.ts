@@ -65,7 +65,7 @@ test('season adapters use verified league-specific free games filters',async t=>
 test('season pagination publishes atomically, resumes after restart, overlays corrections and retains the previous complete generation on failure',async()=>{
   const db=await PGlite.create(),client=db as unknown as PoolClient,pool=db as unknown as Pick<Pool,'query'>;
   try {
-    for(const file of ['001_foundation.sql','002_game_ingestion.sql','006_season_records.sql'])await db.exec(await readFile('migrations/'+file,'utf8'));
+    for(const file of ['001_foundation.sql','002_game_ingestion.sql','006_season_records.sql','007_advanced_game_details.sql'])await db.exec(await readFile('migrations/'+file,'utf8'));
     const season=seasonForLeague('nba');
     const firstPage={...first,season},lastPage={...second,season};
     let bad=false;

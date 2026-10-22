@@ -29,10 +29,11 @@ export interface NormalizedGame {
   awayTeam: GameTeam;
   season?: number | null;
   recordPhase?: 'regular' | 'playoffs' | null;
+  lineScore?: import('./advanced-game').GameLineScore | null;
 }
 
 export interface GameTeam { providerId: number; name: string | null; abbreviation: string | null; }
-export interface StoredGame extends NormalizedGame { localDate: string; observedAt: string; changedAt: string; media?: import('./game-media').GameMedia; records?: import('./records').GameRecords | null; }
+export interface StoredGame extends NormalizedGame { localDate: string; observedAt: string; changedAt: string; media?: import('./game-media').GameMedia; records?: import('./records').GameRecords | null; playerStats?: import('./advanced-game').PlayerStatsSnapshot; }
 export interface LeagueSync {
   league: FreeLeague;
   lastAttemptAt: string | null;

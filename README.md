@@ -12,6 +12,8 @@ The independent worker fetches and stores schedules/scores for the three free-ti
 
 Current season records appear beside followed teams; game cards show each team's record entering the game, and final-game details add postgame totals. Regular seasons and playoffs stay separate, and spoiler protection also hides records. See [RECORDS.md](RECORDS.md) for full-season coverage and update behavior.
 
+Game dialogs include expandable Advanced details with free NBA/NFL quarter scores and overtime. WNBA quarter scores are unavailable in the free feed. Player-stat adapters, storage and tables are prepared but disabled until paid access is confirmed. Spoiler protection hides all statistical results. See [ADVANCED-DETAILS.md](ADVANCED-DETAILS.md).
+
 ## Start on this Windows computer
 
 Prerequisites: Node.js 24, npm, and Docker Desktop using Linux containers. Docker Desktop must be running. Dependencies are locked by `package-lock.json`.

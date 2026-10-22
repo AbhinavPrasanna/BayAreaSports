@@ -7,6 +7,7 @@ import { syncNextLeague } from '../server/ingestion/scheduler';
 import { importReviewedMedia, loadReviewedMedia } from '../server/media/reviewed-media';
 import { syncNextHighlights } from '../server/media/highlight-discovery';
 import { syncNextRecordPage } from '../server/ingestion/season-records';
+import { configurePlayerStats,syncNextPlayerStats } from '../server/ingestion/player-stats';
 
 async function main() {
   loadLocalEnvironment();
@@ -29,6 +30,7 @@ async function main() {
     // The advisory lock is session-scoped. Exit if that connection is lost.
     lockClient.on('error', () => { console.error(JSON.stringify({ event: 'worker_lock_connection_lost' })); stop.abort(); process.exitCode = 1; });
     await lockClient.query("UPDATE sync_runs SET status='failed', completed_at=now(), error_code='WORKER_RESTART' WHERE status='running'");
+    await configurePlayerStats(lockClient,config.PLAYER_STATS_LEAGUES);
     console.log(JSON.stringify({ event: 'worker_started', leagues: adapters.map(adapter => adapter.league), mode: 'game_ingestion' }));
     console.log(JSON.stringify({ event: 'highlights_discovery', enabled: config.HIGHLIGHTS_ENABLED && !!config.YOUTUBE_API_KEY }));
     while (!stop.signal.aborted) {
@@ -36,6 +38,9 @@ async function main() {
       await syncNextLeague(lockClient, adapters, config.WORKER_INTERVAL_SECONDS, stop.signal).catch(error => { if (!stop.signal.aborted) throw error; });
       if (!stop.signal.aborted) await syncNextRecordPage(lockClient,adapters,stop.signal).catch(()=>{
         if(!stop.signal.aborted) console.error(JSON.stringify({event:'season_records_storage_failed'}));
+      });
+      if(!stop.signal.aborted)await syncNextPlayerStats(lockClient,adapters,config.PLAYER_STATS_LEAGUES,stop.signal).catch(()=>{
+        if(!stop.signal.aborted)console.error(JSON.stringify({event:'player_stats_storage_failed'}));
       });
       if (Date.now() >= mediaCheckAfter && !stop.signal.aborted) {
         // A failed media refresh must not stop score ingestion or consume provider quota.

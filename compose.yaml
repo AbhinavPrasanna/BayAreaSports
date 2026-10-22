@@ -65,6 +65,7 @@ services:
       WORKER_INTERVAL_SECONDS: ${WORKER_INTERVAL_SECONDS:-60}
       YOUTUBE_API_KEY: ${YOUTUBE_API_KEY:-}
       HIGHLIGHTS_ENABLED: ${HIGHLIGHTS_ENABLED:-true}
+      PLAYER_STATS_LEAGUES: ${PLAYER_STATS_LEAGUES:-}
     depends_on:
       migrate:
         condition: service_completed_successfully

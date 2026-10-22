@@ -42,7 +42,7 @@ test('automatic matching distinguishes dates, opponents, season, full-game uploa
 
 async function database() {
   const db = await PGlite.create();
-  for(const file of ['001_foundation.sql','002_game_ingestion.sql','004_game_media.sql','005_automatic_highlights.sql','006_season_records.sql']) await db.exec(await readFile(`migrations/${file}`,'utf8'));
+  for(const file of ['001_foundation.sql','002_game_ingestion.sql','004_game_media.sql','005_automatic_highlights.sql','006_season_records.sql','007_advanced_game_details.sql']) await db.exec(await readFile(`migrations/${file}`,'utf8'));
   await db.query("INSERT INTO teams(league,provider_id,name,enabled) VALUES('nba',14,'Los Angeles Lakers',false)");
   await db.query("INSERT INTO games(league,provider_id,home_team_id,away_team_id,starts_at,calendar_date,status,observed_at,home_score,away_score) VALUES('nba',70,14,10,$1,'2026-10-21','final',now(),100,110)",[game.startsAt]);
   await db.query('UPDATE youtube_discovery_state SET next_check_at=$1',[new Date(now-1)]);

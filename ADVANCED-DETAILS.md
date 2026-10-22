@@ -1,0 +1,21 @@
+# Advanced game details
+
+Each game dialog contains an expandable **Advanced details** section. NBA and NFL quarter scores come from the existing free games feed and use the same score-ingestion checks; browser refreshes read the database every 15 seconds. No extra provider request is needed for quarter scores. Overtime columns appear when reported. Missing cells remain dashes, true zeroes remain zeroes, and incomplete final totals are labeled. Upcoming games show a pending message. Spoiler protection omits quarter/player tables and player names until that game's score is revealed.
+
+The configured free key returned quarter scores for recent Warriors and 49ers games. The WNBA games response contains only game totals, so its section says quarter scores are unavailable. This release does not infer quarters from a final score or scrape another provider. Documentation: [NBA games](https://nba.balldontlie.io/#games), [NFL games](https://nfl.balldontlie.io/#games), [WNBA games](https://wnba.balldontlie.io/#games).
+
+## Player statistics — prepared, disabled on the free plan
+
+The migration, worker adapters, paginated atomic cache and NBA/WNBA/NFL tables are implemented for later activation. No player statistics are fabricated or inserted into production. Basketball tables include minutes, points, rebounds, assists, steals, blocks, shooting and turnovers. NFL groups cover passing, rushing, receiving, defense and kicking. Null statistics remain unknown; offensive sacks taken are separate from defensive sacks.
+
+`PLAYER_STATS_LEAGUES=` is empty by default in local and production configuration. The worker records enabled leagues in `player_stats_access`, so web never needs the provider key. With no configured leagues, no player-stat job or paid endpoint is called. Detail responses include `playerStats` with an explicit state; schedule/list responses omit player payloads. The UI gives an unavailable message while disabled.
+
+As checked October 22, 2026, player game statistics require NBA ALL-STAR ($9.99/month), NFL ALL-STAR ($9.99/month) and WNBA GOAT ($39.99/month), totaling $59.97/month separate from AWS/domain charges. Tiers do not apply across sports. Review pricing and the $100 overall budget before activation: [NBA tiers](https://nba.balldontlie.io/#account-tiers), [NFL tiers](https://nfl.balldontlie.io/#account-tiers), [WNBA tiers](https://wnba.balldontlie.io/#account-tiers).
+
+To activate later, the owner must first confirm/purchase access and validate the configured key against game-specific statistics responses. Then set only the purchased leagues in root-managed `production.env`, e.g. `PLAYER_STATS_LEAGUES=nba,nfl`, and recreate the worker with its recorded image. This release must keep the setting empty. It does not activate a trial or subscription. WNBA quarter scores remain a separate integration even after player-stat access is purchased.
+
+Optional ingestion checks at most one game per minute under the existing scheduler lock and shared persistent 14-second provider throttle. Pagination is bounded to four pages, validates game/team identity, deduplicates players and publishes only after every page succeeds. Failures retain the previous snapshot and checked time; empty responses cannot erase populated statistics. Entitlement errors back off a league, and rate limits postpone shared access. Live games recheck after a minute, final snapshots after six hours, empty initial responses after ten minutes. Jobs cover the stored past 31 days and prioritize live games. Enabling paid feeds adds requests; review score-check timing when doing so.
+
+## Storage and recovery
+
+Migration 007 adds `games.line_score`, `player_stats_access`, `game_player_stats` and `player_stats_gate`. The schema is additive and compatible with previous images. Back up first, apply all seven migrations, then start web and worker. Verify NBA/NFL details expose `lineScore` after their normal ingestion checks, all three access rows remain disabled, and records/highlights still work. Backups preserve quarter snapshots and optional caches. A restore drill verifies seven migrations, populated quarter snapshots and zero enabled player-stat leagues for this free release.

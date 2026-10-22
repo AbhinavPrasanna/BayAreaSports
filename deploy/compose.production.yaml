@@ -77,6 +77,7 @@ services:
       WORKER_INTERVAL_SECONDS: "60"
       YOUTUBE_API_KEY_FILE: /run/secrets/youtube_key
       HIGHLIGHTS_ENABLED: ${HIGHLIGHTS_ENABLED:-true}
+      PLAYER_STATS_LEAGUES: ${PLAYER_STATS_LEAGUES:-}
     secrets: [database_url, provider_key, youtube_key]
     networks: [database, outbound]
     mem_limit: 384m

@@ -14,6 +14,7 @@ const workerSchema = databaseSchema.extend({
   WORKER_INTERVAL_SECONDS: z.coerce.number().int().min(60).max(3600).default(60),
   YOUTUBE_API_KEY: z.preprocess(value => value === '' ? undefined : value, z.string().trim().regex(/^[A-Za-z0-9_-]{20,200}$/).optional()),
   HIGHLIGHTS_ENABLED: z.enum(['true','false']).default('true').transform(value => value === 'true'),
+  PLAYER_STATS_LEAGUES: z.string().default('').transform(value=>value.split(',').map(v=>v.trim()).filter(Boolean)).refine(values=>new Set(values).size===values.length&&values.every(v=>(freeLeagues as readonly string[]).includes(v))),
 });
 
 export class ConfigurationError extends Error {
@@ -42,5 +43,6 @@ function withSecrets(env: Environment, keys: string[]): Environment {
 export function parseDatabaseEnv(env: Environment = process.env) { return validate(databaseSchema, withSecrets(env, ['DATABASE_URL'])); }
 export function parseWorkerEnv(env: Environment = process.env) {
   const result = validate(workerSchema, withSecrets(env, ['DATABASE_URL', 'BALLDONTLIE_API_KEY', 'YOUTUBE_API_KEY']));
-  return { ...result, ENABLED_LEAGUES: result.ENABLED_LEAGUES as FreeLeague[] };
+  if(result.PLAYER_STATS_LEAGUES.some(v=>!result.ENABLED_LEAGUES.includes(v)))throw new ConfigurationError(['PLAYER_STATS_LEAGUES']);
+  return { ...result, ENABLED_LEAGUES: result.ENABLED_LEAGUES as FreeLeague[],PLAYER_STATS_LEAGUES:result.PLAYER_STATS_LEAGUES as FreeLeague[] };
 }
