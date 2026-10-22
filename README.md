@@ -8,11 +8,11 @@ The independent worker can automatically attach official NBA/NFL/WNBA full-game 
 
 Next.js + TypeScript + PostgreSQL, with an independently supervised Node.js worker. The enabled leagues are NBA, NFL, and WNBA; the seeded teams are the Warriors, 49ers, and Golden State Valkyries. NHL/MLS remain disabled until their paid game endpoints are available and tested.
 
-The independent worker fetches and stores schedules/scores for the three free-tier teams. The fan interface includes Today, each followed team's next game, a combined week/day schedule, the last 30 days of results, live snapshots, and game details. Team selections and spoiler protection are saved on the device. No simulated scores are displayed and no paid provider requests are scheduled. NHL/MLS are shown only as coming later.
+The independent worker fetches and stores schedules/scores for the three teams. The fan interface includes Today, each followed team's next game, a combined week/day schedule, the last 30 days of results, live snapshots, and game details. Team selections and spoiler protection are saved on the device. The owner has purchased NBA/NFL player-stat access; only those two paid feeds are enabled in production. NHL/MLS are shown only as coming later.
 
 Current season records appear beside followed teams; game cards show each team's record entering the game, and final-game details add postgame totals. Regular seasons and playoffs stay separate, and spoiler protection also hides records. See [RECORDS.md](RECORDS.md) for full-season coverage and update behavior.
 
-NBA/NFL game dialogs include expandable Advanced details with free quarter scores and overtime. WNBA dialogs omit this section because their free feed lacks quarter scores. Player-stat adapters, storage and tables are prepared but disabled until paid access is confirmed. Spoiler protection hides all statistical results. See [ADVANCED-DETAILS.md](ADVANCED-DETAILS.md).
+NBA/NFL game dialogs include expandable Advanced details with quarter scores, overtime and player statistics for both teams. Basketball tables show minutes, scoring, rebounds, assists, defense and shooting; NFL tables group passing, rushing, receiving, defense and kicking. WNBA dialogs omit this section because their free feed lacks quarter scores. Spoiler protection hides all statistical results. See [ADVANCED-DETAILS.md](ADVANCED-DETAILS.md).
 
 ## Start on this Windows computer
 

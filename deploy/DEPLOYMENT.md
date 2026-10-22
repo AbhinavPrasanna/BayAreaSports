@@ -2,7 +2,15 @@
 
 Live app: **https://baylinescore.com/** (singular "score"). The user registered this exact domain in Route 53. `https://www.baylinescore.com/` redirects to the primary domain with HTTP 308 and preserves paths/query strings. The retained static IP `44.224.200.231` also continues to serve the app for existing bookmarks and recovery.
 
-## Current application release — omit WNBA advanced details, October 22, 2026
+## Current configuration — NBA/NFL player statistics enabled, October 22, 2026
+
+The owner purchased NBA/NFL premium access and authorized player statistics. The existing production key returned HTTP 200 for NBA game 21717859 (26 player rows) and NFL game 1392308 (63 rows); both complete pages passed game/team validation. Production now uses `PLAYER_STATS_LEAGUES=nba,nfl`, with only NBA/NFL access rows enabled. The existing digest-pinned worker and web images already implement ingestion, storage, detail responses and player tables, so no new image or migration was needed. Only worker was recreated; web/database IDs and start times stayed unchanged. Local defaults remain disabled to avoid a second worker consuming the same quota.
+
+Live game-detail responses returned both populated snapshots, with both teams represented and no duplicate player identities. NBA player points matched each team's final score. Browser checks verified basketball columns, all five NFL categories, zero player/quarter tables or player names under spoiler protection, restoration after revealing a single game, and continued omission of WNBA Advanced details. Existing records and official highlights remain available. Screenshot: `preview/nba-player-stats.png`. Type checking and all **61 application tests** passed. Public readiness returned all checks true. Optional player ingestion retains the existing shared 14-second provider throttle; initial backfill covers stored games in the past 31 days and runs one game per minute.
+
+Backup `postgres/20261022T205123Z-882a507b4810.json` was verified off-server and restored into separate database `bayline_restore_20261022205130`. The canary, seven migrations, 45 schedule games, two enabled NBA/NFL access rows, four populated game caches with 220 player rows, six published record snapshots, eleven reviewed media rows and two automatic highlights were verified. Dump SHA-256: `3c1e366432365145f57438cae72ef96ce879015faf5b9507e64854cc85058427`. More recent-game caches can populate after this snapshot as the worker completes backfill. Recovery must retain `PLAYER_STATS_LEAGUES=nba,nfl` and reinstall the provider key through its existing worker-only secret mount; no key is included in release archives. No additional AWS service or provider subscription was purchased by this activation.
+
+## Previous application release — omit WNBA advanced details, October 22, 2026
 
 Web source `a4291794db5c` removes the entire Advanced details panel from WNBA game dialogs, including upcoming and completed games. NBA/NFL quarter breakdowns remain available. Live browser checks verified both WNBA states and expanded NBA/NFL quarter tables; WNBA records and official highlights still display. Screenshot: `preview/wnba-details.png`.
 
