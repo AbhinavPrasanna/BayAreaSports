@@ -2,6 +2,14 @@
 
 Live app: **https://baylinescore.com/** (singular "score"). The user registered this exact domain in Route 53. `https://www.baylinescore.com/` redirects to the primary domain with HTTP 308 and preserves paths/query strings. The retained static IP `44.224.200.231` also continues to serve the app for existing bookmarks and recovery.
 
+## Current worker release — older player-stat backfill corrected, October 22, 2026
+
+Worker source `315732e69a90` fixes a history-window mismatch: player jobs used a 31-day timestamp cutoff while schedules ingest 45 Pacific calendar days. Rams–49ers (September 10 Pacific, game 1392217, 41 days old) and Dolphins–49ers (September 20, game 1392245, 32 days old) had no jobs, attempts or stored errors. Authenticated provider checks returned complete HTTP 200 pages with 65 and 69 valid player rows respectively. Both job creation and selection now use the shared schedule window, inclusive of its starting Pacific date, with calendar-date fallback when a start time is absent.
+
+CodeBuild `bayline-mvp-prod:15b67732-642d-447f-9dcb-8906428a247c` passed production checks and **62 application tests**, including a database regression for both paid leagues, 32/41-day games, the inclusive date boundary, calendar-only games and exclusion of a stale out-of-window job. Only worker was recreated, with image `sha256:50a2a6ec6bd6efb1b30290a35c6963f515ddb6c13573ed2e84fdaf0e37085105`; web/database IDs and start times stayed unchanged. NBA/NFL player access and official highlight discovery stayed enabled; no subscription, schema or request-rate change was needed.
+
+The normal worker queue backfilled both games. Public details and live game dialogs now show 65 Rams-game player rows and 69 Dolphins-game rows, with both teams represented, no duplicate identities and no ingestion errors. All seven NBA/NFL player caches are populated; existing records and highlights were preserved. Public readiness passed. Screenshots: `preview/rams-player-stats.png`, `preview/dolphins-player-stats.png`. Verified off-server backup `postgres/20261022T210820Z-552dd23ed67b.json` includes the new caches (185,883 bytes). Existing migration-007 restoration checks remain applicable because the payload/schema did not change.
+
 ## Current web release — quarter-score note removed, October 22, 2026
 
 Web source `34480be79882` removes the generic “— Not reported” footer below NBA/NFL quarter tables. The specific incomplete-final warning remains conditional, and player statistics retain their separate missing-value explanation. Live browser checks verified the note is absent from both Warriors and 49ers quarter sections with all quarters/totals still visible. Screenshot: `preview/quarter-scores-clean.png`.
