@@ -6,8 +6,8 @@ export function CurrentRecord({ record, league, hidden }: {record?:CurrentTeamRe
   if(!record) return <span className="team-records muted-record">Record loading…</span>;
   const playoff=record.playoffs && record.playoffs.wins+record.playoffs.losses+record.playoffs.ties>0;
   return <span className="team-records" title={record.checkedAt?`Season data checked ${new Date(record.checkedAt).toLocaleString('en-US',{timeZone:'America/Los_Angeles'})} PT`:undefined}>
-    <span>{record.regular?`${seasonLabel(league,record.season)} · ${recordLabel(record.regular,league)}`:'Season record loading…'}</span>
-    {playoff&&<span>Playoffs {recordLabel(record.playoffs!,league)}</span>}
+    <span>{record.regular?<>{seasonLabel(league,record.season)} · <span className="record-tally">{recordLabel(record.regular,league)}</span></>:'Season record loading…'}</span>
+    {playoff&&<span>Playoffs <span className="record-tally">{recordLabel(record.playoffs!,league)}</span></span>}
     {record.delayed&&<span className="delayed-text">Record update delayed</span>}
   </span>;
 }
