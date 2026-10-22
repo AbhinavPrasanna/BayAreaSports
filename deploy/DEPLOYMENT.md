@@ -2,7 +2,24 @@
 
 Live app: **https://baylinescore.com/** (singular "score"). The user registered this exact domain in Route 53. `https://www.baylinescore.com/` redirects to the primary domain with HTTP 308 and preserves paths/query strings. The retained static IP `44.224.200.231` also continues to serve the app for existing bookmarks and recovery.
 
-## Current application release — automatic official highlights, October 22, 2026
+## Current application release — season records, October 22, 2026
+
+Application source `0aa006e335e8` adds migration 006, full-season record snapshots and records for Warriors, 49ers and Valkyries. Game cards show each team's record entering the game; final-game details show totals after that game. My teams shows the current regular-season record and a separate playoff record when applicable. Spoiler protection hides all record numbers; revealing one game's score keeps sidebar records hidden. NFL records include ties. See [RECORDS.md](../RECORDS.md) for scope and timing.
+
+CodeBuild `bayline-mvp-prod:841c93ff-f241-4e6d-894f-81eb37618ac6` passed the Linux production build, all **56 application tests**, four recovery tests, Compose validation and compiled runtime checks. Both application services were deployed; the PostgreSQL container ID and start time were unchanged. Current images:
+
+- Web: `sha256:1bc720b8a8c3bd73ff8a3e3096357c652d8bbde68ca83a3367c7bdaab81ac30b`
+- Worker/migrations: `sha256:20cb6beb54cb962cb5cbae2b27954127b6bf6ce80ad21b90c8ac40fb7423d526`
+
+Season history uses the existing free games endpoints, with verified NBA/NFL/WNBA season filters. One page per minute shares the persistent 14-second provider throttle with score ingestion. A complete generation is published atomically; partial pages remain pending and resume by cursor. Followed-team score checks overlay newer results and corrections, while full snapshots refresh hourly. No paid standings endpoint or new AWS service was introduced. Official YouTube discovery remains active and all eleven reviewed links and both automatic highlights were preserved.
+
+Browser checks at 390×844 verified entering/after-game records, separate WNBA playoff totals, upcoming-game records, no horizontal overflow, and hidden record numbers/video metadata under spoiler protection. Revealing a single game left sidebar records hidden. Screenshots: `preview/season-records-phone-details.png` and `preview/season-records-protected-phone.png`.
+
+The initial backfill completed with **658 season-game rows** and all six league/phase snapshots published without errors. Current totals matched an independent SQL aggregation of final results; historical before/after totals were verified through public NBA, NFL and WNBA game responses. Readiness remained healthy. Backup `postgres/20261022T092829Z-a24b256dd756.json` was checksum-verified and restored into separate database `bayline_restore_20261022092836`: six migrations, three enabled teams, 45 schedule games, 658 season-game rows, six published snapshots, eleven reviewed media rows and both automatic highlights. The recovery canary matched. Dump SHA-256: `94cd62e83c42f7c49d3bf906c9edc278f4332582cbf284d3d2fbbb1960ecd490`.
+
+Web source `71f6075a04ff` keeps each sidebar win/loss/tie tally on one line at phone widths. CodeBuild `bayline-mvp-prod:46fec926-347e-4b75-8587-6d8bd3753802` passed all 56 application tests and the production build/validation. Only web was recreated for this refinement; worker/database IDs and start times stayed unchanged. Final phone checks confirmed all four regular/playoff tallies occupy one line each with no horizontal page overflow. Screenshots: `preview/season-records-phone.png` and `preview/season-records-sidebar.png`. Public readiness passed after the final release.
+
+## Previous application release — automatic official highlights, October 22, 2026
 
 Image source `30008710013c` adds migration 005, independent worker discovery from **@NBA for Warriors, @NFL for 49ers, and @WNBA for Valkyries**, strict matchup/date/publication checks, persisted backoff/quota limits, and separate expiring automatic metadata. Matching reviewed clips take precedence. YouTube's embedding flag selects direct links for videos that cannot be embedded. The key is worker-only, with Windows encrypted local configuration and a server-side validation/activation helper documented in [YOUTUBE-SETUP.md](../YOUTUBE-SETUP.md).
 
