@@ -10,7 +10,7 @@ Next.js + TypeScript + PostgreSQL, with an independently supervised Node.js work
 
 The independent worker fetches and stores schedules/scores for the three teams. The fan interface includes Today, each followed team's next game, a combined week/day schedule, the last 30 days of results, live snapshots, and game details. Team selections and spoiler protection are saved on the device. The owner has purchased NBA/NFL player-stat access; only those two paid feeds are enabled in production. NHL/MLS are shown only as coming later.
 
-Current season records appear beside followed teams; game cards show each team's record entering the game, and final-game details add postgame totals. Regular seasons and playoffs stay separate, and spoiler protection also hides records. See [RECORDS.md](RECORDS.md) for full-season coverage and update behavior.
+Current season records appear beside followed teams; game cards show each team's record entering the game, and final-game details add postgame totals. Regular seasons and playoffs stay separate. Valkyries–Dream Finals games also show the game number and a separate series tally, including current totals for upcoming games and the sidebar. Spoiler protection also hides records. See [RECORDS.md](RECORDS.md) for coverage and update behavior.
 
 NBA/NFL game dialogs include expandable Advanced details with quarter scores, overtime and player statistics for both teams. Basketball tables show minutes, scoring, rebounds, assists, defense and shooting; NFL tables group passing, rushing, receiving, defense and kicking. WNBA dialogs omit this section because their free feed lacks quarter scores. Spoiler protection hides all statistical results. See [ADVANCED-DETAILS.md](ADVANCED-DETAILS.md).
 

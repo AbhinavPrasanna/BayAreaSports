@@ -52,6 +52,7 @@ export function GameCard({ game, now, delayed, hideScore, protection, onReveal, 
   const played = showScores(game.status);
   return <article className={`game-card${game.status === 'in_progress' ? ' in-progress' : ''}`} aria-label={`${game.awayTeam.name} at ${game.homeTeam.name}`} data-scroll-anchor={`game-${game.league}-${game.providerId}`}>
     <div className="game-meta"><span className={`league-label ${game.league}`}>{game.league.toUpperCase()}</span><GameStatus game={game} protectedScore={hideScore} /></div>
+    {game.records?.finals&&<p className="finals-game-label">{game.records.finals.label} · Game {game.records.finals.gameNumber}{game.records.finals.ifNecessary?' · If necessary':''}</p>}
     <Matchup game={game} hideScore={hideScore} />
     {protection && played && <button className="reveal-score" onClick={onReveal}>{hideScore ? 'Reveal score' : 'Hide score'}</button>}
     <div className="game-footer"><span>{game.startsAt ? `${formatTime(game.startsAt)} PT` : 'Time TBD'}</span><span className={delayed ? 'delayed-text' : ''}>{delayed ? 'Update delayed' : checkLabel(game.observedAt, now)}</span></div>
