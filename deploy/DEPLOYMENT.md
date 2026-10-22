@@ -2,6 +2,12 @@
 
 Live app: **https://baylinescore.com/** (singular "score"). The user registered this exact domain in Route 53. `https://www.baylinescore.com/` redirects to the primary domain with HTTP 308 and preserves paths/query strings. The retained static IP `44.224.200.231` also continues to serve the app for existing bookmarks and recovery.
 
+## Current web release — quarter-score note removed, October 22, 2026
+
+Web source `34480be79882` removes the generic “— Not reported” footer below NBA/NFL quarter tables. The specific incomplete-final warning remains conditional, and player statistics retain their separate missing-value explanation. Live browser checks verified the note is absent from both Warriors and 49ers quarter sections with all quarters/totals still visible. Screenshot: `preview/quarter-scores-clean.png`.
+
+CodeBuild `bayline-mvp-prod:9c932660-224c-467f-8740-17021d2f9755` passed all 61 application tests and production checks. Web image is `sha256:90405b463f9470d0167e59b5d68d060f0b9dccc7b968c3c2d54969152da9b33c`. Only web was recreated; worker/database IDs and start times stayed unchanged. Public readiness passed. NBA/NFL player ingestion remains enabled, with no schema, provider-access or infrastructure change. The player-stat backup/restore evidence below remains applicable.
+
 ## Current configuration — NBA/NFL player statistics enabled, October 22, 2026
 
 The owner purchased NBA/NFL premium access and authorized player statistics. The existing production key returned HTTP 200 for NBA game 21717859 (26 player rows) and NFL game 1392308 (63 rows); both complete pages passed game/team validation. Production now uses `PLAYER_STATS_LEAGUES=nba,nfl`, with only NBA/NFL access rows enabled. The existing digest-pinned worker and web images already implement ingestion, storage, detail responses and player tables, so no new image or migration was needed. Only worker was recreated; web/database IDs and start times stayed unchanged. Local defaults remain disabled to avoid a second worker consuming the same quota.
