@@ -2,6 +2,7 @@ import type { FreeLeague, GameTeam, StoredGame } from '@/shared/games';
 import { followedTeams } from '@/shared/games';
 import { TIME_ZONE } from '@/shared/dates';
 import { ageLabel, showScores, statusLabels } from '@/shared/scoreboard';
+import { EnteringRecord } from './team-record';
 
 export const teamInfo = {
   nba: { short: 'Warriors', mark: 'GSW', city: 'Golden State' },
@@ -28,11 +29,11 @@ export function GameStatus({ game, protectedScore = false }: { game: StoredGame;
   }
   return <span className={`game-status ${game.status}`}>{game.status === 'in_progress' && <i className="live-dot" />}{label}</span>;
 }
-export function TeamRow({ team, score, league, winner, visible, home }: { team: GameTeam; score: number | null; league: FreeLeague; winner: boolean; visible: boolean; home: boolean }) {
+export function TeamRow({ team, score, league, winner, visible, home, game, hideRecord = false }: { team: GameTeam; score: number | null; league: FreeLeague; winner: boolean; visible: boolean; home: boolean; game?:StoredGame;hideRecord?:boolean }) {
   const followed = isBayTeam(league, team.providerId);
   return <div className={`game-team${winner && visible ? ' winner' : ''}`}>
     {followed ? <TeamMark league={league} small /> : <span className="opponent-mark" aria-hidden="true">{team.abbreviation?.slice(0, 4) || '—'}</span>}
-    <span className="game-team-name">{team.name || `Team ${team.providerId}`}<span className="followed-tag">{home ? 'Home' : 'Away'}{followed ? ' · Bay Area' : ''}</span></span>
+    <span className="game-team-name">{team.name || `Team ${team.providerId}`}<span className="followed-tag">{home ? 'Home' : 'Away'}{followed ? ' · Bay Area' : ''}</span>{game&&<EnteringRecord game={game} home={home} hidden={hideRecord}/>}</span>
     <span className="game-score">{visible ? score ?? '—' : '—'}</span>
   </div>;
 }
@@ -40,8 +41,8 @@ export function Matchup({ game, hideScore }: { game: StoredGame; hideScore: bool
   const final = game.status === 'final' && game.homeScore !== null && game.awayScore !== null;
   const visible = showScores(game.status) && !hideScore;
   return <>
-    <TeamRow team={game.awayTeam} score={game.awayScore} league={game.league} winner={Boolean(final && game.awayScore! > game.homeScore!)} visible={visible} home={false} />
-    <TeamRow team={game.homeTeam} score={game.homeScore} league={game.league} winner={Boolean(final && game.homeScore! > game.awayScore!)} visible={visible} home />
+    <TeamRow team={game.awayTeam} score={game.awayScore} league={game.league} winner={Boolean(final && game.awayScore! > game.homeScore!)} visible={visible} home={false} game={game} hideRecord={hideScore} />
+    <TeamRow team={game.homeTeam} score={game.homeScore} league={game.league} winner={Boolean(final && game.homeScore! > game.awayScore!)} visible={visible} home game={game} hideRecord={hideScore} />
   </>;
 }
 export function GameCard({ game, now, delayed, hideScore, protection, onReveal, onOpen }: {

@@ -10,6 +10,8 @@ Next.js + TypeScript + PostgreSQL, with an independently supervised Node.js work
 
 The independent worker fetches and stores schedules/scores for the three free-tier teams. The fan interface includes Today, each followed team's next game, a combined week/day schedule, the last 30 days of results, live snapshots, and game details. Team selections and spoiler protection are saved on the device. No simulated scores are displayed and no paid provider requests are scheduled. NHL/MLS are shown only as coming later.
 
+Current season records appear beside followed teams; game cards show each team's record entering the game, and final-game details add postgame totals. Regular seasons and playoffs stay separate, and spoiler protection also hides records. See [RECORDS.md](RECORDS.md) for full-season coverage and update behavior.
+
 ## Start on this Windows computer
 
 Prerequisites: Node.js 24, npm, and Docker Desktop using Linux containers. Docker Desktop must be running. Dependencies are locked by `package-lock.json`.

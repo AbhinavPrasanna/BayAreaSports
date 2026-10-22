@@ -6,6 +6,7 @@ import { checkLabel, formatDay, formatTime, GameStatus, Matchup } from './game-u
 import { useSnapshot } from './use-snapshot';
 import { browserScroll, captureScroll, restoreScroll } from './scroll-preservation';
 import { GameMedia } from './game-media';
+import { AfterGameRecords } from './team-record';
 
 export function GameDetails({ initial, refreshVersion, now, hideScore, protection, onReveal, onClose, trigger }: {
   initial: StoredGame; refreshVersion: number; now: number; hideScore: boolean; protection: boolean;
@@ -37,6 +38,7 @@ export function GameDetails({ initial, refreshVersion, now, hideScore, protectio
     {protection && showScores(game.status) && <button className="detail-reveal" onClick={onReveal}>{hideScore ? 'Reveal this game’s score' : 'Hide this game’s score'}</button>}
     {hideScore && showScores(game.status) && <p className="detail-note">Spoiler protection is on. Scores and winner styling stay hidden until you reveal this game.</p>}
     {feed.error && <p className="notice" role="alert">Details couldn’t be refreshed. Showing the saved game; updates will retry automatically.</p>}
+    <AfterGameRecords game={game} hidden={hideScore}/>
     <GameMedia game={game} hideScore={hideScore} />
     <dl className="detail-facts"><div><dt>Matchup</dt><dd>{game.awayTeam.name} at {game.homeTeam.name}</dd></div><div><dt>Latest check</dt><dd>{checkLabel(game.observedAt, now)}</dd></div><div><dt>Updates</dt><dd>Refreshes every 15 seconds while this page is visible.</dd></div></dl>
     <p className="detail-note">Scores are snapshots from BALLDONTLIE. The free game feed does not include a full box score or play-by-play.</p>

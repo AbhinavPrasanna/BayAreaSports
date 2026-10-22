@@ -3,6 +3,8 @@ import type { GamesResponse, LeagueSync, StoredGame } from '../../shared/games';
 import { TIME_ZONE } from '../../shared/dates';
 import type { GamesQuery } from './game-query';
 import { gameMedia } from '../../shared/game-media';
+import { readRecordBook } from './records';
+import { currentTeamRecords, recordsAtGame } from '../../shared/records';
 
 export async function readGames(pool: Pick<Pool, 'query'>, query: GamesQuery, gameId: number | null = null): Promise<GamesResponse> {
   const result = await pool.query<{ game: StoredGame & { automaticMedia?: unknown } }>(`SELECT json_build_object(
@@ -12,6 +14,7 @@ export async function readGames(pool: Pick<Pool, 'query'>, query: GamesQuery, ga
     'startsAt',g.starts_at, 'calendarDate',to_char(g.calendar_date,'YYYY-MM-DD'),
     'localDate',to_char(COALESCE((g.starts_at AT TIME ZONE 'America/Los_Angeles')::date,g.calendar_date),'YYYY-MM-DD'),
     'status',g.status, 'originalStatus',g.original_status, 'period',g.period, 'clock',g.clock,
+    'season',g.season,'recordPhase',g.record_phase,
     'observedAt',g.observed_at, 'changedAt',g.changed_at, 'media',m.payload,'automaticMedia',y.payload,
     'homeTeam',json_build_object('providerId',h.provider_id,'name',h.name,'abbreviation',h.abbreviation),
     'awayTeam',json_build_object('providerId',a.provider_id,'name',a.name,'abbreviation',a.abbreviation)
@@ -32,9 +35,10 @@ export async function readGames(pool: Pick<Pool, 'query'>, query: GamesQuery, ga
     'lastSuccessAt',last_success_at,'nextSyncAt',next_sync_at,'lastErrorCode',last_error_code,'gameCount',game_count) AS state
     FROM ingestion_state ORDER BY league`);
   const heartbeat = await pool.query<{ lastSeen: Date }>("SELECT last_seen_at AS \"lastSeen\" FROM worker_heartbeats WHERE worker_name='scheduler'");
-  return { data: result.rows.map(({ game: { automaticMedia, ...game } }) => {
+  const recordBook=await readRecordBook(pool);
+  return { teamRecords:currentTeamRecords(recordBook),data: result.rows.map(({ game: { automaticMedia, ...game } }) => {
     const manual = gameMedia(game, game.media), automatic = gameMedia(game, automaticMedia);
     const media = !manual.highlight && automatic.highlight ? { ...manual, highlight: automatic.highlight, sourceUrl: automatic.sourceUrl, verifiedAt: automatic.verifiedAt } : manual;
-    return { ...game, media };
+    return { ...game, media, records:recordsAtGame(game,recordBook) };
   }), sync: { leagues: states.rows.map(row => row.state), workerLastSeenAt: heartbeat.rows[0]?.lastSeen.toISOString() ?? null, serverTime: new Date().toISOString() }, range: { from: query.from, to: query.to, timeZone: TIME_ZONE } };
 }

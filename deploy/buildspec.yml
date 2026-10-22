@@ -11,7 +11,7 @@ phases:
     commands:
       - docker build --target web --tag "$WEB_REPOSITORY:$IMAGE_TAG" .
       - docker build --target worker --tag "$WORKER_REPOSITORY:$IMAGE_TAG" .
-      - docker run --rm --entrypoint node "$WORKER_REPOSITORY:$IMAGE_TAG" -e "require('fs').accessSync('dist-runtime/scripts/migrate.js');require('fs').accessSync('dist-runtime/scripts/import-game-media.js');require('fs').accessSync('migrations/005_automatic_highlights.sql');require('./dist-runtime/src/server/media/highlight-discovery.js');require('./dist-runtime/src/server/media/reviewed-media.js').loadReviewedMedia()"
+      - docker run --rm --entrypoint node "$WORKER_REPOSITORY:$IMAGE_TAG" -e "require('fs').accessSync('dist-runtime/scripts/migrate.js');require('fs').accessSync('dist-runtime/scripts/import-game-media.js');require('fs').accessSync('migrations/006_season_records.sql');require('./dist-runtime/src/server/ingestion/season-records.js');require('./dist-runtime/src/server/media/highlight-discovery.js');require('./dist-runtime/src/server/media/reviewed-media.js').loadReviewedMedia()"
   post_build:
     commands:
       - test "$CODEBUILD_BUILD_SUCCEEDING" = 1

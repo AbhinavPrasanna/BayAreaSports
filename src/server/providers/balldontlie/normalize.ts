@@ -10,6 +10,8 @@ const gameSchema = z.object({
   date: z.string().nullable().optional(), datetime: z.string().nullable().optional(),
   status: z.string().nullable().optional(), status_state: z.string().nullable().optional(),
   period: z.number().int().nullable().optional(), time: z.string().nullable().optional(),
+  season: z.number().int().min(1940).max(2200).nullable().optional(), postseason: z.boolean().nullable().optional(),
+  ist_stage: z.string().nullable().optional(),
 });
 
 export function normalizeGame(league: FreeLeague, input: unknown): NormalizedGame {
@@ -28,6 +30,8 @@ export function normalizeGame(league: FreeLeague, input: unknown): NormalizedGam
   });
   return {
     provider: 'balldontlie', league, providerId: game.id,
+    season: game.season ?? null,
+    recordPhase: league === 'nba' && game.ist_stage?.toLowerCase() === 'championship' ? null : typeof game.postseason === 'boolean' ? game.postseason ? 'playoffs' : 'regular' : null,
     homeTeamId: game.home_team.id, awayTeamId: game.visitor_team.id,
     homeScore: league === 'wnba' ? game.home_score ?? null : game.home_team_score ?? null,
     awayScore: league === 'wnba' ? game.away_score ?? null : game.visitor_team_score ?? null,

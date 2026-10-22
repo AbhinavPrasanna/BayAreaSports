@@ -27,10 +27,12 @@ export interface NormalizedGame {
   clock: string | null;
   homeTeam: GameTeam;
   awayTeam: GameTeam;
+  season?: number | null;
+  recordPhase?: 'regular' | 'playoffs' | null;
 }
 
 export interface GameTeam { providerId: number; name: string | null; abbreviation: string | null; }
-export interface StoredGame extends NormalizedGame { localDate: string; observedAt: string; changedAt: string; media?: import('./game-media').GameMedia; }
+export interface StoredGame extends NormalizedGame { localDate: string; observedAt: string; changedAt: string; media?: import('./game-media').GameMedia; records?: import('./records').GameRecords | null; }
 export interface LeagueSync {
   league: FreeLeague;
   lastAttemptAt: string | null;
@@ -41,6 +43,7 @@ export interface LeagueSync {
 }
 export interface GamesResponse {
   data: StoredGame[];
+  teamRecords?: import('./records').CurrentTeamRecord[];
   sync: { leagues: LeagueSync[]; workerLastSeenAt: string | null; serverTime: string; };
   range: { from: string; to: string; timeZone: 'America/Los_Angeles'; };
 }

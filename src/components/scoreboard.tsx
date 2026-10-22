@@ -9,6 +9,7 @@ import { Arrow, BrandIcon, checkLabel, formatDay, formatTime, GameCard, RefreshI
 import { GameDetails } from './game-details';
 import { PreferencesDialog } from './preferences-dialog';
 import { useSnapshot } from './use-snapshot';
+import { CurrentRecord } from './team-record';
 
 type LeagueFilter = FreeLeague | 'all';
 type View = 'today' | 'all' | 'results' | 'live';
@@ -83,7 +84,7 @@ export function Scoreboard() {
     <header className="site-header"><a className="brand" href="#" aria-label="Bayline home"><BrandIcon /><span>BAYLINE<span className="brand-dot">.</span></span></a><nav aria-label="Main navigation"><a className="current" href="#scoreboard">Scoreboard</a></nav><span className="header-caption"><span className="tiny-dot" /> Made for the Bay</span></header>
     <div className="app-shell">
       <aside className="sidebar" id="your-teams"><p className="eyebrow">YOUR LINEUP</p><button className={`all-teams${activeLeague === 'all' ? ' selected' : ''}`} onClick={() => changeLeague('all')} aria-pressed={activeLeague === 'all'}><span className="all-teams-icon">✳</span> My teams <span className="team-count">{preferences.leagues.length}</span></button>
-        <div className="team-nav">{preferences.leagues.map(sport => { const state = (response ?? nextFeed.data)?.sync.leagues.find(item => item.league === sport); return <button key={sport} className={`team-nav-button${activeLeague === sport ? ' selected' : ''}`} onClick={() => changeLeague(activeLeague === sport ? 'all' : sport)} aria-pressed={activeLeague === sport}><TeamMark league={sport} /><span><strong>{teamInfo[sport].short}</strong><small>{teamInfo[sport].city} · {sport.toUpperCase()}</small><span className={`team-check${state?.lastErrorCode ? ' delayed-text' : ''}`}>{state?.lastErrorCode ? 'Update delayed' : ageLabel(state?.lastSuccessAt ?? null, now)}</span></span></button>; })}</div>
+        <div className="team-nav">{preferences.leagues.map(sport => { const state = (response ?? nextFeed.data)?.sync.leagues.find(item => item.league === sport); return <button key={sport} className={`team-nav-button${activeLeague === sport ? ' selected' : ''}`} onClick={() => changeLeague(activeLeague === sport ? 'all' : sport)} aria-pressed={activeLeague === sport}><TeamMark league={sport} /><span><strong>{teamInfo[sport].short}</strong><small>{teamInfo[sport].city} · {sport.toUpperCase()}</small><CurrentRecord league={sport} hidden={preferences.hideScores} record={(response?.teamRecords ?? nextFeed.data?.teamRecords)?.find(record=>record.league===sport)}/><span className={`team-check${state?.lastErrorCode ? ' delayed-text' : ''}`}>{state?.lastErrorCode ? 'Update delayed' : ageLabel(state?.lastSuccessAt ?? null, now)}</span></span></button>; })}</div>
         <button className="manage-teams" onClick={event => openPreferences(event.currentTarget)}>Choose teams <span aria-hidden="true">＋</span></button>
         <div className="later-teams"><p className="eyebrow">ON THE HORIZON</p><div><span className="later-icon">SJ</span><span>Sharks<small>NHL · Coming later</small></span></div><div><span className="later-icon">SJ</span><span>Earthquakes<small>MLS · Coming later</small></span></div></div><div className="sidebar-note"><span className="compass-icon">↗</span><p>Different jerseys.<br /><strong>Same side of the Bay.</strong></p></div>
       </aside>

@@ -2,6 +2,7 @@ import { z } from 'zod';
 import type { FreeLeague } from '../../../shared/games';
 import type { GameQuery, SportsProvider } from '../types';
 import { normalizeGame } from './normalize';
+import type { RecordPhase } from '../../../shared/records';
 
 const pageSchema = z.object({ data: z.array(z.unknown()), meta: z.object({ next_cursor: z.number().int().nullable().optional() }).optional() });
 
@@ -25,6 +26,21 @@ export class BallDontLieAdapter implements SportsProvider {
     url.searchParams.set('per_page', '100');
     if (query.cursor !== undefined) url.searchParams.set('cursor', String(query.cursor));
     for (const date of query.dates) url.searchParams.append('dates[]', date);
+    return this.requestGames(url, signal);
+  }
+  async getSeasonGames(season: number, phase: RecordPhase, endDate: string, cursor: number | undefined, signal?: AbortSignal) {
+    const url = new URL(`https://api.balldontlie.io/${this.league}/v1/games`);
+    url.searchParams.set('seasons[]', String(season));
+    url.searchParams.set('per_page', '100');
+    if (cursor !== undefined) url.searchParams.set('cursor', String(cursor));
+    if (this.league === 'nfl') url.searchParams.set('season_types[]', phase === 'regular' ? '2' : '3');
+    else {
+      url.searchParams.set('season_type', this.league === 'wnba' ? phase === 'regular' ? '2' : '3' : phase);
+      url.searchParams.set('end_date', endDate);
+    }
+    return this.requestGames(url, signal);
+  }
+  private async requestGames(url: URL, signal?: AbortSignal) {
     let response: Response;
     try {
       response = await fetch(url, { headers: { Authorization: this.apiKey, Accept: 'application/json' }, signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(15000)]) : AbortSignal.timeout(15000), redirect: 'error', cache: 'no-store' });

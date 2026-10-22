@@ -7,7 +7,7 @@ import { fetchTeamGames } from './fetch-games';
 import { failurePolicy, REQUEST_SPACING_MS } from './policy';
 import { storeGames } from './store';
 
-async function reserveRequest(client: PoolClient, signal: AbortSignal) {
+export async function reserveRequest(client: PoolClient, signal: AbortSignal) {
   const slot = await client.query<{ allowed_at: Date }>(`UPDATE provider_throttle
     SET next_request_at=GREATEST(next_request_at,clock_timestamp()) + ($1 * interval '1 millisecond')
     WHERE provider='balldontlie' RETURNING next_request_at - ($1 * interval '1 millisecond') AS allowed_at`, [REQUEST_SPACING_MS]);
