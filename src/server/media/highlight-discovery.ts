@@ -57,11 +57,11 @@ export async function syncNextHighlights(db: Database, key: string | undefined, 
       AND g.starts_at BETWEEN $2::timestamptz-interval '7 days' AND $2::timestamptz
       AND NOT EXISTS (SELECT 1 FROM game_media m WHERE m.league=g.league AND m.provider_id=g.provider_id AND ${exactGame('m')} AND m.payload->'highlight' IS NOT NULL AND m.payload->'highlight'<>'null'::jsonb)
       AND NOT EXISTS (SELECT 1 FROM youtube_highlights y WHERE y.league=g.league AND y.provider_id=g.provider_id AND ${exactGame('y')} AND y.expires_at>$2)
-      ORDER BY g.starts_at DESC LIMIT 20`, [league,stamp])).rows;
+      ORDER BY g.starts_at DESC LIMIT 20`, [league,stamp])).rows.map(game => ({ ...game, providerId: Number(game.providerId) }));
     const refresh = (await db.query<HighlightGame & {videoId: string}>(`SELECT ${gameFields},y.video_id AS "videoId"
       FROM youtube_highlights y JOIN games g ON g.league=y.league AND g.provider_id=y.provider_id ${joins}
       WHERE y.league=$1 AND g.status='final' AND y.verified_at<$2::timestamptz-interval '7 days'
-      ORDER BY y.verified_at LIMIT 20`, [league,stamp])).rows;
+      ORDER BY y.verified_at LIMIT 20`, [league,stamp])).rows.map(game => ({ ...game, providerId: Number(game.providerId) }));
     if (games.length || refresh.length) {
       const cached = channelSchema.safeParse(state.channel);
       const channel = cached.success && state.channel_verified_at && now - state.channel_verified_at.getTime() < 7 * 86400_000 ? cached.data : await client.channel(league);

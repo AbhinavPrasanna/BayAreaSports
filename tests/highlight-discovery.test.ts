@@ -62,7 +62,13 @@ function mockAPI(videos: YouTubeVideo[] = [video], calls: string[] = []) {
 const query={league:'nba' as const,view:'results' as const,from:'2026-10-21',to:'2026-10-21'};
 
 test('worker discovery persists exact game metadata, protects spoilers, keeps manual precedence and survives restart', async () => {
-  const db=await database(), pool=db as unknown as Pick<Pool,'query'>, calls:string[]=[];
+  const db=await database(), calls:string[]=[];
+  // node-postgres returns int8 IDs as strings; PGlite returns numbers. Exercise
+  // the production decoding boundary for both discovery and refresh queries.
+  const pool={query:async(sql:string,params?:unknown[])=>{
+    const result=await db.query<Record<string,unknown>>(sql,params);
+    return {...result,rows:result.rows.map(row=>'providerId' in row?{...row,providerId:String(row.providerId)}:row)};
+  }} as unknown as Pick<Pool,'query'>;
   try {
     assert.equal((await syncNextHighlights(pool,secret,['nba'],new AbortController().signal,{now,request:mockAPI([video],calls)})).status,'checked');
     assert.equal(calls.length,3);
