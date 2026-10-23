@@ -16,7 +16,7 @@ NBA/NFL game dialogs include expandable Advanced details with quarter scores, ov
 
 The live Player status section adds current Warriors and 49ers rosters, reported injuries, search and filters inside game details. Missing injury entries are labeled “No reported injury,” and older games clearly identify reports as current. Reports stay protected until deliberately revealed, independently of scores. WNBA status coverage remains unavailable with the configured access. Coverage validation and recovery are documented in [PLAYER-STATUS.md](PLAYER-STATUS.md).
 
-A dedicated **Injury Report** navigation tab is implemented and locally verified, pending web deployment. It exposes the same cached rosters without opening a game, follows the sidebar team selection and preserves score protection. See the prepared navigation update in [PLAYER-STATUS.md](PLAYER-STATUS.md).
+The live **Injury Report** tab has Warriors and 49ers icon buttons to browse one team's current roster at a time without opening a game. Player search, injury filters and spoiler protection remain available. The icon selector, refresh and phone layout were verified live. See [PLAYER-STATUS.md](PLAYER-STATUS.md).
 
 ## Start on this Windows computer
 

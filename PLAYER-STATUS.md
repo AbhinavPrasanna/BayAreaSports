@@ -1,9 +1,9 @@
 # Current player status
-## Prepared update: Warriors and 49ers icon selector
+## Live Warriors and 49ers icon selector
 
 Two labeled icon buttons directly on Injury Report select Warriors or 49ers. Warriors is selected initially; only the selected team's cached roster/report is shown. The selected button has a visible outline/background and `aria-pressed` state. Both reports are accessible here independently of the scoreboard's followed-team preferences. Switching teams resets search/filter/reveal state so a newly selected team stays protected when spoiler protection is enabled. Automatic refresh keeps the selected team. Existing game-details reports, API data, provider schedule and subscriptions are unchanged.
 
-Typechecking and the production Next build passed. The local browser could not reach the preview because this session's loopback connection was denied, so interactive/phone verification is pending publication. Publish committed source with `node deploy/aws/publish-player-status.mjs --injury-tab` from normal PowerShell, then verify both icon buttons, one-team display, search, refresh and spoiler protection on the live app. This selector update is not yet deployed.
+Source `a1ee91c807b0` was deployed on October 23, 2026. Typechecking and the production build passed. Live checks verified Warriors as the initial selection (18 players), switching to 49ers (89 players), switching back, player search, injury filtering and a single visible team. Selection and search survived refresh. With spoiler protection enabled, switching from a revealed team hid the newly selected roster until explicit reveal. Both icon buttons fit at 320 and 390 pixels without horizontal overflow. No browser console errors were observed; public readiness passed. Screenshot: `preview/injury-team-icons-live-phone.png`. Worker/database containers stayed unchanged and backup `postgres/20261023T191237Z-08811d94986a.json` was verified. See [DEPLOYMENT.md](deploy/DEPLOYMENT.md) for image/recovery references.
 
 ## Navigation release history
 
@@ -19,7 +19,7 @@ Navigation source `3c62bbb49c71` was deployed and verified live on October 23, 2
 node "C:\Users\abhin\Documents\Codex\2026-10-20\if-x20\outputs\bayline-mvp\deploy\aws\publish-player-status.mjs" --injury-tab
 ```
 
-This mode builds the committed source and replaces only web. It verifies that worker/database container IDs and start times remain unchanged, checks the public navigation, roster API, existing stats/Finals data and readiness, verifies an off-server backup, and archives source/deployment settings for recovery. It rolls back web on failure. Evidence is saved to ignored `deploy/evidence/injury-tab-release.json`. The existing migration-008 isolated restore remains applicable. Do not mark this update live until that evidence and a live browser check pass.
+This mode builds the committed source and replaces only web. It verifies that worker/database container IDs and start times remain unchanged, checks the public navigation, roster API, existing stats/Finals data and readiness, verifies an off-server backup, and archives source/deployment settings for recovery. It rolls back web on failure. Evidence is saved to ignored `deploy/evidence/injury-tab-release.json`. The existing migration-008 isolated restore remains applicable. For future releases, verify both evidence and live browser behavior before marking publication complete.
 
 ## Existing game-details experience
 
