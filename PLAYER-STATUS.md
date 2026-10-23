@@ -1,14 +1,19 @@
 # Current player status
+## Prepared update: Warriors and 49ers icon selector
 
-## Prepared navigation update
+Two labeled icon buttons directly on Injury Report select Warriors or 49ers. Warriors is selected initially; only the selected team's cached roster/report is shown. The selected button has a visible outline/background and `aria-pressed` state. Both reports are accessible here independently of the scoreboard's followed-team preferences. Switching teams resets search/filter/reveal state so a newly selected team stays protected when spoiler protection is enabled. Automatic refresh keeps the selected team. Existing game-details reports, API data, provider schedule and subscriptions are unchanged.
 
-The next web release adds **Injury Report** beside **Scoreboard** in the top navigation. It opens `/#injury-report` without requiring a scheduled game. The shared roster/report display supports all followed teams or the existing sidebar team filter, player search, injury/availability filters, delayed-report notices and independent spoiler reveal. Switching back to Scoreboard retains its view and score-protection preference. Direct links, reload and browser Back select the correct tab.
+Typechecking and the production Next build passed. The local browser could not reach the preview because this session's loopback connection was denied, so interactive/phone verification is pending publication. Publish committed source with `node deploy/aws/publish-player-status.mjs --injury-tab` from normal PowerShell, then verify both icon buttons, one-team display, search, refresh and spoiler protection on the live app. This selector update is not yet deployed.
+
+## Navigation release history
+
+The October 23, 2026 web release added **Injury Report** beside **Scoreboard** in the top navigation. It opens `/#injury-report` without requiring a scheduled game. The shared roster/report display supports all followed teams or the existing sidebar team filter, player search, injury/availability filters, delayed-report notices and independent spoiler reveal. Switching back to Scoreboard retains its view and score-protection preference. Direct links, reload and browser Back select the correct tab.
 
 `GET /api/player-status` reads the existing migration-008 cache for the three followed teams, with `Cache-Control: no-store` and a bounded error response. It does not call BALLDONTLIE. The page uses the existing 15-second visible refresh, reconnect handling and scroll preservation. WNBA remains explicitly unavailable; no new provider subscription, migration or worker change is required.
 
 Local typechecking, all **71 tests**, the production Next build and publisher syntax checks passed. Browser tests used clearly labeled sample reports: top navigation, direct-link reload, Back, manual refresh, team filtering, player search, injury filters and spoiler protection passed, with no horizontal overflow at 320- and 390-pixel widths. Screenshot `preview/injury-tab-local-phone.png` is a local sample preview, not live deployment evidence.
 
-Publishing is pending the owner's AWS session. From normal PowerShell run:
+Navigation source `3c62bbb49c71` was deployed and verified live on October 23, 2026. Both cached reports, filters, spoiler protection and a 390-pixel phone layout passed live checks. Off-server backup `postgres/20261023T181534Z-d131b09409ae.json` was verified; worker/database containers stayed unchanged. See ignored `deploy/evidence/injury-tab-release.json` and `preview/injury-tab-live-phone.png`. For future web-only publishing, from normal PowerShell run:
 
 ```powershell
 node "C:\Users\abhin\Documents\Codex\2026-10-20\if-x20\outputs\bayline-mvp\deploy\aws\publish-player-status.mjs" --injury-tab
