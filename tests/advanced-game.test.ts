@@ -65,7 +65,7 @@ test('player fetching defaults off and validates explicit league configuration',
 test('actual SQL stores corrected quarter snapshots and only exposes player payloads on game details',async()=>{
   const db=await PGlite.create(),client=db as unknown as PoolClient,pool=db as unknown as Pick<Pool,'query'>;
   try {
-    for(const file of ['001_foundation.sql','002_game_ingestion.sql','004_game_media.sql','005_automatic_highlights.sql','006_season_records.sql','007_advanced_game_details.sql'])await db.exec(await readFile('migrations/'+file,'utf8'));
+    for(const file of ['001_foundation.sql','002_game_ingestion.sql','004_game_media.sql','005_automatic_highlights.sql','006_season_records.sql','007_advanced_game_details.sql','008_player_status.sql'])await db.exec(await readFile('migrations/'+file,'utf8'));
     const save=async(game=base)=>{const r=await db.query<{id:string}>("INSERT INTO sync_runs(league,status) VALUES('nba','running') RETURNING id::text");await storeGames(client,'nba',[game],r.rows[0].id,{from:'2026-10-01',to:'2026-10-31'},new Date());};
     await save();
     let requests=0,mode:'ready'|'fail'|'empty'='ready';
@@ -87,7 +87,7 @@ test('actual SQL stores corrected quarter snapshots and only exposes player payl
 test('player ingestion covers the full schedule history with inclusive Pacific dates and calendar-only games',async()=>{
   const db=await PGlite.create(),client=db as unknown as PoolClient;
   try {
-    for(const file of ['001_foundation.sql','002_game_ingestion.sql','004_game_media.sql','005_automatic_highlights.sql','006_season_records.sql','007_advanced_game_details.sql'])await db.exec(await readFile('migrations/'+file,'utf8'));
+    for(const file of ['001_foundation.sql','002_game_ingestion.sql','004_game_media.sql','005_automatic_highlights.sql','006_season_records.sql','007_advanced_game_details.sql','008_player_status.sql'])await db.exec(await readFile('migrations/'+file,'utf8'));
     const today=pacificDate(),{from,to}=ingestionWindow(),requested:string[]=[];
     const providers:PlayerStatsProvider[]=[];
     for(const league of ['nba','nfl'] as const){

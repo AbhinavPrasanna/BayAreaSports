@@ -14,6 +14,8 @@ Current season records appear beside followed teams; game cards show each team's
 
 NBA/NFL game dialogs include expandable Advanced details with quarter scores, overtime and player statistics for both teams. Basketball tables show minutes, scoring, rebounds, assists, defense and shooting; NFL tables group passing, rushing, receiving, defense and kicking. WNBA dialogs omit this section because their free feed lacks quarter scores. Spoiler protection hides all statistical results. See [ADVANCED-DETAILS.md](ADVANCED-DETAILS.md).
 
+The prepared Player status section adds current followed-team rosters, reported injuries, search and filters inside game details. Missing injury entries are labeled “No reported injury,” and older games clearly identify reports as current. WNBA status coverage remains unavailable with the configured access. Activation, coverage validation and recovery are documented in [PLAYER-STATUS.md](PLAYER-STATUS.md).
+
 ## Start on this Windows computer
 
 Prerequisites: Node.js 24, npm, and Docker Desktop using Linux containers. Docker Desktop must be running. Dependencies are locked by `package-lock.json`.

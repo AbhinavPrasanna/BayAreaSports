@@ -33,7 +33,7 @@ export interface NormalizedGame {
 }
 
 export interface GameTeam { providerId: number; name: string | null; abbreviation: string | null; }
-export interface StoredGame extends NormalizedGame { localDate: string; observedAt: string; changedAt: string; media?: import('./game-media').GameMedia; records?: import('./records').GameRecords | null; playerStats?: import('./advanced-game').PlayerStatsSnapshot; }
+export interface StoredGame extends NormalizedGame { localDate: string; observedAt: string; changedAt: string; media?: import('./game-media').GameMedia; records?: import('./records').GameRecords | null; playerStats?: import('./advanced-game').PlayerStatsSnapshot; playerStatus?:import('./player-status').TeamPlayerStatus[]; }
 export interface LeagueSync {
   league: FreeLeague;
   lastAttemptAt: string | null;

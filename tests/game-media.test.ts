@@ -51,7 +51,7 @@ test('PostgreSQL media imports are idempotent and remain isolated from scores an
   const db=await PGlite.create();
   const pool=db as unknown as Pick<Pool,'query'>;
   try {
-    for(const file of ['001_foundation.sql','002_game_ingestion.sql','004_game_media.sql','005_automatic_highlights.sql','006_season_records.sql','007_advanced_game_details.sql']) await db.exec(await readFile(`migrations/${file}`,'utf8'));
+    for(const file of ['001_foundation.sql','002_game_ingestion.sql','004_game_media.sql','005_automatic_highlights.sql','006_season_records.sql','007_advanced_game_details.sql','008_player_status.sql']) await db.exec(await readFile(`migrations/${file}`,'utf8'));
     await db.query("INSERT INTO teams (league,provider_id,name,enabled) VALUES ('nba',14,'Los Angeles Lakers',false) ON CONFLICT DO NOTHING");
     await db.query("INSERT INTO games (league,provider_id,home_team_id,away_team_id,starts_at,calendar_date,status,observed_at,home_score,away_score) VALUES ('nba',7,10,14,$1,'2026-10-21','scheduled',now(),110,100)",[game.startsAt]);
     assert.equal((await importReviewedMedia(pool,[entry])).changed,1);

@@ -11,6 +11,7 @@ phases:
     commands:
       - docker build --target web --tag "$WEB_REPOSITORY:$IMAGE_TAG" .
       - docker build --target worker --tag "$WORKER_REPOSITORY:$IMAGE_TAG" .
+      - docker run --rm --entrypoint node "$WORKER_REPOSITORY:$IMAGE_TAG" -e "require('fs').accessSync('migrations/008_player_status.sql');require('./dist-runtime/src/server/ingestion/player-status.js')"
       - docker run --rm --entrypoint node "$WORKER_REPOSITORY:$IMAGE_TAG" -e "require('fs').accessSync('dist-runtime/scripts/migrate.js');require('fs').accessSync('dist-runtime/scripts/import-game-media.js');require('fs').accessSync('migrations/007_advanced_game_details.sql');require('./dist-runtime/src/server/ingestion/player-stats.js');require('./dist-runtime/src/server/ingestion/season-records.js');require('./dist-runtime/src/server/media/highlight-discovery.js');require('./dist-runtime/src/server/media/reviewed-media.js').loadReviewedMedia()"
   post_build:
     commands:

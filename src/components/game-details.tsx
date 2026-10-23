@@ -8,6 +8,7 @@ import { browserScroll, captureScroll, restoreScroll } from './scroll-preservati
 import { GameMedia } from './game-media';
 import { AfterGameRecords,FinalsSeriesRecord } from './team-record';
 import { AdvancedGameDetails } from './advanced-game-details';
+import { PlayerStatusSection } from './player-status';
 
 export function GameDetails({ initial, refreshVersion, now, hideScore, protection, onReveal, onClose, trigger }: {
   initial: StoredGame; refreshVersion: number; now: number; hideScore: boolean; protection: boolean;
@@ -41,6 +42,7 @@ export function GameDetails({ initial, refreshVersion, now, hideScore, protectio
     {feed.error && <p className="notice" role="alert">Details couldn’t be refreshed. Showing the saved game; updates will retry automatically.</p>}
     <AfterGameRecords game={game} hidden={hideScore}/>
     <FinalsSeriesRecord game={game} hidden={hideScore}/>
+    <PlayerStatusSection game={game} hidden={hideScore}/>
     <AdvancedGameDetails game={game} hidden={hideScore}/>
     <GameMedia game={game} hideScore={hideScore} />
     <dl className="detail-facts"><div><dt>Matchup</dt><dd>{game.awayTeam.name} at {game.homeTeam.name}</dd></div><div><dt>Latest check</dt><dd>{checkLabel(game.observedAt, now)}</dd></div><div><dt>Updates</dt><dd>Refreshes every 15 seconds while this page is visible.</dd></div></dl>

@@ -6,6 +6,7 @@ import { gameMedia } from '../../shared/game-media';
 import { readRecordBook } from './records';
 import { currentTeamRecords, recordsAtGame } from '../../shared/records';
 import { readPlayerStats } from './player-stats';
+import { readTeamPlayerStatus } from './player-status';
 
 export async function readGames(pool: Pick<Pool, 'query'>, query: GamesQuery, gameId: number | null = null): Promise<GamesResponse> {
   const result = await pool.query<{ game: StoredGame & { automaticMedia?: unknown } }>(`SELECT json_build_object(
@@ -38,9 +39,11 @@ export async function readGames(pool: Pick<Pool, 'query'>, query: GamesQuery, ga
   const heartbeat = await pool.query<{ lastSeen: Date }>("SELECT last_seen_at AS \"lastSeen\" FROM worker_heartbeats WHERE worker_name='scheduler'");
   const recordBook=await readRecordBook(pool);
   const playerStats=gameId!==null&&result.rows.length?await readPlayerStats(pool,result.rows[0].game.league,gameId):undefined;
+  const detailGame=gameId!==null?result.rows[0]?.game:undefined;
+  const playerStatus=detailGame?await readTeamPlayerStatus(pool,detailGame.league,[detailGame.homeTeamId,detailGame.awayTeamId]):undefined;
   return { teamRecords:currentTeamRecords(recordBook),data: result.rows.map(({ game: { automaticMedia, ...game } }) => {
     const manual = gameMedia(game, game.media), automatic = gameMedia(game, automaticMedia);
     const media = !manual.highlight && automatic.highlight ? { ...manual, highlight: automatic.highlight, sourceUrl: automatic.sourceUrl, verifiedAt: automatic.verifiedAt } : manual;
-    return { ...game, media, records:recordsAtGame(game,recordBook),...(playerStats?{playerStats}:{}) };
+    return { ...game, media, records:recordsAtGame(game,recordBook),...(playerStats?{playerStats}:{}),...(playerStatus?{playerStatus}:{}) };
   }), sync: { leagues: states.rows.map(row => row.state), workerLastSeenAt: heartbeat.rows[0]?.lastSeen.toISOString() ?? null, serverTime: new Date().toISOString() }, range: { from: query.from, to: query.to, timeZone: TIME_ZONE } };
 }

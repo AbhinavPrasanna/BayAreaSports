@@ -4,6 +4,7 @@ import type { GameQuery, SportsProvider } from '../types';
 import { normalizeGame } from './normalize';
 import type { RecordPhase } from '../../../shared/records';
 import { normalizePlayerStats } from './player-stats';
+import { normalizeRosterPlayer,normalizeInjuryReport } from './player-status';
 
 const pageSchema = z.object({ data: z.array(z.unknown()), meta: z.object({ next_cursor: z.number().int().nullable().optional() }).optional() });
 
@@ -48,6 +49,21 @@ export class BallDontLieAdapter implements SportsProvider {
     if(cursor!==undefined)url.searchParams.set('cursor',String(cursor));
     const page=await this.requestPage(url,signal);
     return {players:page.data.map(row=>normalizePlayerStats(this.league,row,game.providerId,[game.homeTeamId,game.awayTeamId])),nextCursor:page.meta?.next_cursor??null};
+  }
+  async getRoster(teamId:number,cursor:number|undefined,signal?:AbortSignal){
+    const path=this.league==='nba'?'v1/players/active':`${this.league}/v1/players/active`;
+    const url=new URL('https://api.balldontlie.io/'+path);url.searchParams.set('per_page','100');
+    url.searchParams.set('team_ids[]',String(teamId));
+    if(cursor!==undefined)url.searchParams.set('cursor',String(cursor));
+    const page=await this.requestPage(url,signal);
+    return {players:page.data.map(row=>normalizeRosterPlayer(this.league,row,teamId)),nextCursor:page.meta?.next_cursor??null};
+  }
+  async getInjuries(teamId:number,cursor:number|undefined,signal?:AbortSignal){
+    const path=this.league==='nba'?'v1/player_injuries':`${this.league}/v1/player_injuries`;
+    const url=new URL('https://api.balldontlie.io/'+path);url.searchParams.set('team_ids[]',String(teamId));url.searchParams.set('per_page','100');
+    if(cursor!==undefined)url.searchParams.set('cursor',String(cursor));
+    const page=await this.requestPage(url,signal);
+    return {players:page.data.map(row=>normalizeInjuryReport(this.league,row,teamId)),nextCursor:page.meta?.next_cursor??null};
   }
   private async requestGames(url:URL,signal?:AbortSignal){
     const page=await this.requestPage(url,signal);

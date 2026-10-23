@@ -239,6 +239,24 @@ h2 { margin:0; font-size:27px; letter-spacing:-.8px; font-weight:600; }
 .muted-record { color:var(--muted); font-weight:400; }
 .finals-record { display:block; font-weight:600; }
 .finals-game-label { margin:0 0 12px; font-size:11px; font-weight:600; color:var(--ink); }
+.player-status-panel { margin:20px 0; border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+.player-status-panel>summary { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:16px; min-height:64px; cursor:pointer; font-size:14px; font-weight:600; list-style:none; }
+.player-status-panel>summary::-webkit-details-marker { display:none; }
+.player-status-panel>summary small { display:block; margin-top:5px; color:var(--muted); font-size:11px; font-weight:400; }
+.player-status-body { padding:0 16px 16px; }
+.player-status-filters { display:grid; grid-template-columns:1.2fr 1fr; gap:12px; margin:18px 0; }
+.player-status-filters label { display:block; min-width:0; font-size:11px; font-weight:600; }
+.player-status-filters input,.player-status-filters select { display:block; width:100%; min-width:0; min-height:44px; margin-top:7px; padding:10px; border:1px solid var(--line); border-radius:7px; background:#fff; color:var(--ink); font:inherit; }
+.status-team h3 { font-size:14px; margin:20px 0 10px; }
+.player-status-list { list-style:none; padding:0; margin:12px 0 0; }
+.player-status-list>li { border-top:1px solid var(--line); padding:14px 0; }
+.player-status-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; font-size:13px; }
+.player-status-heading strong { min-width:0; overflow-wrap:anywhere; }
+.player-status-heading small,.player-status-list>li>small { display:block; margin-top:5px; color:var(--muted); font-size:11px; font-weight:400; line-height:1.6; overflow-wrap:anywhere; }
+.player-status-list p { font-size:12px; line-height:1.75; margin:10px 0; overflow-wrap:anywhere; }
+.status-badge { flex-shrink:0; max-width:48%; padding:5px 8px; border-radius:6px; font-size:10px; line-height:1.5; overflow-wrap:anywhere; background:#e8eee4; color:var(--ink); }
+.status-badge.reported { color:#81451e; background:#f5e9dc; }
+@media(max-width:540px) { .player-status-filters { grid-template-columns:1fr; } .player-status-body { padding:0 12px 14px; } }
 .after-game-records { margin:20px 0; padding:16px; border:1px solid var(--line); border-radius:12px; }
 .after-game-records h3 { font-size:14px; margin:0 0 12px; }
 .after-game-records h3 small { display:block; margin-top:5px; color:var(--muted); font-weight:400; font-size:11px; }

@@ -8,6 +8,7 @@ import { importReviewedMedia, loadReviewedMedia } from '../server/media/reviewed
 import { syncNextHighlights } from '../server/media/highlight-discovery';
 import { syncNextRecordPage } from '../server/ingestion/season-records';
 import { configurePlayerStats,syncNextPlayerStats } from '../server/ingestion/player-stats';
+import { configurePlayerStatus,syncNextPlayerStatus } from '../server/ingestion/player-status';
 
 async function main() {
   loadLocalEnvironment();
@@ -31,6 +32,7 @@ async function main() {
     lockClient.on('error', () => { console.error(JSON.stringify({ event: 'worker_lock_connection_lost' })); stop.abort(); process.exitCode = 1; });
     await lockClient.query("UPDATE sync_runs SET status='failed', completed_at=now(), error_code='WORKER_RESTART' WHERE status='running'");
     await configurePlayerStats(lockClient,config.PLAYER_STATS_LEAGUES);
+    await configurePlayerStatus(lockClient,config.PLAYER_STATUS_LEAGUES);
     console.log(JSON.stringify({ event: 'worker_started', leagues: adapters.map(adapter => adapter.league), mode: 'game_ingestion' }));
     console.log(JSON.stringify({ event: 'highlights_discovery', enabled: config.HIGHLIGHTS_ENABLED && !!config.YOUTUBE_API_KEY }));
     while (!stop.signal.aborted) {
@@ -47,6 +49,9 @@ async function main() {
         await importReviewedMedia(lockClient, reviewedMedia).catch(() => console.error(JSON.stringify({ event: 'media_import_failed' })));
         mediaCheckAfter = Date.now() + 600_000;
       }
+      if(!stop.signal.aborted)await syncNextPlayerStatus(lockClient,adapters,config.PLAYER_STATUS_LEAGUES,stop.signal).catch(()=>{
+        if(!stop.signal.aborted)console.error(JSON.stringify({event:'player_status_storage_failed'}));
+      });
       if (Date.now() >= highlightCheckAfter && !stop.signal.aborted) {
         await syncNextHighlights(lockClient, config.HIGHLIGHTS_ENABLED ? config.YOUTUBE_API_KEY : undefined, config.ENABLED_LEAGUES, stop.signal)
           .catch(() => { if (!stop.signal.aborted) console.error(JSON.stringify({ event: 'highlights_storage_failed' })); });
