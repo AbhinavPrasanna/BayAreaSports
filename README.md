@@ -16,6 +16,8 @@ NBA/NFL game dialogs include expandable Advanced details with quarter scores, ov
 
 The live Player status section adds current Warriors and 49ers rosters, reported injuries, search and filters inside game details. Missing injury entries are labeled “No reported injury,” and older games clearly identify reports as current. Reports stay protected until deliberately revealed, independently of scores. WNBA status coverage remains unavailable with the configured access. Coverage validation and recovery are documented in [PLAYER-STATUS.md](PLAYER-STATUS.md).
 
+A dedicated **Injury Report** navigation tab is implemented and locally verified, pending web deployment. It exposes the same cached rosters without opening a game, follows the sidebar team selection and preserves score protection. See the prepared navigation update in [PLAYER-STATUS.md](PLAYER-STATUS.md).
+
 ## Start on this Windows computer
 
 Prerequisites: Node.js 24, npm, and Docker Desktop using Linux containers. Docker Desktop must be running. Dependencies are locked by `package-lock.json`.

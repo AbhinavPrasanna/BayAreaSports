@@ -2,6 +2,7 @@
 :root { color-scheme:light; --paper:#f7f7f2; --white:#fff; --ink:#193a30; --muted:#768079; --line:#e0e4dc; --orange:#cf603c; }
 * { box-sizing:border-box; }
 html { scroll-behavior:smooth; scroll-padding-top:100px; }
+[hidden] { display:none!important; }
 body { margin:0; color:var(--ink); background:var(--paper); font-family:'DM Sans',Arial,sans-serif; font-size:14px; -webkit-font-smoothing:antialiased; }
 button,a { -webkit-tap-highlight-color:transparent; }
 button { font:inherit; cursor:pointer; color:inherit; }
@@ -240,6 +241,11 @@ h2 { margin:0; font-size:27px; letter-spacing:-.8px; font-weight:600; }
 .finals-record { display:block; font-weight:600; }
 .finals-game-label { margin:0 0 12px; font-size:11px; font-weight:600; color:var(--ink); }
 .player-status-panel { margin:20px 0; border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+.injury-report-section { padding:36px 0 0; }
+.injury-intro { color:var(--muted); line-height:1.8; max-width:560px; margin:0 0 22px; }
+.injury-report-card { background:var(--white); border:1px solid var(--line); border-radius:12px; padding:20px; min-width:0; }
+.injury-report-card .status-team+.status-team { border-top:1px solid var(--line); margin-top:28px; padding-top:16px; }
+@media(max-width:540px) { .site-header { gap:12px; } .site-header nav { gap:14px; font-size:11px; white-space:nowrap; } .brand { font-size:18px; letter-spacing:1.5px; } .injury-report-section { padding-top:28px; } .injury-report-card { padding:16px 12px; } }
 .player-status-panel>summary { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:16px; min-height:64px; cursor:pointer; font-size:14px; font-weight:600; list-style:none; }
 .player-status-panel>summary::-webkit-details-marker { display:none; }
 .player-status-panel>summary small { display:block; margin-top:5px; color:var(--muted); font-size:11px; font-weight:400; }

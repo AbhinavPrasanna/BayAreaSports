@@ -1,5 +1,23 @@
 # Current player status
 
+## Prepared navigation update
+
+The next web release adds **Injury Report** beside **Scoreboard** in the top navigation. It opens `/#injury-report` without requiring a scheduled game. The shared roster/report display supports all followed teams or the existing sidebar team filter, player search, injury/availability filters, delayed-report notices and independent spoiler reveal. Switching back to Scoreboard retains its view and score-protection preference. Direct links, reload and browser Back select the correct tab.
+
+`GET /api/player-status` reads the existing migration-008 cache for the three followed teams, with `Cache-Control: no-store` and a bounded error response. It does not call BALLDONTLIE. The page uses the existing 15-second visible refresh, reconnect handling and scroll preservation. WNBA remains explicitly unavailable; no new provider subscription, migration or worker change is required.
+
+Local typechecking, all **71 tests**, the production Next build and publisher syntax checks passed. Browser tests used clearly labeled sample reports: top navigation, direct-link reload, Back, manual refresh, team filtering, player search, injury filters and spoiler protection passed, with no horizontal overflow at 320- and 390-pixel widths. Screenshot `preview/injury-tab-local-phone.png` is a local sample preview, not live deployment evidence.
+
+Publishing is pending the owner's AWS session. From normal PowerShell run:
+
+```powershell
+node "C:\Users\abhin\Documents\Codex\2026-10-20\if-x20\outputs\bayline-mvp\deploy\aws\publish-player-status.mjs" --injury-tab
+```
+
+This mode builds the committed source and replaces only web. It verifies that worker/database container IDs and start times remain unchanged, checks the public navigation, roster API, existing stats/Finals data and readiness, verifies an off-server backup, and archives source/deployment settings for recovery. It rolls back web on failure. Evidence is saved to ignored `deploy/evidence/injury-tab-release.json`. The existing migration-008 isolated restore remains applicable. Do not mark this update live until that evidence and a live browser check pass.
+
+## Existing game-details experience
+
 An expandable **Player status** section in game details lists the followed Bay Area team's current provider roster plus any extra players in its injury report. It includes reported status (Out, Questionable, PUP/IR and other provider labels), injury commentary, position, report date and estimated return when supplied. Search and filters support long NFL rosters. Opponent rosters are outside this release's coverage.
 
 The app never interprets absence from an injury feed as confirmed health. A player on a complete roster without an injury entry is labeled **No reported injury**. Explicit available/healthy/cleared designations remain provider statements. A roster or injury-fetch failure cannot publish a healthy-looking partial report. Missing coverage stays pending/unavailable, or delayed with the prior complete snapshot retained.

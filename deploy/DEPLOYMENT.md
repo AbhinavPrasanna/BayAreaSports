@@ -2,6 +2,12 @@
 
 Live app: **https://baylinescore.com/** (singular "score"). The user registered this exact domain in Route 53. `https://www.baylinescore.com/` redirects to the primary domain with HTTP 308 and preserves paths/query strings. The retained static IP `44.224.200.231` also continues to serve the app for existing bookmarks and recovery.
 
+## Prepared web update — Injury Report navigation (not deployed)
+
+The top navigation adds Injury Report beside Scoreboard, backed by `GET /api/player-status` and the existing migration-008 report cache. Local typechecking, all 71 tests and the production Next build passed. Sample-data browser checks passed top navigation, Back, direct-link reload, team/search/injury filters, manual refresh and independent spoiler protection. At 320 and 390 pixels the header/report had no horizontal overflow. Screenshot `preview/injury-tab-local-phone.png` is explicitly a local sample preview. No new data subscription, provider request or schema change is introduced.
+
+The sandbox account cannot access the owner's AWS profile. Run `node deploy/aws/publish-player-status.mjs --injury-tab` from the owner's normal PowerShell to build committed source and deploy only web; worker/database containers stay running. The helper checks public navigation, cached roster responses, existing player/Finals data, readiness and an off-server backup, archives source and configuration, and rolls back web on failure. Record `deploy/evidence/injury-tab-release.json` and live browser verification before marking this update deployed. The existing migration-008 isolated restore below remains applicable.
+
 ## Current application release — Player status, October 22, 2026
 
 Source `9933f59db9aeff8a9c674a414b290313e7c74555` adds expandable current followed-team rosters and injury reports inside game details. It includes provider injury/status commentary, report dates, return estimates, search/filter controls, a current-versus-historical notice and independent spoiler reveal. Missing injury entries are labeled “No reported injury,” with no inference of confirmed fitness. Migration 008 adds the atomic report cache and gate. Production now has `PLAYER_STATUS_LEAGUES=nba,nfl`: authenticated active-player/injury checks passed for Warriors (18 roster, 5 injury rows) and 49ers (89 roster, 29 injury rows). WNBA active-player/injury probes returned HTTP 401 and stay disabled. See [PLAYER-STATUS.md](../PLAYER-STATUS.md).

@@ -1,6 +1,9 @@
 import type {Pool} from 'pg';
-import type {FreeLeague} from '../../shared/games';
+import {followedTeams,type FreeLeague} from '../../shared/games';
 import type {PlayerStatus,TeamPlayerStatus} from '../../shared/player-status';
+export async function readFollowedPlayerStatus(pool:Pick<Pool,'query'>):Promise<TeamPlayerStatus[]>{
+  return (await Promise.all(followedTeams.map(team=>readTeamPlayerStatus(pool,team.league as FreeLeague,[team.providerId])))).flat();
+}
 export async function readTeamPlayerStatus(pool:Pick<Pool,'query'>,league:FreeLeague,teamIds:number[]):Promise<TeamPlayerStatus[]>{
   const result=await pool.query<{teamId:number;teamName:string;enabled:boolean;players:PlayerStatus[]|null;checkedAt:Date|null;error:string|null}>(`SELECT s.team_id AS "teamId",t.name AS "teamName",s.enabled,s.payload AS players,s.checked_at AS "checkedAt",s.error_code AS error
     FROM team_player_status s JOIN teams t ON t.league=s.league AND t.provider_id=s.team_id

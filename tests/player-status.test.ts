@@ -9,12 +9,12 @@ import {combinePlayerStatus} from '../src/shared/player-status';
 import {normalizeRosterPlayer,normalizeInjuryReport} from '../src/server/providers/balldontlie/player-status';
 import {BallDontLieAdapter,ProviderRequestError} from '../src/server/providers/balldontlie/adapter';
 import {configurePlayerStatus,syncNextPlayerStatus,type StatusProvider} from '../src/server/ingestion/player-status';
-import {readTeamPlayerStatus} from '../src/server/db/player-status';
+import {readTeamPlayerStatus,readFollowedPlayerStatus} from '../src/server/db/player-status';
 import {readGames} from '../src/server/db/game-reader';
 import {storeGames} from '../src/server/ingestion/store';
 import {normalizeGame} from '../src/server/providers/balldontlie/normalize';
 import {parseWorkerEnv} from '../src/server/config/env';
-import {PlayerStatusSection} from '../src/components/player-status';
+import {PlayerStatusSection,PlayerStatusReport} from '../src/components/player-status';
 import type {StoredGame} from '../src/shared/games';
 
 const raw={id:42,first_name:'Test',last_name:'Player',position:'G',team:{id:10}};
@@ -64,6 +64,14 @@ test('current roster/injury adapters use scoped active-player endpoints; league 
   assert.throws(()=>parseWorkerEnv({...env,ENABLED_LEAGUES:'nba',PLAYER_STATUS_LEAGUES:'nfl'}));
 });
 
+test('standalone roster reports preserve spoiler protection and show coverage without requiring a game',()=>{
+  const teams=[{league:'nba' as const,teamId:10,teamName:'Warriors',status:'delayed' as const,checkedAt:'2026-10-22T12:00:00Z',players:combinePlayerStatus([roster,other],[injury])},{league:'wnba' as const,teamId:13,teamName:'Valkyries',status:'disabled' as const,checkedAt:null,players:[]}];
+  const hidden=renderToStaticMarkup(createElement(PlayerStatusReport,{teams,hidden:true}));
+  assert.doesNotMatch(hidden,/Test Player|Knee injury|Other Player/);
+  const visible=renderToStaticMarkup(createElement(PlayerStatusReport,{teams,hidden:false}));
+  for(const text of ['Test Player','Knee injury','No reported injury','Updates are delayed','coverage isn’t enabled','Current team reports'])assert.ok(visible.includes(text));
+});
+
 test('status SQL publishes only complete roster/injury pages and retains the last report on failures',async()=>{
   const db=await PGlite.create(),client=db as unknown as PoolClient,pool=db as unknown as Pick<Pool,'query'>;
   try{
@@ -75,6 +83,7 @@ test('status SQL publishes only complete roster/injury pages and retains the las
     async function tick(){await db.exec("UPDATE player_status_gate SET next_check_at=now()-interval '1 second';UPDATE team_player_status SET next_sync_at=now()-interval '1 second';UPDATE provider_throttle SET next_request_at=now()-interval '1 minute'");await syncNextPlayerStatus(client,[provider],['nba'],new AbortController().signal);}
     await configurePlayerStatus(client,[]);await syncNextPlayerStatus(client,[provider],[],new AbortController().signal);assert.equal(calls,0);assert.equal((await readTeamPlayerStatus(pool,'nba',[10]))[0].status,'disabled');
     await configurePlayerStatus(client,['nba']);await tick();let saved=(await readTeamPlayerStatus(pool,'nba',[10]))[0];assert.equal(saved.status,'ready');assert.equal(saved.players.length,2);const checked=saved.checkedAt;
+    const reports=await readFollowedPlayerStatus(pool);assert.equal(reports.length,3);assert.equal(reports.find(team=>team.league==='nba')?.players.length,2);assert.equal(reports.find(team=>team.league==='wnba')?.status,'disabled');assert.equal(reports.find(team=>team.league==='nfl')?.players.length,0);
     assert.equal((await readGames(pool,{league:'nba',view:'all',from:'2026-10-22',to:'2026-10-22'})).data[0]?.playerStatus,undefined);
     const detail=(await readGames(pool,{league:'nba',view:'all',from:'2026-10-22',to:'2026-10-22'},7)).data[0];assert.equal(detail.playerStatus?.[0].players.length,2);
     mode='partial';await tick();saved=(await readTeamPlayerStatus(pool,'nba',[10]))[0];assert.equal(saved.status,'delayed');assert.equal(saved.checkedAt,checked);assert.equal(saved.players[0].reportedStatus,'Out');
