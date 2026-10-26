@@ -2,6 +2,14 @@
 
 Live app: **https://baylinescore.com/** (singular "score"). The user registered this exact domain in Route 53. `https://www.baylinescore.com/` redirects to the primary domain with HTTP 308 and preserves paths/query strings. The retained static IP `44.224.200.231` also continues to serve the app for existing bookmarks and recovery.
 
+## Prepared web update — supplied player artwork, October 26, 2026 (not deployed)
+
+The home-page hero uses the user's supplied 1536×1024 PNG featuring 49ers, Warriors and Valkyries players with their team logos. The new versioned public URL is `/images/bayline-hero-players.png`; Next.js responsive image optimization and the existing uncropped 3:2 layout remain enabled. Alt text describes the new composition. The copied source matches the supplied file exactly: SHA-256 `ebbfac798aaa58ada21d837bb7bd9750389bab3b0a9dd1821736d959227420ec`.
+
+Typechecking passed. Actual Next.js local-browser previews at desktop width and 390×844 confirmed image loading, full composition and no horizontal page overflow. Phone image dimensions were 337.5×225 pixels. Screenshots: `preview/hero-players-local-desktop.png` and `preview/hero-players-local-phone.png`. These are local hero previews without a live database connection; they do not verify production ingestion or deployment.
+
+The sandbox's AWS CLI reports that the default profile is unavailable. Publish from the owner's normal PowerShell using `node deploy/aws/publish-player-status.mjs --injury-tab`; this existing mode deploys only web and preserves worker/database containers. Verify the new public image's hash, optimized rendering and responsive layout after release, then replace this prepared note with deployment evidence. No new migration, provider request or subscription is required.
+
 ## Current web release — Warriors and 49ers icon selector, October 23, 2026
 
 Source `a1ee91c807b07eefacf2162510b5eeb211c218b4` adds two labeled icon buttons directly on Injury Report. Warriors is selected initially; selecting either team shows only its current cached roster/report. The selected button has a visible outline and `aria-pressed` state. This selector is independent of scoreboard follow preferences. Switching teams resets search/filter/reveal state; refresh retains the selected team and search. No provider request, subscription, worker or schema change was introduced. The original Injury Report navigation was previously deployed from `3c62bbb49c71`.
