@@ -1,5 +1,7 @@
 # Viewing links and game highlights
 
+Warriors viewing networks now have a prepared automatic refresh path from the official NBA schedule; see [BROADCASTS.md](BROADCASTS.md). The catalog below remains the exact-game manual fallback and the viewing source for NFL/WNBA. Automatic production activation is pending.
+
 Game cards open viewing options or highlights in game details. U.S. broadcast/streaming links include access notes and an official source. A service link is not a guarantee that a viewer's location or subscription includes the game. Missing or expired entries link to the official team schedule/viewing guide.
 
 Completed games show reviewed YouTube highlights, automatically matched official league videos when discovery is enabled, or a clearly labeled official-channel search when no verified match exists. The reviewed catalog contains two official WNBA clips and four official NFL clips for the September 27–October 19, 2026 49ers games, plus viewing options for upcoming Warriors, 49ers and Valkyries games. Automatic discovery uses only **@NBA for Warriors**, **@NFL for 49ers**, and **@WNBA for Valkyries**. It requires a server-only YouTube Data API key; see [YOUTUBE-SETUP.md](YOUTUBE-SETUP.md). Broadcaster listings remain manually reviewed.

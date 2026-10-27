@@ -2,7 +2,7 @@
 
 Live app: **[baylinescore.com](https://baylinescore.com/)**. `www.baylinescore.com` redirects to the primary domain. Deployment and recovery details are in [deploy/DEPLOYMENT.md](deploy/DEPLOYMENT.md) and [deploy/RUNBOOK.md](deploy/RUNBOOK.md).
 
-Upcoming games include reviewed U.S. viewing links; completed games support a YouTube highlights miniplayer with separate spoiler protection. Missing media has official-source fallbacks. See [MEDIA.md](MEDIA.md) for the initial coverage and the review/import process.
+Warriors viewing networks sync from the official NBA schedule every 15 minutes; other teams retain reviewed U.S. viewing links; completed games support a YouTube highlights miniplayer with separate spoiler protection. Missing media has official-source fallbacks. See [BROADCASTS.md](BROADCASTS.md) for Warriors broadcast syncing and [MEDIA.md](MEDIA.md) for the initial coverage and the review/import process.
 
 The independent worker can automatically attach official NBA/NFL/WNBA full-game highlights after final games. Matching, persisted retries, quota limits, key setup and known limitations are documented in [YOUTUBE-SETUP.md](YOUTUBE-SETUP.md). A YouTube key is optional and remains worker-only; without it, discovery is disabled and the reviewed catalog continues to work.
 

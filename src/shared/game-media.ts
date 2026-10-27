@@ -18,13 +18,31 @@ export const reviewedMediaSchema = z.object({
 export type ReviewedMedia = z.infer<typeof reviewedMediaSchema>;
 export type Broadcast = z.infer<typeof broadcastSchema>;
 export type Highlight = z.infer<typeof highlightSchema>;
-export interface GameMedia { broadcasts: Broadcast[]; highlight: Highlight | null; sourceUrl: string | null; verifiedAt: string | null; guide: { label: string; url: string }; youtubeSearchUrl: string; }
+export interface GameMedia { broadcasts: Broadcast[]; highlight: Highlight | null; sourceUrl: string | null; verifiedAt: string | null; guide: { label: string; url: string }; youtubeSearchUrl: string; broadcastSource?: 'official_schedule' | 'reviewed'; broadcastDelayed?: boolean; }
 
 export function parseMediaCatalog(value: unknown): ReviewedMedia[] {
   const entries = z.array(reviewedMediaSchema).max(2000).parse(value);
   const keys = entries.map(entry => `${entry.league}:${entry.providerId}`);
   if (new Set(keys).size !== keys.length) throw new Error('Duplicate reviewed game media entry.');
   return entries;
+}
+
+/** Broadcast provenance is independent of highlight provenance and never freshened by a video refresh. */
+export function resolveGameMedia(game: StoredGame, manualRaw: unknown, youtubeRaw: unknown, officialRaw: unknown, expiresAt: string | null, sourceFailed: boolean, now=Date.now()): GameMedia {
+  const manual=gameMedia(game,manualRaw,now), youtube=gameMedia(game,youtubeRaw,now);
+  let result:GameMedia={...manual,highlight:manual.highlight??youtube.highlight,broadcastSource:'reviewed',broadcastDelayed:sourceFailed&&game.league==='nba'};
+  const parsed=reviewedMediaSchema.safeParse(officialRaw);
+  if(!parsed.success) return result;
+  const entry=parsed.data;
+  if(entry.league!==game.league || entry.providerId!==game.providerId || entry.homeTeamId!==game.homeTeamId || entry.awayTeamId!==game.awayTeamId || Date.parse(entry.startsAt)!==Date.parse(game.startsAt??'')) return result;
+  const checked=Date.parse(entry.verifiedAt);
+  if(checked>now+300_000) return result;
+  // A newer explicit manual broadcast correction can temporarily override the feed.
+  if(manual.broadcasts.length && Date.parse(manual.verifiedAt??'')>checked) return result;
+  const fresh=expiresAt!==null && Date.parse(expiresAt)>now && now-checked<=86400_000;
+  const official=gameMedia(game,entry,now);
+  result={...result,broadcasts:fresh?official.broadcasts:[],sourceUrl:entry.sourceUrl,verifiedAt:entry.verifiedAt,broadcastSource:'official_schedule',broadcastDelayed:sourceFailed||!fresh||now-checked>30*60_000};
+  return result;
 }
 
 export function gameMedia(game: StoredGame, raw: unknown, now = Date.now()): GameMedia {

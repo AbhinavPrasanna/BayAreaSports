@@ -75,7 +75,7 @@ test('standalone roster reports preserve spoiler protection and show coverage wi
 test('status SQL publishes only complete roster/injury pages and retains the last report on failures',async()=>{
   const db=await PGlite.create(),client=db as unknown as PoolClient,pool=db as unknown as Pick<Pool,'query'>;
   try{
-    for(const file of ['001_foundation.sql','002_game_ingestion.sql','004_game_media.sql','005_automatic_highlights.sql','006_season_records.sql','007_advanced_game_details.sql','008_player_status.sql'])await db.exec(await readFile('migrations/'+file,'utf8'));
+    for(const file of ['001_foundation.sql','002_game_ingestion.sql','004_game_media.sql','005_automatic_highlights.sql','006_season_records.sql','007_advanced_game_details.sql','008_player_status.sql','009_official_broadcasts.sql'])await db.exec(await readFile('migrations/'+file,'utf8'));
     const run=await db.query<{id:string}>("INSERT INTO sync_runs(league,status) VALUES('nba','running') RETURNING id::text");await storeGames(client,'nba',[game],run.rows[0].id,{from:'2026-10-01',to:'2026-10-31'},new Date());
     let calls=0,mode:'ready'|'partial'|'emptyRoster'|'emptyReport'|'limited'='ready';
     const slot=async()=>{calls++;await db.exec("UPDATE provider_throttle SET next_request_at=now()-interval '1 minute'");};

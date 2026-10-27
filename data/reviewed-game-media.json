@@ -203,5 +203,31 @@
       "channel": "NFL",
       "verifiedAt": "2026-10-21T20:19:47.174Z"
     }
+  },
+  {
+    "league": "nba",
+    "providerId": 21717970,
+    "homeTeamId": 8,
+    "awayTeamId": 10,
+    "startsAt": "2026-10-27T02:00:00Z",
+    "verifiedAt": "2026-10-26T20:46:11Z",
+    "sourceUrl": "https://www.nba.com/warriors/schedule",
+    "broadcasts": [
+      {
+        "label": "Peacock",
+        "url": "https://peacocktv.app.link/eKAuSFqZc7b",
+        "kind": "stream",
+        "region": "US",
+        "access": "Subscription required; regional restrictions may apply."
+      },
+      {
+        "label": "NBC Sports Network",
+        "url": "https://www.nba.com/how-to-watch-game-redirect/0022600127?partnerRef=Warriors&platform=web&surface=gameblock",
+        "kind": "tv",
+        "region": "US",
+        "access": "Check your TV provider and location for access."
+      }
+    ],
+    "highlight": null
   }
 ]

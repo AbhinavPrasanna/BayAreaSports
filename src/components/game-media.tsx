@@ -26,8 +26,9 @@ export function GameMedia({ game, hideScore }: { game: StoredGame; hideScore: bo
     {finished ? <Highlights key={`${game.league}:${game.providerId}:${hideScore}`} game={game} hideScore={hideScore} /> : <>
       {media.broadcasts.length ? <>
         <div className="broadcast-list">{media.broadcasts.map(item => <a key={`${item.label}:${item.url}`} href={item.url} target="_blank" rel="noopener" className="broadcast-link"><span><strong>{item.label}</strong><small>{item.kind === 'stream' ? 'Streaming' : 'TV / provider access'} · {item.access}</small></span><span aria-hidden="true">↗</span></a>)}</div>
-        <p className="media-caption">Reviewed {media.verifiedAt ? new Date(media.verifiedAt).toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles', month: 'short', day: 'numeric' }) : ''}{media.sourceUrl && <> · <a href={media.sourceUrl} target="_blank" rel="noopener">Official listing ↗</a></>}</p>
+        <p className="media-caption">{media.broadcastSource==='official_schedule'?'Checked':'Reviewed'} {media.verifiedAt ? new Date(media.verifiedAt).toLocaleString('en-US', { timeZone: 'America/Los_Angeles', month: 'short', day: 'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short' }) : ''}{media.sourceUrl && <> · <a href={media.sourceUrl} target="_blank" rel="noopener">Official listing ↗</a></>}</p>
       </> : <p className="media-note">{['delayed','postponed'].includes(game.status) ? 'The schedule changed. Recheck the official listing for viewing details.' : 'Game-specific viewing options haven’t been confirmed here yet.'}</p>}
+      {media.broadcastDelayed && <p className="media-note">Viewing updates are delayed. {media.broadcasts.length?'These are the last confirmed listings. ':''}Check the official schedule before watching.</p>}
       <a className="media-external" href={media.guide.url} target="_blank" rel="noopener">{media.guide.label} <span aria-hidden="true">↗</span></a>
       <p className="media-caption">Availability depends on location and your subscription or TV provider. Links open the official service; sign-in may be required.</p>
     </>}

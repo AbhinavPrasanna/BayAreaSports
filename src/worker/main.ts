@@ -9,6 +9,7 @@ import { syncNextHighlights } from '../server/media/highlight-discovery';
 import { syncNextRecordPage } from '../server/ingestion/season-records';
 import { configurePlayerStats,syncNextPlayerStats } from '../server/ingestion/player-stats';
 import { configurePlayerStatus,syncNextPlayerStatus } from '../server/ingestion/player-status';
+import { syncWarriorsBroadcasts } from '../server/media/warriors-broadcasts';
 
 async function main() {
   loadLocalEnvironment();
@@ -57,6 +58,9 @@ async function main() {
           .catch(() => { if (!stop.signal.aborted) console.error(JSON.stringify({ event: 'highlights_storage_failed' })); });
         highlightCheckAfter = Date.now() + 60_000;
       }
+      if(config.ENABLED_LEAGUES.includes('nba')&&!stop.signal.aborted) await syncWarriorsBroadcasts(lockClient,stop.signal).catch(()=>{
+        if(!stop.signal.aborted)console.error(JSON.stringify({event:'warriors_broadcasts_storage_failed'}));
+      });
       await sleep(5000, undefined, { signal: stop.signal }).catch(error => { if (error.name !== 'AbortError') throw error; });
     }
   } finally {

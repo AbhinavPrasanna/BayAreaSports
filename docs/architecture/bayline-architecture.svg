@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1120" viewBox="0 0 1600 1120" role="img" aria-labelledby="title description">
+<title id="title">Bayline Sports production architecture</title>
+<desc id="description">Fans reach a Next.js application through Route 53 DNS and Caddy HTTPS on AWS Lightsail. An independent Node.js worker polls BALLDONTLIE, official NBA broadcast schedules and official YouTube channels, validates data and writes private PostgreSQL snapshots. The browser refreshes cached APIs every 15 seconds. Off-server backups, an independent readiness monitor and a CodeBuild to ECR release path support operations.</desc>
+<rect width="1600" height="1120" fill="#F7F8F5"/>
+<text x="56" y="51" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700" fill="#B45332" text-anchor="start">BAYLINE SPORTS</text>
+<text x="56" y="91" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="700" fill="#193A30" text-anchor="start">Production architecture</text>
+<text x="56" y="123" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="400" fill="#607267" text-anchor="start">A cached sports dashboard with independent ingestion, private storage and verified recovery.</text>
+<rect x="340" y="156" width="970" height="492" rx="18" fill="#FFFFFF" stroke="#D9E1D8" stroke-width="1"/>
+<text x="364" y="187" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#193A30" text-anchor="start">AWS LIGHTSAIL  /  DOCKER COMPOSE</text>
+<text x="364" y="210" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">Web, worker and PostgreSQL run as separate services.</text>
+<text x="1340" y="199" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" fill="#607267" text-anchor="start">EXTERNAL DATA</text>
+<polyline points="300,305 380,305" fill="none" stroke="#6F8275" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polygon points="380.00,305.00 371.89,308.90 371.89,301.10" fill="#6F8275"/>
+<text x="340" y="291" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" fill="#32546F" text-anchor="middle">HTTPS</text>
+<polyline points="570,305 650,305" fill="none" stroke="#6F8275" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polygon points="650.00,305.00 641.89,308.90 641.89,301.10" fill="#6F8275"/>
+<text x="610" y="291" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="400" fill="#607267" text-anchor="middle">route</text>
+<polyline points="785,370 785,465" fill="none" stroke="#6F8275" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polygon points="785.00,465.00 781.10,456.89 788.90,456.89" fill="#6F8275"/>
+<polygon points="785.00,370.00 788.90,378.11 781.10,378.11" fill="#6F8275"/>
+<text x="806" y="412" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700" fill="#193A30" text-anchor="start">Cached reads</text>
+<text x="806" y="432" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#607267" text-anchor="start">Own API routes</text>
+<polyline points="1005,535 920,535" fill="none" stroke="#6F8275" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polygon points="920.00,535.00 928.11,531.10 928.11,538.90" fill="#6F8275"/>
+<text x="962" y="516" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#607267" text-anchor="middle">upserts</text>
+<polyline points="1275,500 1318,500 1318,419 1340,419" fill="none" stroke="#6F8275" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polygon points="1340.00,419.00 1331.89,422.90 1331.89,415.10" fill="#6F8275"/>
+<polygon points="1275.00,500.00 1283.11,496.10 1283.11,503.90" fill="#6F8275"/>
+<polyline points="1275,567 1340,567" fill="none" stroke="#6F8275" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polygon points="1340.00,567.00 1331.89,570.90 1331.89,563.10" fill="#6F8275"/>
+<polygon points="1275.00,567.00 1283.11,563.10 1283.11,570.90" fill="#6F8275"/>
+<polyline points="180,440 180,370" fill="none" stroke="#6F8275" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polygon points="180.00,370.00 183.90,378.11 176.10,378.11" fill="#6F8275"/>
+<polygon points="180.00,440.00 176.10,431.89 183.90,431.89" fill="#6F8275"/>
+<text x="197" y="410" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#607267" text-anchor="start">DNS</text>
+<polyline points="1140,465 1140,370" fill="none" stroke="#6F8275" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polygon points="1140.00,370.00 1143.90,378.11 1136.10,378.11" fill="#6F8275"/>
+<text x="1154" y="416" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#607267" text-anchor="start">worker task</text>
+<polyline points="1275,305 1318,305 1318,274 1340,274" fill="none" stroke="#6F8275" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polygon points="1340.00,274.00 1331.89,277.90 1331.89,270.10" fill="#6F8275"/>
+<polygon points="1275.00,305.00 1283.11,301.10 1283.11,308.90" fill="#6F8275"/>
+<polyline points="1005,337 965,337 965,490 920,490" fill="none" stroke="#6F8275" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polygon points="920.00,490.00 928.11,486.10 928.11,493.90" fill="#6F8275"/>
+<text x="974" y="452" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#607267" text-anchor="start">cache</text>
+<rect x="60" y="240" width="240" height="130" rx="12" fill="#E8EFE6" stroke="#D9E1D8" stroke-width="1"/>
+<text x="78" y="266" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700" fill="#607267" text-anchor="start">FAN EXPERIENCE</text>
+<text x="78" y="295" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#193A30" text-anchor="start">Browser</text>
+<text x="78" y="321" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">Responsive React interface</text>
+<text x="78" y="342" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">15s visible cache refresh</text>
+<text x="78" y="363" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">Refetch on focus / reconnect</text>
+<rect x="380" y="240" width="190" height="130" rx="12" fill="#FFFFFF" stroke="#D9E1D8" stroke-width="1"/>
+<text x="398" y="266" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700" fill="#607267" text-anchor="start">PUBLIC EDGE</text>
+<text x="398" y="295" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#193A30" text-anchor="start">Caddy</text>
+<text x="398" y="321" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">HTTPS reverse proxy</text>
+<text x="398" y="342" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">Automatic TLS renewal</text>
+<rect x="650" y="240" width="270" height="130" rx="12" fill="#E8EFE6" stroke="#D9E1D8" stroke-width="1"/>
+<text x="668" y="266" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700" fill="#607267" text-anchor="start">WEB SERVICE</text>
+<text x="668" y="295" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#193A30" text-anchor="start">Next.js + TypeScript</text>
+<text x="668" y="321" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">UI + read-only HTTP APIs</text>
+<text x="668" y="342" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">Reads stored snapshots</text>
+<text x="668" y="363" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">No provider keys</text>
+<rect x="60" y="440" width="240" height="108" rx="12" fill="#FFFFFF" stroke="#D9E1D8" stroke-width="1"/>
+<text x="78" y="466" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700" fill="#607267" text-anchor="start">DOMAIN</text>
+<text x="78" y="495" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#193A30" text-anchor="start">Route 53</text>
+<text x="78" y="521" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">baylinescore.com</text>
+<text x="78" y="542" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">DNS for the public app</text>
+<rect x="650" y="465" width="270" height="135" rx="12" fill="#E8EFE6" stroke="#D9E1D8" stroke-width="1"/>
+<text x="668" y="491" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700" fill="#607267" text-anchor="start">PRIVATE DATABASE</text>
+<text x="668" y="520" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#193A30" text-anchor="start">PostgreSQL</text>
+<text x="668" y="546" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">Games, records and media</text>
+<text x="668" y="567" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">Player stats + injury reports</text>
+<text x="668" y="588" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">No public database port</text>
+<rect x="1005" y="465" width="270" height="135" rx="12" fill="#E8EFE6" stroke="#D9E1D8" stroke-width="1"/>
+<text x="1023" y="491" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700" fill="#607267" text-anchor="start">INDEPENDENT SERVICE</text>
+<text x="1023" y="520" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#193A30" text-anchor="start">Node.js worker</text>
+<text x="1023" y="546" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">Scores / stats / injury reports</text>
+<text x="1023" y="567" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">Highlights + broadcast tasks</text>
+<text x="1023" y="588" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">Lock, rate limits and backoff</text>
+<rect x="1005" y="240" width="270" height="130" rx="12" fill="#E8EFE6" stroke="#D9E1D8" stroke-width="1"/>
+<text x="1023" y="266" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700" fill="#607267" text-anchor="start">WORKER TASK</text>
+<text x="1023" y="295" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#193A30" text-anchor="start">Warriors broadcasts</text>
+<text x="1023" y="321" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">Official schedule poll every 15m</text>
+<text x="1023" y="342" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">Exact matchup + start time</text>
+<text x="1023" y="363" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">24h cache limit; safe fallback</text>
+<rect x="1340" y="220" width="210" height="108" rx="12" fill="#EAF0F6" stroke="#D9E1D8" stroke-width="1"/>
+<text x="1358" y="246" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700" fill="#607267" text-anchor="start">OFFICIAL NETWORKS</text>
+<text x="1358" y="275" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#193A30" text-anchor="start">NBA schedule</text>
+<text x="1358" y="301" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">National + Warriors TV</text>
+<text x="1358" y="322" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">No opponent-only TV</text>
+<rect x="1340" y="365" width="210" height="108" rx="12" fill="#EAF0F6" stroke="#D9E1D8" stroke-width="1"/>
+<text x="1358" y="391" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700" fill="#607267" text-anchor="start">SPORTS DATA</text>
+<text x="1358" y="420" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#193A30" text-anchor="start">BALLDONTLIE</text>
+<text x="1358" y="446" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">Schedules, scores, stats</text>
+<text x="1358" y="467" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">Current roster / injuries</text>
+<rect x="1340" y="510" width="210" height="108" rx="12" fill="#EAF0F6" stroke="#D9E1D8" stroke-width="1"/>
+<text x="1358" y="536" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700" fill="#607267" text-anchor="start">OFFICIAL HIGHLIGHTS</text>
+<text x="1358" y="565" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#193A30" text-anchor="start">YouTube API</text>
+<text x="1358" y="591" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">NBA / NFL / WNBA</text>
+<text x="1358" y="612" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">Validated video metadata</text>
+<text x="364" y="628" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#607267" text-anchor="start">Provider keys stay in the worker; its schedule survives web restarts.</text>
+<polyline points="785,600 785,685 791,685 791,744" fill="none" stroke="#6F8275" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polygon points="791.00,744.00 787.10,735.89 794.90,735.89" fill="#6F8275"/>
+<text x="807" y="684" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#607267" text-anchor="start">Host backup job</text>
+<text x="56" y="710" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" fill="#607267" text-anchor="start">OPERATIONS OUTSIDE THE APP PROCESS</text>
+<rect x="60" y="744" width="440" height="130" rx="12" fill="#FFFFFF" stroke="#D9E1D8" stroke-width="1"/>
+<text x="78" y="770" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700" fill="#607267" text-anchor="start">UPTIME &amp; ALERTING</text>
+<text x="78" y="799" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#193A30" text-anchor="start">Independent AWS monitor</text>
+<text x="78" y="825" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">EventBridge + Lambda checks HTTPS /api/ready</text>
+<text x="78" y="846" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">CloudWatch + SNS report failure and recovery</text>
+<text x="78" y="867" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">Worker, score-feed, backup and restore checks</text>
+<rect x="530" y="744" width="520" height="130" rx="12" fill="#FFFFFF" stroke="#D9E1D8" stroke-width="1"/>
+<text x="548" y="770" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700" fill="#607267" text-anchor="start">OFF-SERVER RECOVERY</text>
+<text x="548" y="799" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#193A30" text-anchor="start">Private backup storage</text>
+<text x="548" y="825" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">Database backups every 6 hours; 35-day retention</text>
+<text x="548" y="846" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">Checksum verification + isolated restore checks</text>
+<text x="548" y="867" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">Matching source / deployment archives retained</text>
+<rect x="1080" y="744" width="470" height="130" rx="12" fill="#FFFFFF" stroke="#D9E1D8" stroke-width="1"/>
+<text x="1098" y="770" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700" fill="#607267" text-anchor="start">COST CONTROL</text>
+<text x="1098" y="799" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#193A30" text-anchor="start">AWS budget alerts</text>
+<text x="1098" y="825" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">$100/month project budget</text>
+<text x="1098" y="846" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">Actual + forecast spending alerts</text>
+<text x="1098" y="867" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#607267" text-anchor="start">Notifications are not a spending cutoff</text>
+<text x="56" y="922" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" fill="#607267" text-anchor="start">BUILD &amp; RELEASE PATH</text>
+<rect x="60" y="944" width="255" height="86" rx="12" fill="#FFFFFF" stroke="#D9E1D8" stroke-width="1"/>
+<text x="78" y="978" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700" fill="#193A30" text-anchor="start">GitHub source</text>
+<text x="78" y="1006" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="400" fill="#607267" text-anchor="start">Operator prepares release</text>
+<rect x="435" y="944" width="255" height="86" rx="12" fill="#FFFFFF" stroke="#D9E1D8" stroke-width="1"/>
+<text x="453" y="978" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700" fill="#193A30" text-anchor="start">AWS CodeBuild</text>
+<text x="453" y="1006" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="400" fill="#607267" text-anchor="start">Validate + build containers</text>
+<rect x="810" y="944" width="255" height="86" rx="12" fill="#FFFFFF" stroke="#D9E1D8" stroke-width="1"/>
+<text x="828" y="978" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700" fill="#193A30" text-anchor="start">Amazon ECR</text>
+<text x="828" y="1006" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="400" fill="#607267" text-anchor="start">Digest-pinned images</text>
+<rect x="1185" y="944" width="365" height="86" rx="12" fill="#FFFFFF" stroke="#D9E1D8" stroke-width="1"/>
+<text x="1203" y="978" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700" fill="#193A30" text-anchor="start">Lightsail deployment</text>
+<text x="1203" y="1006" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="400" fill="#607267" text-anchor="start">Pull images + verify / rollback</text>
+<polyline points="325,987 425,987" fill="none" stroke="#6F8275" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polygon points="425.00,987.00 416.89,990.90 416.89,983.10" fill="#6F8275"/>
+<polyline points="700,987 800,987" fill="none" stroke="#6F8275" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polygon points="800.00,987.00 791.89,990.90 791.89,983.10" fill="#6F8275"/>
+<polyline points="1075,987 1175,987" fill="none" stroke="#6F8275" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polygon points="1175.00,987.00 1166.89,990.90 1166.89,983.10" fill="#6F8275"/>
+<text x="60" y="1074" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#193A30" text-anchor="start">15s browser refresh reads the database cache. Warriors networks poll every 15m; upstream failures use backoff.</text>
+<text x="60" y="1098" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#607267" text-anchor="start">Warriors broadcasts: release prepared, activation pending. Other leagues retain reviewed viewing links. October 2026.</text>
+</svg>

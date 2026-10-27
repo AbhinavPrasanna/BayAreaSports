@@ -2,14 +2,14 @@ import type { Pool } from 'pg';
 import type { GamesResponse, LeagueSync, StoredGame } from '../../shared/games';
 import { TIME_ZONE } from '../../shared/dates';
 import type { GamesQuery } from './game-query';
-import { gameMedia } from '../../shared/game-media';
+import { resolveGameMedia } from '../../shared/game-media';
 import { readRecordBook } from './records';
 import { currentTeamRecords, recordsAtGame } from '../../shared/records';
 import { readPlayerStats } from './player-stats';
 import { readTeamPlayerStatus } from './player-status';
 
 export async function readGames(pool: Pick<Pool, 'query'>, query: GamesQuery, gameId: number | null = null): Promise<GamesResponse> {
-  const result = await pool.query<{ game: StoredGame & { automaticMedia?: unknown } }>(`SELECT json_build_object(
+  const result = await pool.query<{ game: StoredGame & { automaticMedia?: unknown; officialBroadcasts?:unknown; broadcastExpiresAt:string|null; broadcastSourceFailed:boolean } }>(`SELECT json_build_object(
     'provider','balldontlie', 'league',g.league, 'providerId',g.provider_id,
     'homeTeamId',g.home_team_id, 'awayTeamId',g.away_team_id,
     'homeScore',g.home_score, 'awayScore',g.away_score,
@@ -18,6 +18,7 @@ export async function readGames(pool: Pick<Pool, 'query'>, query: GamesQuery, ga
     'status',g.status, 'originalStatus',g.original_status, 'period',g.period, 'clock',g.clock,
     'season',g.season,'recordPhase',g.record_phase,'lineScore',g.line_score,
     'observedAt',g.observed_at, 'changedAt',g.changed_at, 'media',m.payload,'automaticMedia',y.payload,
+    'officialBroadcasts',b.payload,'broadcastExpiresAt',b.expires_at,'broadcastSourceFailed',bs.last_error_code IS NOT NULL,
     'homeTeam',json_build_object('providerId',h.provider_id,'name',h.name,'abbreviation',h.abbreviation),
     'awayTeam',json_build_object('providerId',a.provider_id,'name',a.name,'abbreviation',a.abbreviation)
     ) AS game
@@ -25,6 +26,8 @@ export async function readGames(pool: Pick<Pool, 'query'>, query: GamesQuery, ga
       JOIN teams a ON a.league=g.league AND a.provider_id=g.away_team_id
       LEFT JOIN game_media m ON m.league=g.league AND m.provider_id=g.provider_id
       LEFT JOIN youtube_highlights y ON y.league=g.league AND y.provider_id=g.provider_id AND y.expires_at>now()
+      LEFT JOIN official_broadcasts b ON b.league=g.league AND b.provider_id=g.provider_id
+      LEFT JOIN broadcast_sync_state bs ON bs.source='nba-warriors' AND g.league='nba'
     WHERE ($1='all' OR g.league=$1)
       AND (h.enabled OR a.enabled)
       AND ($5::bigint IS NULL OR g.provider_id=$5::bigint)
@@ -41,9 +44,8 @@ export async function readGames(pool: Pick<Pool, 'query'>, query: GamesQuery, ga
   const playerStats=gameId!==null&&result.rows.length?await readPlayerStats(pool,result.rows[0].game.league,gameId):undefined;
   const detailGame=gameId!==null?result.rows[0]?.game:undefined;
   const playerStatus=detailGame?await readTeamPlayerStatus(pool,detailGame.league,[detailGame.homeTeamId,detailGame.awayTeamId]):undefined;
-  return { teamRecords:currentTeamRecords(recordBook),data: result.rows.map(({ game: { automaticMedia, ...game } }) => {
-    const manual = gameMedia(game, game.media), automatic = gameMedia(game, automaticMedia);
-    const media = !manual.highlight && automatic.highlight ? { ...manual, highlight: automatic.highlight, sourceUrl: automatic.sourceUrl, verifiedAt: automatic.verifiedAt } : manual;
+  return { teamRecords:currentTeamRecords(recordBook),data: result.rows.map(({ game: { automaticMedia,officialBroadcasts,broadcastExpiresAt,broadcastSourceFailed, ...game } }) => {
+    const media = resolveGameMedia(game,game.media,automaticMedia,officialBroadcasts,broadcastExpiresAt,broadcastSourceFailed);
     return { ...game, media, records:recordsAtGame(game,recordBook),...(playerStats?{playerStats}:{}),...(playerStatus?{playerStatus}:{}) };
   }), sync: { leagues: states.rows.map(row => row.state), workerLastSeenAt: heartbeat.rows[0]?.lastSeen.toISOString() ?? null, serverTime: new Date().toISOString() }, range: { from: query.from, to: query.to, timeZone: TIME_ZONE } };
 }

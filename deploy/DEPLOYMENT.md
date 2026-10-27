@@ -2,6 +2,14 @@
 
 Live app: **https://baylinescore.com/** (singular "score"). The user registered this exact domain in Route 53. `https://www.baylinescore.com/` redirects to the primary domain with HTTP 308 and preserves paths/query strings. The retained static IP `44.224.200.231` also continues to serve the app for existing bookmarks and recovery.
 
+## Prepared release — automatic Warriors viewing networks, October 26, 2026
+
+**Not yet deployed.** The local release adds migration 009 and a worker task polling the official NBA schedule every 15 minutes. It exactly matches home/away teams and UTC start time to stored BALLDONTLIE games, imports the Warriors–Nuggets Peacock/NBC Sports Network correction, retains bounded stale caches on failure, and expires automatic links after 24 hours. NFL/WNBA viewing links remain reviewed. See [BROADCASTS.md](../BROADCASTS.md).
+
+Local validation: 75 TypeScript/SQL/UI tests, 4 operations tests, TypeScript/runtime compilation, production Next.js build and production Compose validation passed. The actual adapter read 86 Warriors games from the official feed; its Warriors–Nuggets result matched the reviewed correction. Desktop and 390px phone preview checks showed both links, source timestamp, correct destinations and no horizontal overflow. These are local checks, not proof of production activation.
+
+Publish through `node deploy/aws/publish-player-status.mjs --broadcasts` from the owner's authenticated PowerShell session. The sandbox cannot see the owner's AWS profile. Record resulting image digests, source commit, public broadcast provenance, source error/success state, off-server backup and fresh nine-migration restore proof here after deployment. The helper saves ignored `deploy/evidence/broadcasts-release.json`.
+
 ## Current web release — supplied player artwork, October 26, 2026
 
 Source `1fca0e0954f34c44cdb089f8347609f000f124a2` replaces the home-page hero with the user's supplied 1536×1024 PNG of 49ers, Warriors and Valkyries players and team logos. The versioned public URL is `/images/bayline-hero-players.png`; updated alt text describes the new composition. Next.js image optimization and the existing uncropped 3:2 layout remain enabled. The source file matched the user's upload exactly: SHA-256 `ebbfac798aaa58ada21d837bb7bd9750389bab3b0a9dd1821736d959227420ec`.
