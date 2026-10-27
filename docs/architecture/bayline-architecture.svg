@@ -140,5 +140,5 @@
 <polyline points="1075,987 1175,987" fill="none" stroke="#6F8275" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
 <polygon points="1175.00,987.00 1166.89,990.90 1166.89,983.10" fill="#6F8275"/>
 <text x="60" y="1074" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#193A30" text-anchor="start">15s browser refresh reads the database cache. Warriors networks poll every 15m; upstream failures use backoff.</text>
-<text x="60" y="1098" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#607267" text-anchor="start">Warriors broadcasts: release prepared, activation pending. Other leagues retain reviewed viewing links. October 2026.</text>
+<text x="60" y="1098" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#607267" text-anchor="start">Warriors broadcast sync is live. Other leagues retain reviewed viewing links. Production verified October 26, 2026.</text>
 </svg>

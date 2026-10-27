@@ -3,7 +3,7 @@
 - **bayline-architecture.svg**: scalable vector version, recommended for a website. Export size: 1600 × 1120.
 - **bayline-architecture.png**: high-resolution raster version, 3200 × 2240 pixels.
 
-The diagram describes the October 2026 MVP and the prepared Warriors broadcast-sync release. Broadcast activation remains pending until deployment is verified. It distinguishes browser cache refresh from provider polling (including a 15-minute official NBA network check), keeps the worker separate from web, and shows private PostgreSQL storage, off-server backups, independent monitoring and the operator-triggered release path.
+The diagram describes the deployed MVP architecture, including Warriors broadcast syncing verified on October 26, 2026. It distinguishes browser cache refresh from provider polling (including a 15-minute official NBA network check), keeps the worker separate from web, and shows private PostgreSQL storage, off-server backups, independent monitoring and the operator-triggered release path.
 
 Example HTML after uploading the SVG to your website's images directory:
 

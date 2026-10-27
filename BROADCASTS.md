@@ -31,10 +31,10 @@ flowchart LR
 
 ## Release and recovery
 
-Prepared locally; production activation is pending. From the owner's normal PowerShell session:
+Activated and verified on October 26, 2026. From the owner's normal PowerShell session:
 
 ```powershell
-node "C:\Users\abhin\Documents\Codex\2026-10-20\if-x20\outputs\bayline-mvp\deploy\aws\publish-player-status.mjs" --broadcasts
+node "C:\Users\abhin\Documents\Codex\2026-10-20\if-x20\outputs\bayline-mvp\deploy\aws\publish-broadcasts.mjs"
 ```
 
 The helper checks the existing AWS identity and a clean committed tree, builds prebuilt web/worker images in CodeBuild, takes a verified off-server backup, applies additive migration 009, imports the reviewed correction, and starts both images. It verifies the broadcast task, public APIs, existing advanced details, readiness and a fresh isolated restore containing all nine migrations and broadcast state. PostgreSQL is not restarted or exposed publicly. Source/images/configuration are archived privately for recovery.
@@ -44,3 +44,5 @@ If the upstream feed is unavailable from production, the release retains the rev
 Evidence is written to ignored `deploy/evidence/broadcasts-release.json`. Rollback restores previous image/configuration references and leaves additive tables in place. On server loss, follow `deploy/RUNBOOK.md`, using the matching release archive and an off-server backup. Restoring the database also restores broadcast snapshots and retry timing; the worker resumes when the saved gate becomes due. Provider secrets must be reinstalled through their existing secret mounts.
 
 On October 26, 2026 the official schedule listed Warriors at Nuggets (NBA `0022600127`, BALLDONTLIE `21717970`) at 7 p.m. Pacific with Peacock and NBC Sports Network. That exact reviewed fallback ships in the catalog; later successful source checks can correct or remove it.
+
+Production verification: release `38a1e7226fa2ffefbb5410612d66129a9a07c868` is live with 18 official broadcast snapshots. A worker refresh succeeded at 6:38 p.m. Pacific and scheduled its next check for 6:53 p.m. Public readiness is healthy. The verified off-server backup restored all nine migrations, 47 games and all 18 broadcast snapshots into a separate database. Evidence is retained in ignored `deploy/evidence/broadcasts-release.json` and `deploy/evidence/broadcasts-refresh.json`.

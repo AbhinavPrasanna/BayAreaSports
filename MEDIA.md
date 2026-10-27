@@ -1,6 +1,6 @@
 # Viewing links and game highlights
 
-Warriors viewing networks now have a prepared automatic refresh path from the official NBA schedule; see [BROADCASTS.md](BROADCASTS.md). The catalog below remains the exact-game manual fallback and the viewing source for NFL/WNBA. Automatic production activation is pending.
+Warriors viewing networks now refresh automatically from the official NBA schedule; see [BROADCASTS.md](BROADCASTS.md). The catalog below remains the exact-game manual fallback and the viewing source for NFL/WNBA. Production syncing was verified on October 26, 2026.
 
 Game cards open viewing options or highlights in game details. U.S. broadcast/streaming links include access notes and an official source. A service link is not a guarantee that a viewer's location or subscription includes the game. Missing or expired entries link to the official team schedule/viewing guide.
 

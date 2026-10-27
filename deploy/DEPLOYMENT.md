@@ -2,13 +2,20 @@
 
 Live app: **https://baylinescore.com/** (singular "score"). The user registered this exact domain in Route 53. `https://www.baylinescore.com/` redirects to the primary domain with HTTP 308 and preserves paths/query strings. The retained static IP `44.224.200.231` also continues to serve the app for existing bookmarks and recovery.
 
-## Prepared release — automatic Warriors viewing networks, October 26, 2026
+## Current web and worker release - official Warriors broadcasts, October 26, 2026
 
-**Not yet deployed.** The local release adds migration 009 and a worker task polling the official NBA schedule every 15 minutes. It exactly matches home/away teams and UTC start time to stored BALLDONTLIE games, imports the Warriors–Nuggets Peacock/NBC Sports Network correction, retains bounded stale caches on failure, and expires automatic links after 24 hours. NFL/WNBA viewing links remain reviewed. See [BROADCASTS.md](../BROADCASTS.md).
+Source `38a1e7226fa2ffefbb5410612d66129a9a07c868` is deployed using the existing successful CodeBuild build `bayline-mvp-prod:3d7ca34e-9339-4f56-90af-81d2611f64e9`. Images:
 
-Local validation: 75 TypeScript/SQL/UI tests, 4 operations tests, TypeScript/runtime compilation, production Next.js build and production Compose validation passed. The actual adapter read 86 Warriors games from the official feed; its Warriors–Nuggets result matched the reviewed correction. Desktop and 390px phone preview checks showed both links, source timestamp, correct destinations and no horizontal overflow. These are local checks, not proof of production activation.
+- Web: `sha256:3500000ae4c934d1823c228a1eaa3055297997fd3dfa26e8304829d673bd837b`
+- Worker: `sha256:fc3e81f44774a7e63557a1ba16f3049057648880aa53b8c6939c8762cfe850ec`
 
-Publish through `node deploy/aws/publish-player-status.mjs --broadcasts` from the owner's authenticated PowerShell session. The sandbox cannot see the owner's AWS profile. Record resulting image digests, source commit, public broadcast provenance, source error/success state, off-server backup and fresh nine-migration restore proof here after deployment. The helper saves ignored `deploy/evidence/broadcasts-release.json`.
+The generic player-status helper was first run without the broadcast flag. It applied migration 009, then failed its outdated eight-migration restore assertion and restored prior images/configuration. The recovery reused the same successful build with the broadcast publisher; no rebuild was needed. The legacy player-status helper now expects nine migrations, and `node deploy/aws/publish-broadcasts.mjs` is the dedicated entry point for future broadcast releases.
+
+The live Warriors-Nuggets game shows Peacock and NBC Sports Network with `broadcastSource=official_schedule` and no delayed flag. Eighteen stored Warriors games have official network snapshots. After deploying, one early worker check was requested to verify refreshing; it succeeded at 6:38 p.m. Pacific and restored the normal next check at 6:53 p.m. Score, highlights, stats and injury APIs remained healthy. PostgreSQL's container ID/start time were unchanged.
+
+Backup `postgres/20261027T013526Z-17f90d19b4e9.json` was verified off-server (508,008 bytes) and restored into separate database `bayline_restore_20261027013533`. Verified 9 migrations, 47 games, 2 enabled status teams with 106 players, 10 populated player-stat games, 6 record snapshots, 12 reviewed media rows, 6 automatic highlights, 18 official broadcasts and persisted broadcast sync state. Restore checksum: `c5a89be5bb95976b4bbfdffec928af0501ed4a1fa511edc235daba8afe9d900e`. The canary matched and all readiness checks passed. Source/deployment archives and manifest are retained privately under `releases/38a1e7226fa2/`.
+
+Local checks passed: 75 TypeScript/SQL/UI tests, four operations tests, production build, runtime/type compilation and production Compose validation. Browser verification at desktop and 390px phone width confirmed both viewing links, their official destinations, checked timestamps and no horizontal overflow. Screenshots: `preview/warriors-broadcasts-live-desktop.png` and `preview/warriors-broadcasts-live-phone.png`. Ignored local evidence: `deploy/evidence/broadcasts-release.json`, `deploy/evidence/broadcasts-refresh.json`. See [BROADCASTS.md](../BROADCASTS.md) for matching, expiration and failure behavior.
 
 ## Current web release — supplied player artwork, October 26, 2026
 
