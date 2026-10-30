@@ -2,6 +2,12 @@
 
 Live app: **https://baylinescore.com/** (singular "score"). The user registered this exact domain in Route 53. `https://www.baylinescore.com/` redirects to the primary domain with HTTP 308 and preserves paths/query strings. The retained static IP `44.224.200.231` also continues to serve the app for existing bookmarks and recovery.
 
+## CodeBuild host runtime validation - October 30, 2026
+
+Source `8b8ce42c760eed87ed9e2fa1213d9d9855f53294` adds explicit build-host selections of Node.js 24 and Python 3.12 in `deploy/buildspec.yml`, addressing curated-image default-runtime changes. AWS CodeBuild `bayline-mvp-prod:53df733e-1b20-41a5-8d6e-467ba63a7193` completed with status **SUCCEEDED** on `aws/codebuild/standard:7.0`. Observed host versions: Node.js `v24.22.1` and Python `3.12.15`.
+
+The validation used the committed install-phase runtime selections and ran runtime assertions, all four operations tests and the production Compose validator. This was a host-only build: no application images were built or pushed, and no deployment was performed. The next full application build must use the updated source archive to receive these selections. Docker application stages remain on Node 24 independently of the host. Evidence: ignored `deploy/evidence/codebuild-runtimes.json`. The owner ran the prepared helper from normal PowerShell because the Windows sandbox could not read the AWS role-credential cache.
+
 ## Current web and worker release - official Warriors broadcasts, October 26, 2026
 
 Source `38a1e7226fa2ffefbb5410612d66129a9a07c868` is deployed using the existing successful CodeBuild build `bayline-mvp-prod:3d7ca34e-9339-4f56-90af-81d2611f64e9`. Images:
