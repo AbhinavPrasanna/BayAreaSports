@@ -276,6 +276,11 @@ h2 { margin:0; font-size:27px; letter-spacing:-.8px; font-weight:600; }
 .game-media-button { display:flex; align-items:center; gap:8px; min-height:48px; width:100%; padding:10px 0; border:0; border-top:1px solid var(--line); background:transparent; text-align:left; font-size:12px; font-weight:600; }
 .game-media-button small { color:var(--muted); font-size:10px; font-weight:400; margin-left:auto; max-width:45%; text-align:right; }
 .game-media-button>.arrow { margin-left:auto; flex-shrink:0; }
+.ticket-icon { width:18px; height:18px; flex-shrink:0; }
+.game-ticket-button { display:flex; align-items:center; gap:8px; min-height:48px; width:100%; padding:10px 0; border-top:1px solid var(--line); font-size:12px; font-weight:600; }
+.game-ticket-button small { color:var(--muted); font-size:10px; font-weight:400; margin-left:auto; }
+.game-ticket-button:hover,.ticket-link:hover { text-decoration:underline; text-underline-offset:3px; }
+.game-ticket-button:focus-visible,.ticket-link:focus-visible { outline:2px solid var(--ink); outline-offset:3px; border-radius:4px; }
 .game-media { border:1px solid #dce2d5; padding:18px; border-radius:10px; margin:22px 0; background:#fff; }
 .media-heading { display:flex; gap:8px; align-items:center; margin-bottom:14px; }
 .media-heading h3 { font-size:15px; margin:0; font-weight:600; }

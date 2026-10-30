@@ -3,6 +3,8 @@ import { followedTeams } from '@/shared/games';
 import { TIME_ZONE } from '@/shared/dates';
 import { ageLabel, showScores, statusLabels } from '@/shared/scoreboard';
 import { EnteringRecord } from './team-record';
+import {ticketForGame} from '@/shared/tickets';
+import {TicketIcon} from './game-tickets';
 
 export const teamInfo = {
   nba: { short: 'Warriors', mark: 'GSW', city: 'Golden State' },
@@ -50,6 +52,7 @@ export function GameCard({ game, now, delayed, hideScore, protection, onReveal, 
   onReveal: () => void; onOpen: (game: StoredGame, trigger: HTMLButtonElement) => void;
 }) {
   const played = showScores(game.status);
+  const ticket=ticketForGame(game,now);
   return <article className={`game-card${game.status === 'in_progress' ? ' in-progress' : ''}`} aria-label={`${game.awayTeam.name} at ${game.homeTeam.name}`} data-scroll-anchor={`game-${game.league}-${game.providerId}`}>
     <div className="game-meta"><span className={`league-label ${game.league}`}>{game.league.toUpperCase()}</span><GameStatus game={game} protectedScore={hideScore} /></div>
     {game.records?.finals&&<p className="finals-game-label">{game.records.finals.label} · Game {game.records.finals.gameNumber}{game.records.finals.ifNecessary?' · If necessary':''}</p>}
@@ -57,6 +60,7 @@ export function GameCard({ game, now, delayed, hideScore, protection, onReveal, 
     {protection && played && <button className="reveal-score" onClick={onReveal}>{hideScore ? 'Reveal score' : 'Hide score'}</button>}
     <div className="game-footer"><span>{game.startsAt ? `${formatTime(game.startsAt)} PT` : 'Time TBD'}</span><span className={delayed ? 'delayed-text' : ''}>{delayed ? 'Update delayed' : checkLabel(game.observedAt, now)}</span></div>
     {game.media && ['scheduled','in_progress','delayed','postponed','unknown','final'].includes(game.status) && <button className="game-media-button" onClick={event => onOpen(game, event.currentTarget)}><span aria-hidden="true">{game.status === 'final' ? '▶' : '◉'}</span><span>{game.status === 'final' ? hideScore ? 'Highlights · spoiler protected' : game.media.highlight ? 'Watch highlights' : 'Find highlights' : 'Where to watch'}</span>{game.status !== 'final' && game.media.broadcasts.length > 0 && <small>{game.media.broadcasts.map(item => item.label).join(' · ')}</small>}<Arrow /></button>}
+    {ticket&&<a className="game-ticket-button" href={ticket.url} target="_blank" rel="noopener noreferrer" aria-label={`View tickets on Ticketmaster for ${game.awayTeam.name} at ${game.homeTeam.name}`}><TicketIcon/><span>View tickets</span><small>Ticketmaster</small><Arrow/></a>}
     <button className="game-details-button" onClick={event => onOpen(game, event.currentTarget)}>Game details <Arrow /></button>
   </article>;
 }

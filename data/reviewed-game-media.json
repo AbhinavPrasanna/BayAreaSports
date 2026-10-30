@@ -229,5 +229,347 @@
       }
     ],
     "highlight": null
+  },
+  {
+    "league": "nba",
+    "providerId": 21717999,
+    "homeTeamId": 10,
+    "awayTeamId": 14,
+    "startsAt": "2026-10-31T02:00:00.000Z",
+    "verifiedAt": "2026-10-30T19:27:18.425Z",
+    "sourceUrl": "https://www.nba.com/warriors/schedule",
+    "broadcasts": [],
+    "highlight": null,
+    "ticket": {
+      "eventId": "1C00650AB377D7BD",
+      "url": "https://www.ticketmaster.com/event/1C00650AB377D7BD",
+      "startsAt": "2026-10-31T02:00:00.000Z",
+      "venue": "Chase Center",
+      "verifiedAt": "2026-10-30T19:27:18.425Z"
+    }
+  },
+  {
+    "league": "wnba",
+    "providerId": 1392731,
+    "homeTeamId": 13,
+    "awayTeamId": 4,
+    "startsAt": "2026-11-01T00:00:00.000Z",
+    "verifiedAt": "2026-10-30T19:27:18.425Z",
+    "sourceUrl": "https://valkyries.wnba.com/schedule",
+    "broadcasts": [],
+    "highlight": null,
+    "ticket": {
+      "eventId": "1C006529C5EA34C4",
+      "url": "https://www.ticketmaster.com/event/1C006529C5EA34C4",
+      "startsAt": "2026-11-01T00:00:00.000Z",
+      "venue": "Chase Center",
+      "verifiedAt": "2026-10-30T19:27:18.425Z"
+    }
+  },
+  {
+    "league": "nba",
+    "providerId": 21718010,
+    "homeTeamId": 10,
+    "awayTeamId": 13,
+    "startsAt": "2026-11-02T01:30:00.000Z",
+    "verifiedAt": "2026-10-30T19:27:18.425Z",
+    "sourceUrl": "https://www.nba.com/warriors/schedule",
+    "broadcasts": [],
+    "highlight": null,
+    "ticket": {
+      "eventId": "1C00650AB37CD7C3",
+      "url": "https://www.ticketmaster.com/event/1C00650AB37CD7C3",
+      "startsAt": "2026-11-02T01:30:00.000Z",
+      "venue": "Chase Center",
+      "verifiedAt": "2026-10-30T19:27:18.425Z"
+    }
+  },
+  {
+    "league": "nba",
+    "providerId": 21718024,
+    "homeTeamId": 10,
+    "awayTeamId": 24,
+    "startsAt": "2026-11-03T03:00:00.000Z",
+    "verifiedAt": "2026-10-30T19:27:18.425Z",
+    "sourceUrl": "https://www.nba.com/warriors/schedule",
+    "broadcasts": [],
+    "highlight": null,
+    "ticket": {
+      "eventId": "1C00650AB39CD82C",
+      "url": "https://www.ticketmaster.com/event/1C00650AB39CD82C",
+      "startsAt": "2026-11-03T03:00:00.000Z",
+      "venue": "Chase Center",
+      "verifiedAt": "2026-10-30T19:27:18.425Z"
+    }
+  },
+  {
+    "league": "nba",
+    "providerId": 21718042,
+    "homeTeamId": 10,
+    "awayTeamId": 16,
+    "startsAt": "2026-11-06T03:00:00.000Z",
+    "verifiedAt": "2026-10-30T19:27:18.425Z",
+    "sourceUrl": "https://www.nba.com/warriors/schedule",
+    "broadcasts": [],
+    "highlight": null,
+    "ticket": {
+      "eventId": "1C00650AB382D7DB",
+      "url": "https://www.ticketmaster.com/event/1C00650AB382D7DB",
+      "startsAt": "2026-11-06T03:00:00.000Z",
+      "venue": "Chase Center",
+      "verifiedAt": "2026-10-30T19:27:18.425Z"
+    }
+  },
+  {
+    "league": "nba",
+    "providerId": 21718056,
+    "homeTeamId": 10,
+    "awayTeamId": 22,
+    "startsAt": "2026-11-08T01:30:00.000Z",
+    "verifiedAt": "2026-10-30T19:27:18.425Z",
+    "sourceUrl": "https://www.nba.com/warriors/schedule",
+    "broadcasts": [],
+    "highlight": null,
+    "ticket": {
+      "eventId": "1C00650AB387D7E7",
+      "url": "https://www.ticketmaster.com/event/1C00650AB387D7E7",
+      "startsAt": "2026-11-08T01:30:00.000Z",
+      "venue": "Chase Center",
+      "verifiedAt": "2026-10-30T19:27:18.425Z"
+    }
+  },
+  {
+    "league": "nfl",
+    "providerId": 1392347,
+    "homeTeamId": 30,
+    "awayTeamId": 16,
+    "startsAt": "2026-11-08T21:25:00.000Z",
+    "verifiedAt": "2026-10-30T19:27:18.425Z",
+    "sourceUrl": "https://www.49ers.com/schedule/",
+    "broadcasts": [],
+    "highlight": null,
+    "ticket": {
+      "eventId": "1C006463D0A5450D",
+      "url": "https://www.ticketmaster.com/event/1C006463D0A5450D",
+      "startsAt": "2026-11-08T21:25:00.000Z",
+      "venue": "Levi's® Stadium",
+      "verifiedAt": "2026-10-30T19:27:18.425Z"
+    }
+  },
+  {
+    "league": "nba",
+    "providerId": 21718073,
+    "homeTeamId": 10,
+    "awayTeamId": 19,
+    "startsAt": "2026-11-10T03:00:00.000Z",
+    "verifiedAt": "2026-10-30T19:27:18.425Z",
+    "sourceUrl": "https://www.nba.com/warriors/schedule",
+    "broadcasts": [],
+    "highlight": null,
+    "ticket": {
+      "eventId": "1C00650AB38CD7FB",
+      "url": "https://www.ticketmaster.com/event/1C00650AB38CD7FB",
+      "startsAt": "2026-11-10T03:00:00.000Z",
+      "venue": "Chase Center",
+      "verifiedAt": "2026-10-30T19:27:18.425Z"
+    }
+  },
+  {
+    "league": "nba",
+    "providerId": 21718089,
+    "homeTeamId": 11,
+    "awayTeamId": 10,
+    "startsAt": "2026-11-12T02:30:00.000Z",
+    "verifiedAt": "2026-10-30T19:27:18.425Z",
+    "sourceUrl": "https://www.nba.com/warriors/schedule",
+    "broadcasts": [],
+    "highlight": null,
+    "ticket": {
+      "eventId": "Z7r9jZ1AAZI-V",
+      "url": "https://www.ticketmaster.com/event/Z7r9jZ1AAZI-V",
+      "startsAt": "2026-11-12T02:30:00.000Z",
+      "venue": "Toyota Center - TX",
+      "verifiedAt": "2026-10-30T19:27:18.425Z"
+    }
+  },
+  {
+    "league": "nba",
+    "providerId": 21718101,
+    "homeTeamId": 27,
+    "awayTeamId": 10,
+    "startsAt": "2026-11-14T02:30:00.000Z",
+    "verifiedAt": "2026-10-30T19:27:18.425Z",
+    "sourceUrl": "https://www.nba.com/warriors/schedule",
+    "broadcasts": [],
+    "highlight": null,
+    "ticket": {
+      "eventId": "3A006507BBFAD215",
+      "url": "https://www.ticketmaster.com/event/3A006507BBFAD215",
+      "startsAt": "2026-11-14T02:30:00.000Z",
+      "venue": "Frost Bank Center",
+      "verifiedAt": "2026-10-30T19:27:18.425Z"
+    }
+  },
+  {
+    "league": "nfl",
+    "providerId": 1392363,
+    "homeTeamId": 19,
+    "awayTeamId": 30,
+    "startsAt": "2026-11-15T21:25:00.000Z",
+    "verifiedAt": "2026-10-30T19:27:18.425Z",
+    "sourceUrl": "https://www.49ers.com/schedule/",
+    "broadcasts": [],
+    "highlight": null,
+    "ticket": {
+      "eventId": "0C00646CBC498FC7",
+      "url": "https://www.ticketmaster.com/event/0C00646CBC498FC7",
+      "startsAt": "2026-11-15T21:25:00.000Z",
+      "venue": "AT&T Stadium",
+      "verifiedAt": "2026-10-30T19:27:18.425Z"
+    }
+  },
+  {
+    "league": "nba",
+    "providerId": 21718124,
+    "homeTeamId": 19,
+    "awayTeamId": 10,
+    "startsAt": "2026-11-17T01:00:00.000Z",
+    "verifiedAt": "2026-10-30T19:27:18.425Z",
+    "sourceUrl": "https://www.nba.com/warriors/schedule",
+    "broadcasts": [],
+    "highlight": null,
+    "ticket": {
+      "eventId": "Z7r9jZ1AAZt_E",
+      "url": "https://www.ticketmaster.com/event/Z7r9jZ1AAZt_E",
+      "startsAt": "2026-11-17T01:00:00.000Z",
+      "venue": "Smoothie King Center",
+      "verifiedAt": "2026-10-30T19:27:18.425Z"
+    }
+  },
+  {
+    "league": "nba",
+    "providerId": 21718140,
+    "homeTeamId": 7,
+    "awayTeamId": 10,
+    "startsAt": "2026-11-19T02:30:00.000Z",
+    "verifiedAt": "2026-10-30T19:27:18.425Z",
+    "sourceUrl": "https://www.nba.com/warriors/schedule",
+    "broadcasts": [],
+    "highlight": null,
+    "ticket": {
+      "eventId": "0C00650C90FA406D",
+      "url": "https://www.ticketmaster.com/event/0C00650C90FA406D",
+      "startsAt": "2026-11-19T02:30:00.000Z",
+      "venue": "American Airlines Center",
+      "verifiedAt": "2026-10-30T19:27:18.425Z"
+    }
+  },
+  {
+    "league": "nba",
+    "providerId": 21718143,
+    "homeTeamId": 15,
+    "awayTeamId": 10,
+    "startsAt": "2026-11-20T01:00:00.000Z",
+    "verifiedAt": "2026-10-30T19:27:18.425Z",
+    "sourceUrl": "https://www.nba.com/warriors/schedule",
+    "broadcasts": [],
+    "highlight": null,
+    "ticket": {
+      "eventId": "1B00650BF189F1E8",
+      "url": "https://www.ticketmaster.com/event/1B00650BF189F1E8",
+      "startsAt": "2026-11-20T01:00:00.000Z",
+      "venue": "FedExForum",
+      "verifiedAt": "2026-10-30T19:27:18.425Z"
+    }
+  },
+  {
+    "league": "nba",
+    "providerId": 21718170,
+    "homeTeamId": 10,
+    "awayTeamId": 2,
+    "startsAt": "2026-11-23T01:30:00.000Z",
+    "verifiedAt": "2026-10-30T19:27:18.425Z",
+    "sourceUrl": "https://www.nba.com/warriors/schedule",
+    "broadcasts": [],
+    "highlight": null,
+    "ticket": {
+      "eventId": "1C00650AB391D80F",
+      "url": "https://www.ticketmaster.com/event/1C00650AB391D80F",
+      "startsAt": "2026-11-23T01:30:00.000Z",
+      "venue": "Chase Center",
+      "verifiedAt": "2026-10-30T19:27:18.425Z"
+    }
+  },
+  {
+    "league": "nba",
+    "providerId": 21718191,
+    "homeTeamId": 10,
+    "awayTeamId": 26,
+    "startsAt": "2026-11-26T03:00:00.000Z",
+    "verifiedAt": "2026-10-30T19:27:18.425Z",
+    "sourceUrl": "https://www.nba.com/warriors/schedule",
+    "broadcasts": [],
+    "highlight": null,
+    "ticket": {
+      "eventId": "1C00650AB397D81F",
+      "url": "https://www.ticketmaster.com/event/1C00650AB397D81F",
+      "startsAt": "2026-11-26T03:00:00.000Z",
+      "venue": "Chase Center",
+      "verifiedAt": "2026-10-30T19:27:18.425Z"
+    }
+  },
+  {
+    "league": "nba",
+    "providerId": 21718203,
+    "homeTeamId": 25,
+    "awayTeamId": 10,
+    "startsAt": "2026-11-28T02:30:00.000Z",
+    "verifiedAt": "2026-10-30T19:27:18.425Z",
+    "sourceUrl": "https://www.nba.com/warriors/schedule",
+    "broadcasts": [],
+    "highlight": null,
+    "ticket": {
+      "eventId": "0F0065049CDA8ECC",
+      "url": "https://www.ticketmaster.com/event/0F0065049CDA8ECC",
+      "startsAt": "2026-11-28T02:30:00.000Z",
+      "venue": "Moda Center",
+      "verifiedAt": "2026-10-30T19:27:18.425Z"
+    }
+  },
+  {
+    "league": "nfl",
+    "providerId": 1392392,
+    "homeTeamId": 30,
+    "awayTeamId": 31,
+    "startsAt": "2026-11-29T21:25:00.000Z",
+    "verifiedAt": "2026-10-30T19:27:18.425Z",
+    "sourceUrl": "https://www.49ers.com/schedule/",
+    "broadcasts": [],
+    "highlight": null,
+    "ticket": {
+      "eventId": "1C006463D0C2456D",
+      "url": "https://www.ticketmaster.com/event/1C006463D0C2456D",
+      "startsAt": "2026-11-29T21:25:00.000Z",
+      "venue": "Levi's® Stadium",
+      "verifiedAt": "2026-10-30T19:27:18.425Z"
+    }
+  },
+  {
+    "league": "nba",
+    "providerId": 21718217,
+    "homeTeamId": 10,
+    "awayTeamId": 13,
+    "startsAt": "2026-11-30T01:30:00.000Z",
+    "verifiedAt": "2026-10-30T19:27:18.425Z",
+    "sourceUrl": "https://www.nba.com/warriors/schedule",
+    "broadcasts": [],
+    "highlight": null,
+    "ticket": {
+      "eventId": "1C00650AB331D70A",
+      "url": "https://www.ticketmaster.com/event/1C00650AB331D70A",
+      "startsAt": "2026-11-30T01:30:00.000Z",
+      "venue": "Chase Center",
+      "verifiedAt": "2026-10-30T19:27:18.425Z"
+    }
   }
 ]

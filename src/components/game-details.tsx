@@ -9,6 +9,7 @@ import { GameMedia } from './game-media';
 import { AfterGameRecords,FinalsSeriesRecord } from './team-record';
 import { AdvancedGameDetails } from './advanced-game-details';
 import { PlayerStatusSection } from './player-status';
+import {GameTickets} from './game-tickets';
 
 export function GameDetails({ initial, refreshVersion, now, hideScore, protection, onReveal, onClose, trigger }: {
   initial: StoredGame; refreshVersion: number; now: number; hideScore: boolean; protection: boolean;
@@ -45,6 +46,7 @@ export function GameDetails({ initial, refreshVersion, now, hideScore, protectio
     <PlayerStatusSection game={game} hidden={hideScore}/>
     <AdvancedGameDetails game={game} hidden={hideScore}/>
     <GameMedia game={game} hideScore={hideScore} />
+    <GameTickets game={game} now={now}/>
     <dl className="detail-facts"><div><dt>Matchup</dt><dd>{game.awayTeam.name} at {game.homeTeam.name}</dd></div><div><dt>Latest check</dt><dd>{checkLabel(game.observedAt, now)}</dd></div><div><dt>Updates</dt><dd>Refreshes every 15 seconds while this page is visible.</dd></div></dl>
     <p className="detail-note">Scores and statistics are snapshots from BALLDONTLIE. Coverage varies by league and game.</p>
     <button className="dialog-done" onClick={onClose}>Back to scoreboard</button>

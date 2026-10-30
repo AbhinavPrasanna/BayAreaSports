@@ -9,8 +9,9 @@ import {aws,connection} from './remote.mjs';
 const repo=resolve(dirname(fileURLToPath(import.meta.url)),'../..');
 const injuryTab=process.argv.includes('--injury-tab');
 const broadcasts=process.argv.includes('--broadcasts');
-if(injuryTab&&broadcasts)throw Error('Choose one release mode.');
-const releaseName=broadcasts?'broadcasts':injuryTab?'injury-tab':'player-status';
+const tickets=process.argv.includes('--tickets');
+if([injuryTab,broadcasts,tickets].filter(Boolean).length>1)throw Error('Choose one release mode.');
+const releaseName=tickets?'tickets':broadcasts?'broadcasts':injuryTab?'injury-tab':'player-status';
 const scratch=join(repo,'.secrets',releaseName+'-release');mkdirSync(scratch,{recursive:true,mode:0o700});
 function git(args){const r=spawnSync('git',['-c','safe.directory='+repo.replaceAll('\\','/'),...args],{cwd:repo,encoding:'utf8',windowsHide:true});if(r.status!==0)throw Error('Git source preparation failed; details omitted');return r.stdout.trim();}
 function command(args){const r=spawnSync('aws',args,{encoding:'utf8',windowsHide:true,timeout:180000});if(r.status!==0)throw Error('Source upload failed; details omitted');}
@@ -29,7 +30,7 @@ try{
  git(['archive','--format=zip','--output='+source,'HEAD']);git(['archive','--format=tar','--output='+deployment,'HEAD','deploy']);
  const remote=connection('bayline-mvp-prod-01',join(scratch,'ssh'));
  let coverage=null;
- if(!injuryTab&&!broadcasts){
+ if(!injuryTab&&!broadcasts&&!tickets){
  console.log('Validating NBA/NFL current rosters and injury reports with the existing server-only key...');
  const probe=readFileSync(join(repo,'deploy','probe-player-status.cjs'),'utf8');
  const py=`import subprocess\nr=subprocess.run(['docker','compose','--env-file','production.env','-f','compose.production.yaml','exec','-T','worker','node','-'],input=${JSON.stringify(probe)},cwd='/opt/bayline/deploy',capture_output=True,text=True,timeout=300)\nif r.returncode: raise SystemExit(r.stderr.strip() or 'Coverage validation failed; raw details omitted')\nprint(r.stdout)`;
@@ -63,7 +64,7 @@ try{
  }finally{remote.exec('sudo docker logout '+registry);}
  remote.copy(source,`/tmp/bayline-${releaseName}-source.zip`);remote.copy(deployment,`/tmp/bayline-${releaseName}-deployment.tar`);
  remote.copy(join(repo,'deploy',`publish-${releaseName}.py`),`/tmp/bayline-publish-${releaseName}.py`);
- console.log(broadcasts?'Deploying prebuilt web/worker images, applying migration 009, and verifying broadcast snapshots and recovery...':injuryTab?'Deploying the prebuilt web image and checking cached reports; worker and database stay running...':'Deploying prebuilt images, applying migration 008, and waiting for current reports...');
+ console.log(tickets?'Deploying prebuilt web/worker images and importing verified Ticketmaster event links...':broadcasts?'Deploying prebuilt web/worker images, applying migration 009, and verifying broadcast snapshots and recovery...':injuryTab?'Deploying the prebuilt web image and checking cached reports; worker and database stay running...':'Deploying prebuilt images, applying migration 008, and waiting for current reports...');
  const published=remote.exec(`sudo python3 /tmp/bayline-publish-${releaseName}.py`,{input:JSON.stringify({sourceCommit:sha,images}),timeout:1200000});
  if(published.status!==0)throw Error(published.stderr.trim().slice(-800)||'Production verification failed; inspect service health');
  const proof=JSON.parse(published.stdout);proof.coverage=coverage;proof.buildId=build.id;

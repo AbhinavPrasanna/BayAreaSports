@@ -79,3 +79,7 @@ Target RPO: at most six hours plus backup execution time. Target RTO: one to two
 ## Release rollback
 
 Take and verify a backup first. Record current image digests and pin the prior compatible web/worker digests in `production.env`, pull them using a fresh ECR token if absent, and recreate only the relevant services. Do not automatically reverse database migrations. New migrations must remain backward-compatible with the prior app release or have a separately tested restore/promotion plan. Check readiness and monitor state after rollback.
+
+## Ticket links
+
+The prepared ticket release adds optional `ticket` metadata to the existing reviewed-media JSONB payload. It requires matching web and worker images, with no migration beyond 009. Use `node deploy/aws/publish-tickets.mjs` for the complete release and fresh isolated restore check. Keep the bundled catalog in the source archive and verify ticket-bearing rows in recovered `game_media`; see [TICKETS.md](../TICKETS.md). Ticket purchase links are hidden after the event starts, when a game is rescheduled or postponed, and when its review is older than 30 days. New games require reviewed catalog updates until a separate discovery integration is implemented.
