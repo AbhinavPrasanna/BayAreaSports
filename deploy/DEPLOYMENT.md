@@ -2,13 +2,26 @@
 
 Live app: **https://baylinescore.com/** (singular "score"). The user registered this exact domain in Route 53. `https://www.baylinescore.com/` redirects to the primary domain with HTTP 308 and preserves paths/query strings. The retained static IP `44.224.200.231` also continues to serve the app for existing bookmarks and recovery.
 
+## Current web and worker release — Ticketmaster event links, October 30, 2026
+
+Source `468f5b2610b4f911429a2bb7cae3026992d68952` is deployed. CodeBuild `bayline-mvp-prod:4bba7c36-f0d5-421e-8c46-6f8881d9d66c` succeeded using the explicit host runtime selections. Images:
+
+- Web: `sha256:966dc382046079c75a43ea25efbfbc8e163fb9688f7908d3555a2ad39704262a`
+- Worker: `sha256:017b81f207818322044e35ca7bdf31efbe9366ef90433380240f9054a40eeb88`
+
+The release imported the reviewed catalog into existing `game_media.payload` JSONB without a new migration. Public upcoming-game responses verified 19 distinct exact-event Ticketmaster links across NBA, NFL and WNBA. The unconfirmed 49ers–Vikings event has no purchase link. No new API key, subscription or AWS service was added. Links require a future scheduled game, unchanged matchup/start time and a review no older than 30 days. This is maintained catalog coverage, not automatic discovery; see [TICKETS.md](../TICKETS.md).
+
+Web and worker were replaced with digest-pinned images at 19:42 UTC. PostgreSQL retained its container ID/start time. NBA/NFL player reports and all public readiness checks passed. Backup `postgres/20261030T194214Z-a724de7fb98c.json` was checksum-verified off-server and restored into separate database `bayline_restore_20261030194221`. The recovery canary, nine migrations, three enabled teams, 50 games, 19 ticket-bearing rows, 31 reviewed media rows, 10 automatic highlights, 20 broadcasts and persisted broadcast state were verified. Dump SHA-256: `46c59577fd50b4a0a5ccd5f8a18fdc2cb5eea802f5e70233cd3d8696b420276d`. Source/deployment archives and manifest are retained privately under `releases/468f5b2610b4/`; ignored local evidence is `deploy/evidence/tickets-release.json`.
+
+Local checks passed: 81 application/SQL/UI tests, four operations tests, type checking, runtime compilation, production build and production Compose validation. Live browser checks passed at 1280-pixel desktop width and 390×844 phone size, including all three teams' game-detail links, safe new-tab attributes, at least 48-pixel ticket actions and no horizontal page overflow. Ticketmaster's Warriors destination showed the correct opponent/date/time/venue. Spoiler-protected results showed hidden scores and records, no purchase links and no loaded video iframe; no browser warnings/errors were captured. Screenshots: `preview/tickets-live-desktop.png`, `preview/tickets-live-phone.png`, `preview/tickets-live-card-phone.png`. Temporary browser preferences and viewport overrides were restored after testing.
+
 ## CodeBuild host runtime validation - October 30, 2026
 
 Source `8b8ce42c760eed87ed9e2fa1213d9d9855f53294` adds explicit build-host selections of Node.js 24 and Python 3.12 in `deploy/buildspec.yml`, addressing curated-image default-runtime changes. AWS CodeBuild `bayline-mvp-prod:53df733e-1b20-41a5-8d6e-467ba63a7193` completed with status **SUCCEEDED** on `aws/codebuild/standard:7.0`. Observed host versions: Node.js `v24.22.1` and Python `3.12.15`.
 
 The validation used the committed install-phase runtime selections and ran runtime assertions, all four operations tests and the production Compose validator. This was a host-only build: no application images were built or pushed, and no deployment was performed. The next full application build must use the updated source archive to receive these selections. Docker application stages remain on Node 24 independently of the host. Evidence: ignored `deploy/evidence/codebuild-runtimes.json`. The owner ran the prepared helper from normal PowerShell because the Windows sandbox could not read the AWS role-credential cache.
 
-## Current web and worker release - official Warriors broadcasts, October 26, 2026
+## Previous web and worker release - official Warriors broadcasts, October 26, 2026
 
 Source `38a1e7226fa2ffefbb5410612d66129a9a07c868` is deployed using the existing successful CodeBuild build `bayline-mvp-prod:3d7ca34e-9339-4f56-90af-81d2611f64e9`. Images:
 

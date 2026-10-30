@@ -21,7 +21,7 @@ Newly scheduled games need reviewed links added to `data/reviewed-game-media.jso
 
 ## Release and recovery
 
-Prepared locally; production activation remains pending until verified. Publish the clean committed source from an authenticated PowerShell session:
+Deployed and verified on October 30, 2026 at [baylinescore.com](https://baylinescore.com/). The release imported and checked all 19 event links. Publish future clean committed updates from an authenticated PowerShell session:
 
 ```powershell
 node "C:\Users\abhin\Documents\Codex\2026-10-20\if-x20\outputs\bayline-mvp\deploy\aws\publish-tickets.mjs"
@@ -31,4 +31,4 @@ The dedicated release mode builds prebuilt web/worker images, verifies an off-se
 
 Rollback restores prior images/configuration and retains the compatible JSONB metadata. For server loss, follow `deploy/RUNBOOK.md` with the matching source/image archive and database backup. Ticket eligibility and review expiration are evaluated again after restore.
 
-Local validation passed 81 application/SQL/UI tests, type checking, runtime compilation and a production Next.js build. Local browser access was unavailable in this Windows sandbox; desktop/phone browser verification must be recorded after deployment.
+Local validation passed 81 application/SQL/UI tests, type checking, runtime compilation and a production Next.js build. Live browser verification passed at the default 1280-pixel desktop width and 390×844 phone viewport: cards and details expose the exact event links for all three teams, with no horizontal page overflow and ticket actions at least 48 pixels high. The Warriors link destination showed the matching Lakers game, date, time and Chase Center. Protected results retained hidden scores/records, no ticket links and no loaded video iframe. No browser warnings/errors were captured. Screenshots: `preview/tickets-live-desktop.png`, `preview/tickets-live-phone.png`, and `preview/tickets-live-card-phone.png`. The isolated backup restore verified all 19 ticket-bearing JSONB rows; full release evidence is summarized in `deploy/DEPLOYMENT.md`.

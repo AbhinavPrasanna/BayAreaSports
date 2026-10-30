@@ -156,4 +156,4 @@ See [VERIFICATION.md](VERIFICATION.md) for completed checks and runtime verifica
 
 The production Docker targets are `web` (Next.js standalone) and `worker` (compiled Node.js worker/migrations). `deploy/compose.production.yaml` consumes prebuilt images pinned by digest, has no source mounts or PostgreSQL host port, and puts Caddy on the public edge. Secrets are supplied through restricted host files. See [deploy/RUNBOOK.md](deploy/RUNBOOK.md) for AWS provisioning, launch gates, backup/restore operations, crash tests, and server-loss recovery. Production readiness is separate from the local development Compose stack.
 
-Upcoming games support reviewed, event-specific Ticketmaster links on cards and game details. The prepared ticket release covers 19 verified events across all three teams; see [TICKETS.md](TICKETS.md) for exact matching, expiry, maintenance and deployment status.
+Upcoming games support reviewed, event-specific Ticketmaster links on cards and game details. The October 30 ticket release is live with 19 verified events across all three teams; see [TICKETS.md](TICKETS.md) for exact matching, expiry, maintenance and deployment evidence.
