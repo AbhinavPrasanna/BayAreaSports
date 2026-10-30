@@ -1,5 +1,13 @@
 version: 0.2
 phases:
+  install:
+    # Select host runtimes explicitly; application builds use Node 24 inside Docker.
+    runtime-versions:
+      nodejs: 24
+      python: "3.12"
+    commands:
+      - node --version
+      - python3 --version
   pre_build:
     commands:
       - set -eu
